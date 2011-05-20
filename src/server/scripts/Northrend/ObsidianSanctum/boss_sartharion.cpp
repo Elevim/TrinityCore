@@ -748,11 +748,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_boss_sartharion(Creature* pCreature)
-{
-    return new boss_sartharionAI(pCreature);
-}*/
-
 enum TeneText
 {
     SAY_TENEBRON_AGGRO                      = -1615009,
@@ -1169,11 +1164,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_mob_tenebron(Creature* pCreature)
-{
-    return new mob_tenebronAI(pCreature);
-}*/
-
 /*######
 ## Mob Shadron
 ######*/
@@ -1298,11 +1288,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_mob_shadron(Creature* pCreature)
-{
-    return new mob_shadronAI(pCreature);
-}*/
-
 /*######
 ## Mob Vesperon
 ######*/
@@ -1410,11 +1395,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_mob_vesperon(Creature* pCreature)
-{
-    return new mob_vesperonAI(pCreature);
-}*/
-
 /*######
 ## Mob Acolyte of Shadron
 ######*/
@@ -1502,11 +1482,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_mob_acolyte_of_shadron(Creature* pCreature)
-{
-    return new mob_acolyte_of_shadronAI(pCreature);
-}*/
-
 /*######
 ## Mob Acolyte of Vesperon
 ######*/
@@ -1585,11 +1560,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_mob_acolyte_of_vesperon(Creature* pCreature)
-{
-    return new mob_acolyte_of_vesperonAI(pCreature);
-}*/
-
 /*######
 ## Mob Twilight Eggs
 ######*/
@@ -1620,6 +1590,7 @@ public:
         if(pInstance)
         {
             me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
+            me->SetReactState(REACT_PASSIVE);
         }
         m_uiHatchEggTimer = 20000;
     }
@@ -1671,11 +1642,6 @@ public:
     void MoveInLineOfSight(Unit* pWho) {}
 };
 };
-
-/*CreatureAI* GetAI_mob_twilight_eggs(Creature* pCreature)
-{
-    return new mob_twilight_eggsAI(pCreature);
-}*/
 
 /*######
 ## Mob Flame Tsunami
@@ -1741,8 +1707,8 @@ public:
     {
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
         me->SetReactState(REACT_PASSIVE);
-        me->AddAura( 46265 , me ); // Wrong, can't find proper visual
-        me->AddAura( 69422 , me ); //im neuen patch nicht drin
+        //me->AddAura( 46265 , me ); // Wrong, can't find proper visual
+        //me->AddAura( 69422 , me ); //im neuen patch nicht drin
         VoidBlast_Timer = 5000;
     }
 
@@ -1758,17 +1724,6 @@ public:
     }
 };
 };
-
-
-/*CreatureAI* GetAI_npc_flame_tsunami(Creature* pCreature)
-{
-    return new npc_flame_tsunamiAI(pCreature);
-}
-
-CreatureAI* GetAI_npc_twilight_fissure(Creature* pCreature)
-{
-    return new npc_twilight_fissureAI(pCreature);
-}*/
 
 /*######
 ## Mob Twilight Whelps
@@ -1819,11 +1774,6 @@ public:
 };
 };
 
-/*CreatureAI* GetAI_mob_twilight_whelp(Creature* pCreature)
-{
-    return new mob_twilight_whelpAI(pCreature);
-}*/
-
 class go_twilight_portal : public GameObjectScript
 {
 public:
@@ -1835,7 +1785,33 @@ bool OnEnter(Player* pPlayer, GameObject* pGo)
         return false;
 
     if (pPlayer)
+    {
        pPlayer->CastSpell(pPlayer, SPELL_TWILIGHT_SHIFT_ENTER, false);
+       pPlayer->CastSpell(pPlayer, SPELL_TWILIGHT_SHIFT, true);
+    }
+
+    return true;
+}
+};
+
+class go_normal_portal : public GameObjectScript
+{
+public:
+    go_normal_portal() : GameObjectScript("go_normal_portal") { }
+bool OnEnter(Player* pPlayer, GameObject* pGo)
+{
+    InstanceScript* pInstance = pPlayer->GetInstanceScript();
+    if (!pInstance)
+        return false;
+
+    if (pPlayer)
+    {
+       if (pPlayer->HasAura(SPELL_TWILIGHT_SHIFT_ENTER))
+            pPlayer->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT_ENTER);
+
+       if (pPlayer->HasAura(SPELL_TWILIGHT_SHIFT))
+            pPlayer->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT);
+    }
 
     return true;
 }
@@ -1854,4 +1830,5 @@ void AddSC_boss_sartharion()
     new npc_twilight_fissure();
     new mob_twilight_whelp();
     new go_twilight_portal();
+    new go_normal_portal();
 }
