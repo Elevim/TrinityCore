@@ -1778,7 +1778,7 @@ class go_twilight_portal : public GameObjectScript
 {
 public:
     go_twilight_portal() : GameObjectScript("go_twilight_portal") { }
-bool OnEnter(Player* pPlayer, GameObject* pGo)
+bool OnGossipHello(Player* pPlayer, GameObject* pGo)
 {
     InstanceScript* pInstance = pPlayer->GetInstanceScript();
     if (!pInstance)
@@ -1798,7 +1798,7 @@ class go_normal_portal : public GameObjectScript
 {
 public:
     go_normal_portal() : GameObjectScript("go_normal_portal") { }
-bool OnEnter(Player* pPlayer, GameObject* pGo)
+bool OnGossipHello(Player* pPlayer, GameObject* pGo)
 {
     InstanceScript* pInstance = pPlayer->GetInstanceScript();
     if (!pInstance)
