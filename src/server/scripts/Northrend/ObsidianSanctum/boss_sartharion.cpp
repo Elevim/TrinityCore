@@ -1427,6 +1427,9 @@ public:
     {
         if (pInstance)
         {
+            GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+            pPortal->SetPhaseMask(2,true);
+
             Creature* pShadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
             if(pShadron)
             {
@@ -1518,6 +1521,9 @@ public:
         // remove twilight torment on Vesperon
         if (pInstance)
         {
+            GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+            pPortal->SetPhaseMask(2,true);
+
             Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
             if (pVesperon)
                 (CAST_AI(mob_vesperon::mob_vesperonAI, pVesperon->AI()))->m_bHasPortalOpen = false;
@@ -1602,7 +1608,8 @@ public:
 
     void SpawnWhelps()
     {
-   //     me->RemoveAllAuras(); //im neuen patch nicht drin
+        GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+        pPortal->SetPhaseMask(2,true);
 
         Creature* pTenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
         if (pInstance && pTenebron)
