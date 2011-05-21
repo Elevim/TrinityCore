@@ -1110,6 +1110,13 @@ public:
         DoScriptText(RAND(SAY_TENEBRON_SLAY_1,SAY_TENEBRON_SLAY_2), me);
     }
 
+    //Set Portal Phasemask to 2 if Boss is Dead?
+    /*void JustDied(Unit* pKiller)
+    {
+        GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+        pPortal->SetPhaseMask(2,true);
+    }*/
+
     void UpdateAI(const uint32 uiDiff)
     {
         //if no target, update dummy and return
@@ -1608,8 +1615,6 @@ public:
 
     void SpawnWhelps()
     {
-        GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
-        pPortal->SetPhaseMask(2,true);
 
         Creature* pTenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
         if (pInstance && pTenebron)
@@ -1627,6 +1632,9 @@ public:
              
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
+
+            GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+            pPortal->SetPhaseMask(2,true);
         }
         me->DisappearAndDie();
       }
@@ -1638,7 +1646,8 @@ public:
             Creature* pTenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
             if(pTenebron)
                 (CAST_AI(mob_tenebron::mob_tenebronAI, pTenebron->AI()))->m_bHasPortalOpen = false;
-            SpawnWhelps();
+            if (pTenebron->isAlive())
+                SpawnWhelps();
         }
         else
             m_uiHatchEggTimer -= uiDiff;      
