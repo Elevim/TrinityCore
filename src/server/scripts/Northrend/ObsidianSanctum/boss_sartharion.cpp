@@ -1803,7 +1803,7 @@ bool OnGossipHello(Player* pPlayer, GameObject* pGo)
     if (pPlayer)
     {
        pPlayer->CastSpell(pPlayer, SPELL_TWILIGHT_SHIFT_ENTER, false);
-       pPlayer->CastSpell(pPlayer, SPELL_TWILIGHT_SHIFT, true);
+       //pPlayer->CastSpell(pPlayer, SPELL_TWILIGHT_SHIFT, true); //We don't need this, SPELL_TWILIGHT_SHIFT_ENTER triggers this spell
     }
 
     return true;
