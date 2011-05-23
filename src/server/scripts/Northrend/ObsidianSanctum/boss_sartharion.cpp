@@ -1434,7 +1434,7 @@ public:
     {
         if (pInstance)
         {
-            GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+            if (GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f))
             pPortal->SetPhaseMask(2,true);
 
             Creature* pShadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
@@ -1528,7 +1528,7 @@ public:
         // remove twilight torment on Vesperon
         if (pInstance)
         {
-            GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
+            if (GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f))
             pPortal->SetPhaseMask(2,true);
 
             Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
@@ -1633,8 +1633,6 @@ public:
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
 
-            GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
-            pPortal->SetPhaseMask(2,true);
         }
         me->DisappearAndDie();
       }
@@ -1768,6 +1766,8 @@ public:
     {
         me->RemoveAllAuras();
         m_uiFadeArmorTimer = 1000;
+        if (GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f))
+            pPortal->SetPhaseMask(2,true);
     }
 
     void UpdateAI(const uint32 uiDiff)
