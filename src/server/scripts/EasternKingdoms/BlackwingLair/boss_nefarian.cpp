@@ -52,7 +52,7 @@ EndScriptData */
 
 #define SPELL_MAGE                  23410                   //wild magic
 #define SPELL_WARRIOR               23397                   //beserk
-#define SPELL_DRUID                 23398                   // cat form
+#define SPELL_DRUID                 23398                   // cat form || deactivated because of some problems - couldn´t remove the new stats value
 #define SPELL_PRIEST                23401                   // corrupted healing
 #define SPELL_PALADIN               23418                   //syphon blessing
 #define SPELL_SHAMAN                23425                   //totems
@@ -108,7 +108,7 @@ public:
         void JustDied(Unit* /*Killer*/)
         {
             DoScriptText(SAY_DEATH, me);
-        }
+		}
 
         void EnterCombat(Unit * who)
         {
@@ -186,7 +186,8 @@ public:
                         break;
                     case 2:
                         DoScriptText(SAY_DRUID, me);
-                        DoCast(me, SPELL_DRUID);
+						//deactivated because of some problems - couldn´t remove the new stats value
+                        //DoCast(me, SPELL_DRUID);
                         break;
                     case 3:
                         DoScriptText(SAY_PRIEST, me);

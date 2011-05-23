@@ -59,6 +59,7 @@ EndScriptData */
 
 #define SPELL_SHADOWBOLT        21077
 #define SPELL_FEAR              26070
+#define SPELL_SELF_DEATH		5
 
 //This script is complicated
 //Instead of morphing Victor Nefarius we will have him control phase 1
@@ -98,9 +99,16 @@ public:
 
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(7134, pCreature->GetGUID());
-        return true;
+		if (uint32 IniMap = pCreature->GetMapId())
+		{
+			if (IniMap == 469)
+			{
+				pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+				pPlayer->SEND_GOSSIP_MENU(7134, pCreature->GetGUID());
+				return true;
+			}
+		}
+		return false;
     }
 
     CreatureAI* GetAI(Creature* pCreature) const
@@ -370,7 +378,8 @@ public:
                     if (!Nefarian || !Nefarian->isAlive())
                     {
                         NefarianGUID = 0;
-                        me->DespawnOrUnsummon();
+						DoCast(me, SPELL_SELF_DEATH);
+                        me->DespawnOrUnsummon(60000);
                     }
 
                     NefCheckTime = 2000;
