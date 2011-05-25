@@ -23,6 +23,7 @@
 #define SPELL_DECIMATE          RAID_MODE(28374, 54426)
 #define SPELL_BERSERK           26662
 #define SPELL_INFECTED_WOUND    29306
+#define SPELL_INFECTED_WOUND_AURA 29307
 
 #define MOB_ZOMBIE  16360
 
@@ -88,7 +89,10 @@ public:
         void JustSummoned(Creature *summon)
         {
             if (summon->GetEntry() == MOB_ZOMBIE)
+            {
+                summon->AddAura(SPELL_INFECTED_WOUND_AURA, summon);
                 summon->AI()->AttackStart(me);
+            }
             summons.Summon(summon);
         }
 
