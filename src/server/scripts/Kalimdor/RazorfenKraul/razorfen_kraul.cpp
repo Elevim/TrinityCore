@@ -177,7 +177,7 @@ public:
                 return;
 
             if (pInstance)
-                pInstance->SetData(TYPE_WARD_KEEPERS, NOT_STARTED);
+                pInstance->SetData(EVENT_WARD_KEEPER, NOT_STARTED);
 
             if (QuillboarChanneling_Timer <= diff)
             {

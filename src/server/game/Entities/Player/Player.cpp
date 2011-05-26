@@ -7551,7 +7551,7 @@ void Player::DuelComplete(DuelCompleteType type)
     }
 
     // Victory emote spell
-    if (type != DUEL_INTERRUPTED && duel->opponent)
+    if (type != DUEL_INTERUPTED && duel->opponent)
         duel->opponent->CastSpell(duel->opponent, 52852, true);
 
     //Remove Duel Flag object

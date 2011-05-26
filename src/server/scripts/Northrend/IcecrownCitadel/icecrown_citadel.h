@@ -24,7 +24,7 @@
 
 #define ICCScriptName "instance_icecrown_citadel"
 
-uint32 const EncounterCount = 12;
+uint32 const EncounterCount = 13;
 uint32 const WeeklyNPCs = 9;
 uint32 const MaxHeroicAttempts = 50;
 
@@ -69,9 +69,10 @@ enum DataTypes
     DATA_PROFESSOR_PUTRICIDE        = 6,
     DATA_BLOOD_PRINCE_COUNCIL       = 7,
     DATA_BLOOD_QUEEN_LANA_THEL      = 8,
-    DATA_VALITHRIA_DREAMWALKER      = 9,
-    DATA_SINDRAGOSA                 = 10,
-    DATA_THE_LICH_KING              = 11,
+    DATA_SISTER_SVALNA              = 9,
+    DATA_VALITHRIA_DREAMWALKER      = 10,
+    DATA_SINDRAGOSA                 = 11,
+    DATA_THE_LICH_KING              = 12,
 
     // Additional data
     DATA_SAURFANG_EVENT_NPC         = 13,
@@ -364,6 +365,9 @@ enum SharedActions
 
     // Blood-Queen Lana'thel
     ACTION_KILL_MINCHAR         = -379550,
+
+    // Frostwing Halls gauntlet event
+    ACTION_VRYKUL_DEATH         = 37129,
 
     // Sindragosa
     ACTION_START_FROSTWYRM      = -368530,

@@ -22,7 +22,10 @@ SDComment: Runes need DB support, chain lightning won't cast, supercharge won't 
 SDCategory: Ulduar - Ulduar
 EndScriptData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
 #include "ulduar.h"
 
 enum eSpells
@@ -44,7 +47,9 @@ enum eSpells
 
     // Runemaster Molgeim
     SPELL_SHIELD_OF_RUNES      = 62274,
+    SPELL_SHIELD_OF_RUNES_BUFF = 62277,
     SPELL_SHIELD_OF_RUNES_H    = 63489,
+    SPELL_SHIELD_OF_RUNES_H_BUFF = 63967,
     SPELL_SUMMON_RUNE_OF_POWER = 63513,
     SPELL_RUNE_OF_POWER        = 61974,
     SPELL_RUNE_OF_DEATH        = 62269,
@@ -731,7 +736,6 @@ public:
 
 };
 
-
 class spell_shield_of_runes : public SpellScriptLoader
 {
     public:
@@ -768,4 +772,5 @@ void AddSC_boss_assembly_of_iron()
     new mob_lightning_elemental();
     new mob_rune_of_summoning();
     new mob_rune_of_power();
+    new spell_shield_of_runes();
 }
