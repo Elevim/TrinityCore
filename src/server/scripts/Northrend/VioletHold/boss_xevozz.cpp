@@ -258,6 +258,13 @@ public:
             if (!UpdateVictim())
                 return;
 
+            if (Creature* pXevozz = Unit::GetCreature(*me, pInstance->GetData64(DATA_XEVOZZ)))
+                if (!pXevozz->isAlive())
+                {
+                    me->DespawnOrUnsummon();
+                    return;
+                }
+
             if (!me->HasAura(SPELL_POWER_BALL_VISUAL))
                 DoCast(me, SPELL_POWER_BALL_VISUAL);
 
