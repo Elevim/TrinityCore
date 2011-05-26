@@ -500,7 +500,7 @@ public:
                     return RazorHarpoonGUIDs[2];
                 case GO_RAZOR_HARPOON_4:
                     return RazorHarpoonGUIDs[3];
-                
+
                 // Assembly of Iron
                 case BOSS_STEELBREAKER:
                     return AssemblyGUIDs[0];

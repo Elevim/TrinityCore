@@ -159,6 +159,7 @@ public:
                 Enrage_Timer = 30000;
             } else Enrage_Timer -= diff;
 
+<<<<<<< HEAD
             if (Twisted_Reflection_Timer <= diff)
             {
                 DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0), SPELL_TWISTEDREFLECTION);
@@ -166,6 +167,15 @@ public:
             } else Twisted_Reflection_Timer -= diff;
 
             DoMeleeAttackIfReady();
+=======
+        private:
+            EventMap _events;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_doomlordkazzakAI (creature);
+>>>>>>> 59f48c9... Core: Clean up a lot of whitespace, and at the same time fix non-PCH building (again)
         }
 
     };

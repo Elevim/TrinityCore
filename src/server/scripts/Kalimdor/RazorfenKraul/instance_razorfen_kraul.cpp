@@ -96,6 +96,9 @@ public:
                     if (data == NOT_STARTED)
                         WardKeeperAlive = 1;
                     break;
+                case EVENT_WARD_KEEPER: 
+					WardKeeperDeath++; 
+					break;
             }
         }
 
