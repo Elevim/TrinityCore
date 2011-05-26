@@ -170,7 +170,7 @@ public:
 
             m_uiActivedNumber        = 0;
             m_uiHealthAmountModifier = 1;
-            m_uiHealthAmountMultipler = DUNGEON_MODE(20, 25);
+            m_uiHealthAmountMultipler = DUNGEON_MODE(33, 20);
 
             DespawnBoatGhosts(m_uiActivedCreatureGUID);
             DespawnBoatGhosts(m_uiOrbGUID);
