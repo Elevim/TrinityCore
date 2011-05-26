@@ -206,7 +206,7 @@ class npc_flash_freeze : public CreatureScript
                     // Prevents to have Ice Block on other place than target is
                     me->NearTeleportTo(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), target->GetOrientation());
                     if (target->GetTypeId() == TYPEID_PLAYER)
-                        if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(TYPE_HODIR) : 0))
+                        if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                             Hodir->AI()->DoAction(ACTION_CHEESE_THE_FREEZE);
                 }
             }
@@ -258,7 +258,7 @@ class npc_ice_block : public CreatureScript
                 {
                     Helper->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED | UNIT_FLAG_PACIFIED);
 
-                    if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(TYPE_HODIR) : 0))
+                    if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     {
                         if (!Hodir->isInCombat())
                         {
@@ -286,7 +286,7 @@ class boss_hodir : public CreatureScript
  
         struct boss_hodirAI : public BossAI
         {
-            boss_hodirAI(Creature* creature) : BossAI(creature, TYPE_HODIR)
+            boss_hodirAI(Creature* creature) : BossAI(creature, BOSS_HODIR)
             {
                 me->SetReactState(REACT_PASSIVE);
             }
@@ -456,7 +456,7 @@ class boss_hodir : public CreatureScript
             void FlashFreeze()
             {
                 std::list<Unit*> TargetList;
-                Trinity::AnyUnfriendlyUnitInObjectRangeCheck checker(me, me, 150.0f);
+                Trinity::AnyUnfriendlyUnitInObjectRangeCheck checker(me, me, 100.0f);
                 Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(me, TargetList, checker);
                 me->VisitNearbyObject(100.0f, searcher);
                 for (std::list<Unit*>::iterator itr = TargetList.begin(); itr != TargetList.end(); ++itr)
@@ -632,7 +632,7 @@ class npc_hodir_priest : public CreatureScript
 
             void JustDied(Unit* who)
  	        {
-                if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(TYPE_HODIR) : 0))
+                if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
   	        }
 
@@ -694,7 +694,7 @@ class npc_hodir_shaman : public CreatureScript
 
             void JustDied(Unit* who)
  	        {
-                if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(TYPE_HODIR) : 0))
+                if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
   	        }
         
@@ -755,7 +755,7 @@ class npc_hodir_druid : public CreatureScript
 
             void JustDied(Unit* who)
  	        {
-                if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(TYPE_HODIR) : 0))
+                if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
   	        }
 
@@ -820,7 +820,7 @@ class npc_hodir_mage : public CreatureScript
 
             void JustDied(Unit* who)
  	        {
-  	            if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(TYPE_HODIR) : 0))
+  	            if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
   	        }
 
