@@ -549,11 +549,8 @@ class spell_ulduar_stone_grip_absorb : public SpellScriptLoader
 
             //! This will be called when Right Arm (vehicle) has sustained a specific amount of damage depending on instance mode
             //! What we do here is remove all harmful aura's related and teleport to safe spot.
-            void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes mode)
+            void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
-                if (!(mode & AURA_EFFECT_HANDLE_REAL))
-                    return;
-
                 if (GetTargetApplication()->GetRemoveMode() !=  AURA_REMOVE_BY_ENEMY_SPELL)
                     return;
 
@@ -568,7 +565,7 @@ class spell_ulduar_stone_grip_absorb : public SpellScriptLoader
 
             void Register()
             {
-                OnEffectRemove += AuraEffectRemoveFn(spell_ulduar_stone_grip_absorb_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB, AURA_EFFECT_HANDLE_REAL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_ulduar_stone_grip_absorb_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
@@ -587,11 +584,8 @@ class spell_ulduar_stone_grip : public SpellScriptLoader
         {
             PrepareAuraScript(spell_ulduar_stone_grip_AuraScript);
 
-            void OnRemoveStun(AuraEffect const* aurEff, AuraEffectHandleModes mode)
+            void OnRemoveStun(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
             {
-                if (!(mode & AURA_EFFECT_HANDLE_REAL))
-                    return;
-
                 if (Player* pOwner = GetOwner()->ToPlayer())
                     pOwner->RemoveAurasDueToSpell(aurEff->GetAmount());
             }
@@ -617,7 +611,7 @@ class spell_ulduar_stone_grip : public SpellScriptLoader
             void Register()
             {
                 OnEffectRemove += AuraEffectRemoveFn(spell_ulduar_stone_grip_AuraScript::OnRemoveVehicle, EFFECT_0, SPELL_AURA_CONTROL_VEHICLE, AURA_EFFECT_HANDLE_REAL);
-                OnEffectRemove += AuraEffectRemoveFn(spell_ulduar_stone_grip_AuraScript::OnRemoveStun, EFFECT_2, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_ulduar_stone_grip_AuraScript::OnRemoveStun, EFFECT_2, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
