@@ -205,6 +205,8 @@ public:
 
             if (me->HasReactState(REACT_AGGRESSIVE))
                 DoMeleeAttackIfReady();
+
+            EnterEvadeIfOutOfCombatArea(diff);
         }
     };
 

@@ -142,6 +142,8 @@ public:
             }
 
             DoMeleeAttackIfReady();
+
+            EnterEvadeIfOutOfCombatArea(diff);
         }
     };
 
