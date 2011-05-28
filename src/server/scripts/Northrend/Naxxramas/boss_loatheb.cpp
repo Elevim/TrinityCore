@@ -113,7 +113,7 @@ public:
 
         void JustDied(Unit* killer)
         {
-            DoCast(killer, SPELL_FUNGAL_CREEP);
+            DoCast(killer, SPELL_FUNGAL_CREEP, true);
         }
     };
 
