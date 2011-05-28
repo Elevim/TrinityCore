@@ -63,6 +63,7 @@ class boss_faerlina : public CreatureScript
             boss_faerlinaAI(Creature* creature) : BossAI(creature, BOSS_FAERLINA),
                 _frenzyDispels(0), _introDone(false), _delayFrenzy(false)
             {
+                me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
             }
 
 
