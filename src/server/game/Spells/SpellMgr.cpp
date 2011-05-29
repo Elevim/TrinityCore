@@ -3779,6 +3779,14 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->EffectTriggerSpell[0] = 33760;
             ++count;
             break;
+        case 48246: // Ball of Flame
+            spellInfo->MaxAffectedTargets = 1;
+            count++;
+            break;
+        case 48278: // Paralyze
+            spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
+            count++;
+            break;
         case 17941: // Shadow Trance
         case 22008: // Netherwind Focus
         case 31834: // Light's Grace
