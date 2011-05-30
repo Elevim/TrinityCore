@@ -48,10 +48,15 @@ public:
             pInstance = c->GetInstanceScript();
         }
 
+        uint32 corrupting_blight_Timer;
+        uint32 void_strike_Timer;
+
         InstanceScript* pInstance;
 
         void Reset()
         {
+            corrupting_blight_Timer = 35;
+            void_strike_Timer = 10;
             if (pInstance)
                 pInstance->SetData(DATA_INFINITE_EVENT, NOT_STARTED);
         }
@@ -64,11 +69,23 @@ public:
 
         void AttackStart(Unit* /*who*/) {}
         void MoveInLineOfSight(Unit* /*who*/) {}
-        void UpdateAI(const uint32 /*diff*/)
+        void UpdateAI(const uint32 diff)
         {
             //Return since we have no target
             if (!UpdateVictim())
                 return;
+
+            if (corrupting_blight_Timer <= diff)
+            {
+                me->CastSpell(me->getVictim(), SPELL_CORRUPTING_BLIGHT, false);
+                    corrupting_blight_Timer = 30;
+            } else corrupting_blight_Timer -= diff;
+
+            if (void_strike_Timer <= diff)
+            {
+                me->CastSpell(me->getVictim(), SPELL_VOID_STRIKE, false);
+                void_strike_Timer = 10;
+            } else void_strike_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
