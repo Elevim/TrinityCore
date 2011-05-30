@@ -340,7 +340,7 @@ class boss_freya : public CreatureScript
                     Creature* Elder[3];
                     for (uint8 n = 0; n < 3; ++n)
                     {
-                        Elder[n] = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_BRIGHTLEAF + n) : 0);
+                        Elder[n] = ObjectAccessor::GetCreature(*me, instance->GetData64(BOSS_BRIGHTLEAF + n));
                         if (Elder[n] && Elder[n]->isAlive())
                         {
                             Elder[n]->setFaction(35);
@@ -360,7 +360,7 @@ class boss_freya : public CreatureScript
                 Creature* Elder[3];
                 for (uint8 n = 0; n < 3; ++n)
                 {
-                    Elder[n] = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_BRIGHTLEAF + n) : 0);
+                    Elder[n] = ObjectAccessor::GetCreature(*me, instance->GetData64(BOSS_BRIGHTLEAF + n));
                     if (Elder[n] && Elder[n]->isAlive())
                     {
                         me->AddAura(SPELL_DRAINED_OF_POWER, Elder[n]);
@@ -664,7 +664,7 @@ class boss_freya : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_freyaAI(creature);
+            return GetUlduarAI<boss_freyaAI>(creature);
         }
 };
 
@@ -781,7 +781,7 @@ class boss_elder_brightleaf : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_elder_brightleafAI(creature);
+            return GetUlduarAI<boss_elder_brightleafAI>(creature);
         }
 };
 
@@ -902,7 +902,7 @@ class boss_elder_stonebark : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_elder_stonebarkAI(creature);
+            return GetUlduarAI<boss_elder_stonebarkAI>(creature);
         }
 };
 
@@ -1010,7 +1010,7 @@ class boss_elder_ironbranch : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const
         {
-            return new boss_elder_ironbranchAI(creature);
+            return GetUlduarAI<boss_elder_ironbranchAI>(creature);
         }
 };
 

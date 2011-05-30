@@ -47,7 +47,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_thorimAI(pCreature);
+        return GetUlduarAI<boss_thorimAI>(pCreature);
     }
 
     struct boss_thorimAI : public BossAI
