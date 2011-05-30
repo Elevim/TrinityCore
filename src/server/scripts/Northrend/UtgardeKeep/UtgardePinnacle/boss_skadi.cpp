@@ -220,6 +220,7 @@ public:
             me->SetFlying(false);
             me->Unmount();
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
             if (Unit::GetCreature((*me), m_uiGraufGUID) == NULL)
                 me->SummonCreature(CREATURE_GRAUF, Location[0].GetPositionX(), Location[0].GetPositionY(), Location[0].GetPositionZ(), 3.0f);
         }
@@ -229,6 +230,7 @@ public:
             DoScriptText(SAY_AGGRO, me);
 
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+            me->SetReactState(REACT_PASSIVE);
 
             Phase = FLYING;
 
@@ -297,6 +299,8 @@ public:
                     m_uiCrushTimer = 8000;
                     m_uiPoisonedSpearTimer = 10000;
                     m_uiWhirlwindTimer = 20000;
+                    me->SetReactState(REACT_AGGRESSIVE);
+                    me->SetHealth(me->GetMaxHealth());
                     me->AI()->AttackStart(SelectTarget(SELECT_TARGET_RANDOM));
                 }
             }
