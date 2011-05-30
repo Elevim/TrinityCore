@@ -98,6 +98,7 @@ class boss_drakkari_colossus : public CreatureScript
                 {
                     me->SetReactState(REACT_AGGRESSIVE);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     me->RemoveAura(SPELL_FREEZE_ANIM);
                 }
 
@@ -147,8 +148,11 @@ class boss_drakkari_colossus : public CreatureScript
                         break;
                     case ACTION_FREEZE_COLOSSUS:
                         me->GetMotionMaster()->MoveIdle();
-
+  
                         me->SetReactState(REACT_PASSIVE);
+                        me->RemoveAllAttackers();
+                        me->RemoveAllAuras();
+                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                         DoCast(me, SPELL_FREEZE_ANIM);
                         break;
@@ -158,6 +162,7 @@ class boss_drakkari_colossus : public CreatureScript
                             return;
 
                         me->SetReactState(REACT_AGGRESSIVE);
+                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                         me->RemoveAura(SPELL_FREEZE_ANIM);
 
