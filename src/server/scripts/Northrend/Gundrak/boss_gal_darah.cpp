@@ -32,7 +32,8 @@ enum Spells
     SPELL_STAMPEDE                                = 55218,
     SPELL_WHIRLING_SLASH                          = 55250,
     H_SPELL_WHIRLING_SLASH                        = 59824,
-    SPELL_ECK_RESIDUE                             = 55817
+    SPELL_ECK_RESIDUE                             = 55817,
+    SPELL_RHINO_CHARGE                            = 56106  // Not Blizzlike but can't find a better rhino knockback
 };
 
 //Yells
@@ -283,7 +284,56 @@ public:
 
 };
 
+class npc_rhino_spirit : public CreatureScript
+{
+public:
+    npc_rhino_spirit() : CreatureScript("npc_rhino_spirit") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_rhino_spiritAI (pCreature);
+    }
+
+    struct npc_rhino_spiritAI : public ScriptedAI
+    {
+        npc_rhino_spiritAI(Creature *c) : ScriptedAI(c) {}
+
+        uint32 despawn_timer;
+        uint32 rhino_charge_timer;
+
+        void Reset()
+        {
+            despawn_timer = 500;
+            rhino_charge_timer = 50;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (rhino_charge_timer <= diff)
+            {
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                me->CastSpell(pTarget, SPELL_RHINO_CHARGE, false);
+
+            rhino_charge_timer = 600;
+            } else rhino_charge_timer -= diff;
+
+             if (despawn_timer <= diff)
+             {
+                 me->DespawnOrUnsummon();
+             } else despawn_timer -= diff; 
+
+             DoMeleeAttackIfReady();
+        }
+
+
+    };
+};
+
 void AddSC_boss_gal_darah()
 {
     new boss_gal_darah();
+    new npc_rhino_spirit();
 }
