@@ -24,7 +24,7 @@ enum Spells
     SPELL_BALL_OF_FLAME                      = 48246,
     SPELL_TRANSFORMING_CHANNEL               = 54142,
     SPELL_RITUAL_STRIKE                      = 48277,
-    SPELL_RITUAL_STRIKE_DOT                  = 59930,
+    SPELL_RITUAL_STRIKE_HERO                 = 59930,
     SPELL_RITUAL_STRIKE_TRIGGER              = 48331,
     SPELL_ARTHAS_VISUAL                      = 54134,
 };
@@ -331,11 +331,11 @@ public:
         uiDoodadMirror   = pInstance? pInstance->GetData64(DATA_DOODAD_UTGARDE_MIRROR_FX01) : NULL;
         uiSinsterStrikeTimer = 7*IN_MILLISECONDS;
         uiCallFlamesTimer = 10*IN_MILLISECONDS;
-        uiSacrificeTimer = 8*IN_MILLISECONDS;
+        uiSacrificeTimer = 25*IN_MILLISECONDS;
         uiFlamesCount = 0;
         uiMoveTimer = 23*IN_MILLISECONDS;
 
-        nextPercentageForSacrifice = 75;
+        nextPercentageForSacrifice = 50;
         
         bFlames = false;
         bMove = true;
@@ -375,8 +375,8 @@ public:
     
     void SpellHitTarget(Unit *pTarget, const SpellEntry *spell) 
     {
-        if (pTarget->GetEntry() != CREATURE_SCOURGE_HULK && spell->Id == SPELL_RITUAL_STRIKE_DOT)
-            pTarget->RemoveAurasDueToSpell(SPELL_RITUAL_STRIKE_DOT);
+        if (pTarget->GetEntry() != CREATURE_SCOURGE_HULK && spell->Id == SPELL_RITUAL_STRIKE_HERO)
+            pTarget->RemoveAurasDueToSpell(SPELL_RITUAL_STRIKE_HERO);
             
     }
     
@@ -436,27 +436,29 @@ public:
                 }
             } else uiCallFlamesTimer -= diff;
 
-                if (this->HealthBelowPct(nextPercentageForSacrifice))
-                {
-                    pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                    if (pSacrificeTarget)
-                    {
-                        DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
-                        me->GetMotionMaster()->Clear();
-                        DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
-                        //Spell doesn't teleport
-                        DoTeleportPlayer(pSacrificeTarget, 296.632f, -346.075f, 90.63f, 4.6f);
-                        Phase = SACRIFICING;
+			if (this->HealthBelowPct(nextPercentageForSacrifice))
+			{
+				pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+				if (pSacrificeTarget)
+				{
+					DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
+					me->GetMotionMaster()->Clear();
+					DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
+                    me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_TRIGGER, true);
+                    me->CastSpell(me, SPELL_RITUAL_OF_THE_SWORD_DISARM, true);
+					//Spell doesn't teleport
+					DoTeleportPlayer(pSacrificeTarget, 296.632f, -346.075f, 90.63f, 4.6f);
+					Phase = SACRIFICING;
 
-                        for (uint8 i = 0; i < 3; ++i)
-                            if (Creature* pRitualChanneler = me->SummonCreature(CREATURE_RITUAL_CHANNELER, RitualChannelerPos[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 100*HOUR))
-                                if (pRitualChanneler->AI())
-                                    pRitualChanneler->AI()->SetGUID(pSacrificeTarget->GetGUID());
+					for (uint8 i = 0; i < 3; ++i)
+						if (Creature* pRitualChanneler = me->SummonCreature(CREATURE_RITUAL_CHANNELER, RitualChannelerPos[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, uiSacrificeTimer))
+							if (pRitualChanneler->AI())
+								pRitualChanneler->AI()->SetGUID(pSacrificeTarget->GetGUID());
 
-                    }
-                    if (nextPercentageForSacrifice > 0)
-						nextPercentageForSacrifice -= 25;
-                }
+				}
+				if (nextPercentageForSacrifice > 0)
+					nextPercentageForSacrifice -= 50;
+			}
             DoMeleeAttackIfReady();
         }
         else  //SACRIFICING
@@ -465,9 +467,11 @@ public:
             {
                 if (pSacrificeTarget && !summons.empty())
                 {
-                    //me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_TRIGGER, true); //Spell does not really work, it doesn't fly to the player
-                    me->CastSpell(me, SPELL_RITUAL_OF_THE_SWORD_DISARM, true);
-                    me->Kill(pSacrificeTarget, true);
+					if (IsHeroic())
+						me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_HERO, false);
+					else
+						me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE, false);
+					summons.DespawnAll();
                 }
                 bMove = false;
                 Phase = NORMAL;
@@ -475,7 +479,7 @@ public:
                 uiSinsterStrikeTimer = urand(10*IN_MILLISECONDS,15*IN_MILLISECONDS);
                 uiCallFlamesTimer = urand(13*IN_MILLISECONDS,18*IN_MILLISECONDS);
 
-                uiSacrificeTimer = 8*IN_MILLISECONDS;
+                uiSacrificeTimer = 25*IN_MILLISECONDS;
             }
             else uiSacrificeTimer -= diff;
         }
