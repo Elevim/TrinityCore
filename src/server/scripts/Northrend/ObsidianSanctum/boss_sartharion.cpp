@@ -1686,6 +1686,11 @@ public:
         me->SetDisplayId(11686);
     }
 
+	void Aggro()
+	{
+		return;
+	}
+
     void MovementInform(uint32 type, uint32 id)
     {
         if (type != POINT_MOTION_TYPE)
@@ -1721,8 +1726,6 @@ public:
     {
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
         me->SetReactState(REACT_PASSIVE);
-        //me->AddAura( 46265 , me ); // Wrong, can't find proper visual
-        //me->AddAura( 69422 , me ); //im neuen patch nicht drin
         VoidBlast_Timer = 5000;
     }
 
