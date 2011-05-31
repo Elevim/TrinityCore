@@ -20,6 +20,7 @@
 #ifndef DEF_ULDUAR_H
 #define DEF_ULDUAR_H
 
+#include "ObjectMgr.h"
 #define UlduarScriptName "instance_ulduar"
 
 enum UlduarBosses
