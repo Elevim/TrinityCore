@@ -77,6 +77,21 @@ public:
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);
             EnterPhase(PHASE_FIGHT);
+
+            if (Map *pInstance = me->GetInstanceScript()->instance)
+            {
+                Map::PlayerList const &PlayerList = pInstance->GetPlayers();
+
+                if (!PlayerList.isEmpty())
+                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                    {
+                        float fX = ((Player*)i->getSource())->GetPositionX();
+                        float fY = ((Player*)i->getSource())->GetPositionY();
+                        if (fX > 2722.0f && fX < 2824.0f && fY < -3639.0f && fY > -3735.0f)
+                            continue;
+                        EnterEvadeMode();
+                    }
+            }
         }
 
         void EnterPhase(Phases newPhase)
