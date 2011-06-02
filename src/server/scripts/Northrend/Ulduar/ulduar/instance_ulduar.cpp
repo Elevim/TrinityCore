@@ -68,12 +68,14 @@ public:
         uint64 KologarnBridgeGUID;
         uint64 KologarnDoorGUID;
         uint64 ThorimChestGUID;
+        uint64 HodirRareCacheGUID;
         uint64 HodirChestGUID;
         uint64 FreyaChestGUID;
         uint64 HodirDoorGUID;
         uint64 HodirIceDoorGUID;
 
         uint32 TeamInInstance;
+        uint32 HodirRareCacheData;
 
         std::set<uint64> mRubbleSpawns;
 
@@ -101,6 +103,7 @@ public:
             KologarnBridgeGUID                   = 0;
             KologarnChestGUID                    = 0;
             ThorimChestGUID                      = 0;
+            HodirRareCacheGUID                   = 0;
             HodirChestGUID                       = 0;
             FreyaChestGUID                       = 0;
             LeviathanGateGUID                    = 0;
@@ -108,6 +111,7 @@ public:
             HodirDoorGUID                        = 0;
             HodirIceDoorGUID                     = 0;
             TeamInInstance                       = 0;
+            HodirRareCacheData                   = 0;
 
             memset(Encounter, 0, sizeof(Encounter));
             memset(AssemblyGUIDs, 0, sizeof(AssemblyGUIDs));
@@ -294,6 +298,9 @@ public:
                 case GO_THORIM_CHEST:
                     ThorimChestGUID = gameObject->GetGUID();
                     break;
+                case GO_HODIR_RARE_CACHE_OF_WINTER:
+                    HodirRareCacheGUID = gameObject->GetGUID();
+                    break;
                 case GO_HODIR_CHEST_HERO:
                 case GO_HODIR_CHEST:
                     HodirChestGUID = gameObject->GetGUID();
@@ -412,8 +419,11 @@ public:
                 case BOSS_HODIR:
                     if (state == DONE)
                     {
-                        if (GameObject* gameObject = instance->GetGameObject(HodirChestGUID))
-                            gameObject->SetRespawnTime(gameObject->GetRespawnDelay());
+                        if (GameObject* HodirRareCache = instance->GetGameObject(HodirRareCacheGUID))
+                            if (GetData(DATA_HODIR_RARE_CACHE) == 1)
+                                HodirRareCache->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        if (GameObject* HodirChest = instance->GetGameObject(HodirChestGUID))
+                            HodirChest->SetRespawnTime(HodirChest->GetRespawnDelay());
                         HandleGameObject(HodirDoorGUID, true);
                         HandleGameObject(HodirIceDoorGUID, true);
                     }
@@ -447,6 +457,9 @@ public:
                             gameObject->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                         SaveToDB();
                     }
+                    break;
+                case DATA_HODIR_RARE_CACHE:
+                    HodirRareCacheData = data;
                     break;
                 default:
                     break;
@@ -541,6 +554,10 @@ public:
             {
                 case TYPE_COLOSSUS:
                     return Encounter[type];
+                    break;
+                case DATA_HODIR_RARE_CACHE:
+                    return HodirRareCacheData;
+                    break;
             }
 
             return 0;

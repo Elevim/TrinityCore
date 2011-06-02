@@ -349,8 +349,9 @@ class boss_hodir : public CreatureScript
                 if (damage >= me->GetHealth())
                 {
                     damage = 0;
-                    _JustDied();
                     DoScriptText(SAY_DEATH, me);
+                    if (iCouldSayThatThisCacheWasRare)
+                        instance->SetData(DATA_HODIR_RARE_CACHE, 1);
 
                     me->RemoveAllAuras();
                     me->RemoveAllAttackers();
@@ -366,6 +367,8 @@ class boss_hodir : public CreatureScript
 
                     me->setFaction(35);
                     me->DespawnOrUnsummon(10000);
+
+                    _JustDied();
                 }
             }
 
