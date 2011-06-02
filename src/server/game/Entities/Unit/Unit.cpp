@@ -5840,6 +5840,9 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 // Sweeping Strikes
                 case 12328:
                 {
+                    if (this->ToPlayer()->GetSelection() == ToPlayer()->GetGUID())
+                        return false;
+
                     target = SelectNearbyTarget();
                     if (!target)
                         return false;
