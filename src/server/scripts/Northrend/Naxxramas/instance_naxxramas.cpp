@@ -70,6 +70,11 @@ enum eEnums
     GO_KELTHUZAD_PORTAL04   = 181405,
     GO_KELTHUZAD_TRIGGER    = 181444,
 
+	GO_PORTAL_MAEXXNA		= 181575,
+	GO_PORTAL_THADDIUS		= 181576,
+	GO_PORTAL_LOATHEB		= 181577,
+	GO_PORTAL_4HORSE		= 181578,
+
     SPELL_ERUPTION          = 29371
 };
 
@@ -144,6 +149,12 @@ public:
         time_t minHorsemenDiedTime;
         time_t maxHorsemenDiedTime;
 
+		uint64 PortalMaexxnaGUID;
+		uint64 PortalThaddiusGUID;
+		uint64 PortalLoathebGUID;
+		uint64 Portal4HorseGUID;
+		
+
         void OnCreatureCreate(Creature* creature)
         {
             switch(creature->GetEntry())
@@ -205,6 +216,18 @@ public:
                 case GO_KELTHUZAD_TRIGGER:
                     uiKelthuzadTrigger = go->GetGUID();
                     break;
+				case GO_PORTAL_MAEXXNA:
+					PortalMaexxnaGUID = go->GetGUID();
+					break;
+                case GO_PORTAL_THADDIUS:
+					PortalThaddiusGUID = go->GetGUID();
+					break;
+                case GO_PORTAL_LOATHEB:
+					PortalLoathebGUID = go->GetGUID();
+					break;
+                case GO_PORTAL_4HORSE:
+					Portal4HorseGUID = go->GetGUID();
+					break;
                 default:
                     break;
             }
@@ -270,7 +293,7 @@ public:
 
                         maxHorsemenDiedTime = now;
                     }
-                    break;
+                    break; 
             }
         }
 
@@ -319,6 +342,27 @@ public:
             {
                 if (GameObject* pHorsemenChest = instance->GetGameObject(HorsemenChestGUID))
                     pHorsemenChest->SetRespawnTime(pHorsemenChest->GetRespawnDelay());
+
+                if (GameObject* pHorsePortal = instance->GetGameObject(Portal4HorseGUID))
+                    pHorsePortal->SetPhaseMask(1, true);
+            }
+
+            if (id == BOSS_THADDIUS && state == DONE)
+            {
+                if (GameObject* pThaddiusPortal = instance->GetGameObject(PortalThaddiusGUID))
+                    pThaddiusPortal->SetPhaseMask(1, true);
+            }
+            
+            if (id == BOSS_MAEXXNA && state == DONE)
+            {
+                if (GameObject* pMaexxnaPortal = instance->GetGameObject(PortalMaexxnaGUID))
+                    pMaexxnaPortal->SetPhaseMask(1, true);
+            }
+
+            if (id == BOSS_LOATHEB && state == DONE)
+            {
+                if (GameObject* pLoathebPortal = instance->GetGameObject(PortalLoathebGUID))
+                    pLoathebPortal->SetPhaseMask(1, true);
             }
 
             return true;
@@ -407,8 +451,40 @@ class at_naxxramas_frostwyrm_wing : public AreaTriggerScript
     }
 };
 
+
+/* Naxxramas Portal */
+
+#define NaxxMap          533
+#define NaxxX            2957.200928f       
+#define NaxxY            -3434.486084f
+#define NaxxZ            299.550476f
+#define NaxxO            6.256170f
+
+class go_naxx_portal : public GameObjectScript
+{
+    public:
+        go_naxx_portal() : GameObjectScript("go_naxx_portal") { }
+
+        bool OnGossipHello(Player* pPlayer, GameObject* pGo)
+        {
+            InstanceScript* pInstance = pPlayer->GetInstanceScript();
+
+            if (!pInstance)
+                return false;
+            
+            if (pPlayer)
+            {
+               pPlayer->TeleportTo(NaxxMap, NaxxX, NaxxY, NaxxZ, NaxxO, true);
+            }
+
+            return true;
+        }
+};
+
+
 void AddSC_instance_naxxramas()
 {
     new instance_naxxramas();
     new at_naxxramas_frostwyrm_wing();
+    new go_naxx_portal();
 }
