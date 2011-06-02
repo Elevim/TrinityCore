@@ -715,7 +715,7 @@ public:
 };
 
 /*######
-## npc_brunnhildar_prisoner
+## npc_culomn_ornament
 ######*/
 
 enum culomn_ornament {
