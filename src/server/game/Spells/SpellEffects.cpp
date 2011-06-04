@@ -1394,6 +1394,13 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     // not empty (checked), copy
                     Unit::AttackerSet attackers = unitTarget->getAttackers();
 
+                    // remove invalid attackers
+                    for (Unit::AttackerSet::iterator aItr = attackers.begin(); aItr != attackers.end(); )
+                        if (!(*aItr)->canAttack(m_caster))
+                            attackers.erase(aItr++);
+                        else
+                            ++aItr;
+
                     // selected from list 3
                     for (uint32 i = 0; i < std::min(size_t(3), attackers.size()); ++i)
                     {
