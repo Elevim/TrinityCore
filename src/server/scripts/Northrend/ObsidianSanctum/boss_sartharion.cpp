@@ -1686,7 +1686,7 @@ public:
         me->SetDisplayId(11686);
     }
 
-	void Aggro()
+	void Aggro(Unit* pWho)
 	{
 		return;
 	}

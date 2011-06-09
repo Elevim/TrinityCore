@@ -18,6 +18,58 @@
 #include "ScriptPCH.h"
 #include "naxxramas.h"
 
+/* ************* *
+ * Living Poisen *
+ * ************* */
+
+#define SPELL_DEATH		5
+#define NAXXMAP         533
+
+class naxx_mob_poisen : public CreatureScript
+{
+public:
+    naxx_mob_poisen() : CreatureScript("naxx_mob_poisen") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new naxx_mob_poisenAI (pCreature);
+    }
+
+    struct naxx_mob_poisenAI : public ScriptedAI
+    {
+        naxx_mob_poisenAI(Creature* c) : ScriptedAI(c) {}
+
+    void Reset(){}
+
+    void MoveInLineOfSight(Unit *pWho) 
+    {
+        if (!pWho)
+            return;
+
+        if (uint32 pMap = me->GetMapId())
+            if (pMap != NAXXMAP)
+                return;
+
+        if (me->IsWithinDistInMap(pWho, 2.0f))
+        {
+            if (pWho->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            pWho->CastSpell(pWho,SPELL_DEATH, true);
+            me->ForcedDespawn();
+       }
+    }
+
+    void UpdateAI(uint32 const uiDiff)
+    {
+        if (!UpdateVictim())
+                return;
+
+    }
+    };
+};
+
+
 enum Spells
 {
     SPELL_HATEFUL_STRIKE                        = 41926,
@@ -162,4 +214,5 @@ public:
 void AddSC_boss_patchwerk()
 {
     new boss_patchwerk();
+    new naxx_mob_poisen();
 }
