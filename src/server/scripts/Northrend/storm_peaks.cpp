@@ -714,6 +714,53 @@ public:
     }
 };
 
+/*######
+## npc_culomn_ornament
+######*/
+
+enum culomn_ornament {
+    ITEM_HYLDNIR_HARPOON = 41058,
+    SPELL_HYLDNIR_HARPOON = 54933,
+    QUEST_THE_DRAKKENSRYD = 12886,
+};
+
+class npc_culomn_ornament : public CreatureScript
+{
+public:
+    npc_culomn_ornament() : CreatureScript("npc_culomn_ornament") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_culomn_ornamentAI (pCreature);
+    }
+
+    struct npc_culomn_ornamentAI : public ScriptedAI
+    {
+         npc_culomn_ornamentAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        void SpellHit(Unit* hitter, const SpellEntry* spell)
+        {
+            if (!hitter || !spell)
+                return;
+
+            if (spell->Id != SPELL_HYLDNIR_HARPOON)
+               return;
+
+            if (hitter->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if (CAST_PLR(hitter)->GetQuestStatus(QUEST_THE_DRAKKENSRYD) == QUEST_STATUS_INCOMPLETE) // Is this blizzlike?
+                return;
+
+            if (hitter->IsMounted())
+                hitter->Unmount();
+
+            hitter->ExitVehicle();
+            hitter->JumpTo(me, 25.0f);
+        }
+    };
+};
+
 void AddSC_storm_peaks()
 {
     new npc_agnetta_tyrsdottar;
@@ -726,4 +773,5 @@ void AddSC_storm_peaks()
     new npc_roxi_ramrocket;
     new npc_brunnhildar_prisoner;
     new npc_icefang;
+    new npc_culomn_ornament;
 }
