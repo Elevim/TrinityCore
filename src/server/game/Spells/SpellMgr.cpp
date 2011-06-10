@@ -4044,7 +4044,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 63024: // Gravity Bomb
         case 64234: // Gravity Bomb (25m)
             spellInfo->MaxAffectedTargets = 1;
-            count++;
+            ++count;
             break;
         // ENDOF ULDUAR SPELLS
         //
@@ -4267,7 +4267,7 @@ void SpellMgr::LoadEnchantCustomAttr()
                 if (!ench)
                     continue;
                 mEnchantCustomAttr[enchId] = true;
-                count++;
+                ++count;
                 break;
             }
         }
