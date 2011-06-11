@@ -912,7 +912,7 @@ class spell_biting_cold : public SpellScriptLoader
                 Unit* target = GetTarget();
                 bool found = false;
 
-                if (!caster || !target)
+                if (!caster)
                     return;
 
                 for (TargetList::iterator itr = listOfTargets.begin(); itr != listOfTargets.end(); ++itr)
