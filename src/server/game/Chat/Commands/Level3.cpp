@@ -1682,7 +1682,7 @@ bool ChatHandler::HandleGuildCreateCommand(const char *args)
         return true;
     }
 
-    Guild *guild = new Guild;
+    Guild* guild = new Guild;
     if (!guild->Create (target, guildname))
     {
         delete guild;
@@ -1950,7 +1950,7 @@ bool ChatHandler::HandleReviveCommand(const char *args)
 
 bool ChatHandler::HandleAuraCommand(const char *args)
 {
-    Unit *target = getSelectedUnit();
+    Unit* target = getSelectedUnit();
     if (!target)
     {
         SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
@@ -1969,7 +1969,7 @@ bool ChatHandler::HandleAuraCommand(const char *args)
 
 bool ChatHandler::HandleUnAuraCommand(const char *args)
 {
-    Unit *target = getSelectedUnit();
+    Unit* target = getSelectedUnit();
     if (!target)
     {
         SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
@@ -2373,7 +2373,7 @@ bool ChatHandler::HandleChangeWeather(const char *args)
     uint32 type = (uint32)atoi(px);                         //0 to 3, 0: fine, 1: rain, 2: snow, 3: sand
     float grade = (float)atof(py);                          //0 to 1, sending -1 is instand good weather
 
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     uint32 zoneid = player->GetZoneId();
 
     Weather* wth = sWeatherMgr->FindWeather(zoneid);
@@ -4075,7 +4075,7 @@ bool ChatHandler::HandleInstanceListBindsCommand(const char* /*args*/)
     }
     PSendSysMessage("player binds: %d", counter);
     counter = 0;
-    Group *group = player->GetGroup();
+    Group* group = player->GetGroup();
     if (group)
     {
         for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
@@ -4412,7 +4412,7 @@ bool ChatHandler::HandleChannelSetOwnership(const char *args)
     if (!channel || !argstr)
         return false;
 
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     Channel *chn = NULL;
 
     if (ChannelMgr* cMgr = channelMgr(player->GetTeam()))
@@ -4473,7 +4473,7 @@ bool ChatHandler::HandlePlayAllCommand(const char *args)
 bool ChatHandler::HandleFreezeCommand(const char *args)
 {
     std::string name;
-    Player *player;
+    Player* player;
     char *TargetName = strtok((char*)args, " "); //get entered name
     if (!TargetName) //if no name entered use target
     {
@@ -4540,7 +4540,7 @@ bool ChatHandler::HandleFreezeCommand(const char *args)
 bool ChatHandler::HandleUnFreezeCommand(const char *args)
 {
     std::string name;
-    Player *player;
+    Player* player;
     char *TargetName = strtok((char*)args, " "); //get entered name
     if (!TargetName) //if no name entered use target
     {
