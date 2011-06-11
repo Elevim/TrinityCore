@@ -37,7 +37,7 @@ enum AntiCheatCheck
     CHECK_QUEST             = 3,
     CHECK_TRANSPORT         = 4,
     CHECK_DAMAGE            = 5,
-    CHECK_ITEM		    = 6,
+    CHECK_ITEM            = 6,
     // Check subtypes
     // Movement checks
     CHECK_MOVEMENT_SPEED        = 100 * CHECK_MOVEMENT + 1,
@@ -48,7 +48,7 @@ enum AntiCheatCheck
     CHECK_MOVEMENT_AIRJUMP      = 100 * CHECK_MOVEMENT + 6,
     CHECK_MOVEMENT_TELEPORT     = 100 * CHECK_MOVEMENT + 7,
     CHECK_MOVEMENT_FALL         = 100 * CHECK_MOVEMENT + 8,
-    CHECK_MOVEMENT_ZAXIS	= 100 * CHECK_MOVEMENT + 9,
+    CHECK_MOVEMENT_ZAXIS    = 100 * CHECK_MOVEMENT + 9,
     // Spell checks
     CHECK_SPELL_VALID           = 100 * CHECK_SPELL + 1,
     CHECK_SPELL_ONDEATH         = 100 * CHECK_SPELL + 2,
@@ -58,7 +58,7 @@ enum AntiCheatCheck
     CHECK_DAMAGE_SPELL          = 100 * CHECK_DAMAGE + 1,
     CHECK_DAMAGE_MELEE          = 100 * CHECK_DAMAGE + 2,
     // Item checks
-    CHECK_ITEM_UPDATE		= 100 * CHECK_ITEM + 1,
+    CHECK_ITEM_UPDATE        = 100 * CHECK_ITEM + 1,
     // End of list
     CHECK_MAX
 };
@@ -108,12 +108,12 @@ class AntiCheat
                 return _DoAntiCheatCheck(checkType);
             }
 
-	bool DoAntiCheatCheck(AntiCheatCheck checkType, Item* item, Item* testitem)
-	{
-		m_item = item;
-		m_testitem = testitem;
-		return _DoAntiCheatCheck(checkType);
-	}
+    bool DoAntiCheatCheck(AntiCheatCheck checkType, Item* item, Item* testitem)
+    {
+        m_item = item;
+        m_testitem = testitem;
+        return _DoAntiCheatCheck(checkType);
+    }
 
         bool DoAntiCheatCheck(AntiCheatCheck checkType, uint32 spellID, uint32 opcode = 0, uint32 damage = 0)
             {
@@ -138,7 +138,7 @@ class AntiCheat
         bool CheckSpeed();
         bool CheckTeleport();
         bool CheckFall();
-	bool CheckZAxis();
+    bool CheckZAxis();
         // Transport
         bool CheckOnTransport();
 
@@ -157,9 +157,9 @@ class AntiCheat
         bool CheckSpellDamage();
         bool CheckMeleeDamage();
 
-	// Items
-	bool CheckItem();
-	bool CheckItemUpdate();
+    // Items
+    bool CheckItem();
+    bool CheckItemUpdate();
 
     private:
 
@@ -198,10 +198,10 @@ class AntiCheat
         AntiCheatConfig const*     m_currentConfig;
         float                      m_currentDelta;
         float                      m_currentDeltaZ;
-	
-	//Items
-	Item*			   m_item;
-	Item*			   m_testitem;
+    
+    //Items
+    Item*               m_item;
+    Item*               m_testitem;
 };
 
 struct AntiCheatCheckEntry

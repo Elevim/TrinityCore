@@ -255,7 +255,7 @@ void AntiCheat::DoAntiCheatAction(AntiCheatCheck checkType, std::string reason)
 
             switch(actionID)
             {
-				/*
+                /*
                 case    ANTICHEAT_ACTION_KICK:
                         GetPlayer()->GetSession()->KickPlayer();
                 break;
@@ -307,17 +307,17 @@ void AntiCheat::DoAntiCheatAction(AntiCheatCheck checkType, std::string reason)
                 case    ANTICHEAT_ACTION_SICKNESS:
                         GetPlayer()->_AddAura(15007,config->actionParam[i]);
                 break;
-				*/
+                */
 
                 case    ANTICHEAT_ACTION_ANNOUNCE_GM:
                         sWorld->SendGMText(LANG_ANTI_CHEAT_ENGINE, namechat.c_str(), config->description.c_str());
                 break;
 
-				/*
+                /*
                 case    ANTICHEAT_ACTION_ANNOUNCE_ALL:
                         sWorld->SendWorldText(config->messageNum, name.c_str(), config->description.c_str());
                 break;
-				*/
+                */
 
                 case    ANTICHEAT_ACTION_LOG:
                 case    ANTICHEAT_ACTION_NULL:
@@ -417,7 +417,7 @@ bool AntiCheat::CheckNeeded(AntiCheatCheck checktype)
             if (!isActiveMover())
                 return false;
             break;
-	case CHECK_MOVEMENT_FLY:
+    case CHECK_MOVEMENT_FLY:
         case CHECK_MOVEMENT_ZAXIS:
              if (isCanFly() || !GetMover())
                  return false;
@@ -487,7 +487,7 @@ bool AntiCheat::CheckMovement()
     {
         SetActiveMover(false);
         m_currentMover  = GetPlayer()->m_mover;
-		m_MovedLen = 0.0f;
+        m_MovedLen = 0.0f;
         SetImmune(ANTICHEAT_DEFAULT_DELTA);
     }
     else if (GetPlayer()->IsControlledByPlayer() && !isActiveMover())
@@ -515,20 +515,20 @@ bool AntiCheat::CheckMovement()
 }
 bool AntiCheat::CheckItem(){
 // in process
-	return true;
+    return true;
 }
 
 bool AntiCheat::CheckItemUpdate()
 {
-	if(m_testitem && m_item && (m_item == m_testitem))
-		return true;
-	char buffer[255];
+    if(m_testitem && m_item && (m_item == m_testitem))
+        return true;
+    char buffer[255];
 
-	//sprintf(buffer, "Attempt of use item dupe cheat (WPE hack). Possible server crash later.");
+    //sprintf(buffer, "Attempt of use item dupe cheat (WPE hack). Possible server crash later.");
 
-	m_currentCheckResult.clear();
-	m_currentCheckResult.append(buffer);
-	return false;
+    m_currentCheckResult.clear();
+    m_currentCheckResult.append(buffer);
+    return false;
 }
 bool AntiCheat::CheckSpeed()
 {
@@ -656,7 +656,7 @@ bool AntiCheat::CheckFall()
 {
     if (!m_isFall)
     {
-		m_lastfalltime = m_currentmovementInfo->fallTime;
+        m_lastfalltime = m_currentmovementInfo->fallTime;
         m_lastfallz    = m_currentmovementInfo->pos.GetPositionZ();
         SetInFall(true);
     }
@@ -761,7 +761,7 @@ bool AntiCheat::CheckZAxis()
     float delta_x   = GetPlayer()->GetPositionX() - m_currentmovementInfo->pos.GetPositionX();
     float delta_y   = GetPlayer()->GetPositionY() - m_currentmovementInfo->pos.GetPositionY();
 
-	if(fabs(delta_x) > m_currentConfig->checkFloatParam[0] || fabs(delta_y) > m_currentConfig->checkFloatParam[0])
+    if(fabs(delta_x) > m_currentConfig->checkFloatParam[0] || fabs(delta_y) > m_currentConfig->checkFloatParam[0])
         return true;
 
     float delta_z   = GetPlayer()->GetPositionZ() - m_currentmovementInfo->pos.GetPositionZ();
