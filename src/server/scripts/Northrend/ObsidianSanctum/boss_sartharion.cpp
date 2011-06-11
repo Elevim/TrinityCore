@@ -1099,7 +1099,7 @@ public:
         m_bHasPortalOpen = false;
     }
 
-    void Aggro(Unit* pWho)
+    void EnterCombat(Unit* pWho)
     {
         DoScriptText(SAY_TENEBRON_AGGRO, me);
         DoZoneInCombat();
@@ -1211,7 +1211,7 @@ public:
         m_bHasPortalOpen = false;
     }
 
-    void Aggro(Unit* pWho)
+    void EnterCombat(Unit* pWho)
     {
         DoScriptText(SAY_SHADRON_AGGRO,me);
         DoZoneInCombat();
@@ -1329,7 +1329,7 @@ public:
         m_bHasPortalOpen = false;
     }
 
-    void Aggro(Unit* pWho)
+    void EnterCombat(Unit* pWho)
     {
         DoScriptText(SAY_VESPERON_AGGRO,me);
         DoZoneInCombat();
@@ -1679,27 +1679,21 @@ public:
             me->AddAura(SPELL_FLAME_TSUNAMI_DMG_AURA, me);
         }
 
-    void Reset()
-    {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-        me->SetReactState(REACT_PASSIVE);  //im neuen patch nicht drin
-        me->SetDisplayId(11686);
-    }
+		void Reset()
+		{
+			me->SetReactState(REACT_PASSIVE);
+			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+		}
 
-	void Aggro(Unit* pWho)
-	{
-		return;
-	}
+		void MovementInform(uint32 type, uint32 id)
+		{
+			if (type != POINT_MOTION_TYPE)
+				return;
 
-    void MovementInform(uint32 type, uint32 id)
-    {
-        if (type != POINT_MOTION_TYPE)
-            return;
-
-        if (id == 0)
-            me->RemoveAllAuras();
-    }
-};
+			if (id == 0)
+				me->RemoveAllAuras();
+		}
+	};
 };
 
 // Twilight Fissure
