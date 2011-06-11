@@ -3612,7 +3612,7 @@ void SpellMgr::LoadSpellCustomAttr()
             ++count;
             break;
         case 49838: // Stop Time
-		case 57491:	// Flame tsunami damage aura
+        case 57491:    // Flame tsunami damage aura
             spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
             ++count;
             break;

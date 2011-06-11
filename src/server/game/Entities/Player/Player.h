@@ -1038,9 +1038,9 @@ class Player : public Unit, public GridObject<Player>
         explicit Player (WorldSession *session);
         ~Player ();
 
-		AntiCheat* m_anticheat;
-		/* ANTICHEAT ENGINE */
-		AntiCheat* GetAntiCheat() { return m_anticheat; }
+        AntiCheat* m_anticheat;
+        /* ANTICHEAT ENGINE */
+        AntiCheat* GetAntiCheat() { return m_anticheat; }
 
         void CleanupsBeforeDelete(bool finalCleanup = true);
 

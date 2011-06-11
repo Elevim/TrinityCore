@@ -328,10 +328,10 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
 
     sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: got cast spell packet, castCount: %u, spellId: %u, castFlags: %u, data length = %u", castCount, spellId, castFlags, (uint32)recvPacket.size());
 
-	/* process anticheat check */
+    /* process anticheat check */
 
     if (!GetPlayer()->GetAntiCheat()->DoAntiCheatCheck(CHECK_SPELL, spellId, CMSG_CAST_SPELL))
-		return;
+        return;
 
     // ignore for remote control state (for player case)
     Unit* mover = _player->m_mover;

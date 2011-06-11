@@ -660,9 +660,9 @@ class ObjectMgr
 
         typedef std::map<uint32, uint32> CharacterConversionMap;
 
-		typedef std::map<uint32, AntiCheatConfig> AntiCheatConfigMap;
+        typedef std::map<uint32, AntiCheatConfig> AntiCheatConfigMap;
         AntiCheatConfigMap m_AntiCheatConfig;               // [check_type]
-		AntiCheatConfig const* GetAntiCheatConfig(uint32 checkType) const;
+        AntiCheatConfig const* GetAntiCheatConfig(uint32 checkType) const;
 
         Player* GetPlayer(const char* name) const { return sObjectAccessor->FindPlayerByName(name);}
         Player* GetPlayer(uint64 guid) const { return ObjectAccessor::FindPlayer(guid); }
@@ -959,7 +959,7 @@ class ObjectMgr
         void LoadPageTexts();
         PageText const* GetPageText(uint32 pageEntry);
 
-		void LoadAntiCheatConfig();
+        void LoadAntiCheatConfig();
 
         void LoadPlayerInfo();
         void LoadPetLevelInfo();

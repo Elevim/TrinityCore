@@ -535,17 +535,17 @@ public:
                     {
                         case NPC_TENEBRON:
                             iTextId = SAY_SARTHARION_CALL_TENEBRON;
-				//			pTemp->AddAura(SPELL_POWER_OF_TENEBRON, pTemp);
+                //            pTemp->AddAura(SPELL_POWER_OF_TENEBRON, pTemp);
                             pTemp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aTene[1].m_fX, m_aTene[1].m_fY, m_aTene[1].m_fZ);
                             break;
                         case NPC_SHADRON:
                             iTextId = SAY_SARTHARION_CALL_SHADRON;
-				//			pTemp->AddAura(SPELL_POWER_OF_SHADRON, pTemp);
+                //            pTemp->AddAura(SPELL_POWER_OF_SHADRON, pTemp);
                             pTemp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aShad[1].m_fX, m_aShad[1].m_fY, m_aShad[1].m_fZ);
                             break;
                         case NPC_VESPERON:
                             iTextId = SAY_SARTHARION_CALL_VESPERON;
-				//			pTemp->AddAura(SPELL_POWER_OF_VESPERON, pTemp);
+                //            pTemp->AddAura(SPELL_POWER_OF_VESPERON, pTemp);
                             pTemp->GetMotionMaster()->MovePoint(POINT_ID_LAND, m_aVesp[1].m_fX, m_aVesp[1].m_fY, m_aVesp[1].m_fZ);
                             break;
                     }
@@ -948,7 +948,7 @@ struct dummy_dragonAI : public ScriptedAI
             case NPC_TENEBRON:
             {
                 iTextId = WHISPER_HATCH_EGGS;
-				if (pInstance)
+                if (pInstance)
                 {
                     if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                         for(uint32 i = 0; i < 6; ++i)
@@ -1162,7 +1162,7 @@ public:
             m_uiShadowBreathTimer -= uiDiff;
 
         // Don't attack current target if he's not visible for us.
-		/*im neuen patch nicht drin*/
+        /*im neuen patch nicht drin*/
         if (me->getVictim()->HasAura(57874, 0))
             me->getThreatManager().modifyThreatPercent(me->getVictim(), -100);
 
@@ -1245,35 +1245,35 @@ public:
 
         // Portal Event
         if (!m_bHasPortalOpen)
-			if (m_uiAcolyteShadronTimer <= uiDiff)
-			{
-				if(m_bHasPortalOpen)
-					m_uiAcolyteShadronTimer = 10000;
-				else
-				{
-					if (me->HasAura(SPELL_GIFT_OF_TWILIGTH_SHA))
-						return;
+            if (m_uiAcolyteShadronTimer <= uiDiff)
+            {
+                if(m_bHasPortalOpen)
+                    m_uiAcolyteShadronTimer = 10000;
+                else
+                {
+                    if (me->HasAura(SPELL_GIFT_OF_TWILIGTH_SHA))
+                        return;
 
-					 OpenPortal();
+                     OpenPortal();
 
 
-					 if (pInstance)
-					 {
-						Creature* pSartharion = Unit::GetCreature(*me, pInstance->GetData64(DATA_SARTHARION));
-						if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
-						{
-							if (pSartharion)
-								me->AddAura(SPELL_GIFT_OF_TWILIGTH_SAR, pSartharion);
-						}
-						else
-							me->AddAura(SPELL_GIFT_OF_TWILIGTH_SHA, me);
-					 }
-					 m_bHasPortalOpen = true;
-					 m_uiAcolyteShadronTimer = urand(60000,65000);
-				}
-			}
-			else
-				m_uiAcolyteShadronTimer -= uiDiff;
+                     if (pInstance)
+                     {
+                        Creature* pSartharion = Unit::GetCreature(*me, pInstance->GetData64(DATA_SARTHARION));
+                        if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                        {
+                            if (pSartharion)
+                                me->AddAura(SPELL_GIFT_OF_TWILIGTH_SAR, pSartharion);
+                        }
+                        else
+                            me->AddAura(SPELL_GIFT_OF_TWILIGTH_SHA, me);
+                     }
+                     m_bHasPortalOpen = true;
+                     m_uiAcolyteShadronTimer = urand(60000,65000);
+                }
+            }
+            else
+                m_uiAcolyteShadronTimer -= uiDiff;
 
         // shadow breath
         if (m_uiShadowBreathTimer <= uiDiff)
@@ -1286,7 +1286,7 @@ public:
             m_uiShadowBreathTimer -= uiDiff;
 
         // Don't attack current target if he's not visible for us.
-		/*im neuen patch nicht drin*/
+        /*im neuen patch nicht drin*/
         if (me->getVictim()->HasAura(57874, 0))
             me->getThreatManager().modifyThreatPercent(me->getVictim(), -100);
 
@@ -1363,24 +1363,24 @@ public:
 
         // Portal Event
         if (!m_bHasPortalOpen)
-			if (m_uiAcolyteVesperonTimer <= uiDiff)
-			{
-				if(m_bHasPortalOpen)
-					m_uiAcolyteVesperonTimer = 10000;
-				else
-				{
-					OpenPortal();
-					if (pInstance && pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
-						DoCast(SPELL_TWILIGHT_TORMENT_VESP_ACO);
-					else
-						DoCast(SPELL_TWILIGHT_TORMENT_VESP);
+            if (m_uiAcolyteVesperonTimer <= uiDiff)
+            {
+                if(m_bHasPortalOpen)
+                    m_uiAcolyteVesperonTimer = 10000;
+                else
+                {
+                    OpenPortal();
+                    if (pInstance && pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                        DoCast(SPELL_TWILIGHT_TORMENT_VESP_ACO);
+                    else
+                        DoCast(SPELL_TWILIGHT_TORMENT_VESP);
 
                     m_bHasPortalOpen = true;
-				    m_uiAcolyteVesperonTimer = urand(60000,70000);
-				}
-			}
-			else
-				m_uiAcolyteVesperonTimer -= uiDiff;
+                    m_uiAcolyteVesperonTimer = urand(60000,70000);
+                }
+            }
+            else
+                m_uiAcolyteVesperonTimer -= uiDiff;
 
         // shadow breath
         if (m_uiShadowBreathTimer <= uiDiff)
@@ -1393,7 +1393,7 @@ public:
             m_uiShadowBreathTimer -= uiDiff;
 
         // Don't attack current target if he's not visible for us.
-		/*im neuen patch nicht drin*/
+        /*im neuen patch nicht drin*/
         if (me->getVictim()->HasAura(57874, 0))
             me->getThreatManager().modifyThreatPercent(me->getVictim(), -100);
 
@@ -1679,21 +1679,21 @@ public:
             me->AddAura(SPELL_FLAME_TSUNAMI_DMG_AURA, me);
         }
 
-		void Reset()
-		{
-			me->SetReactState(REACT_PASSIVE);
-			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-		}
+        void Reset()
+        {
+            me->SetReactState(REACT_PASSIVE);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+        }
 
-		void MovementInform(uint32 type, uint32 id)
-		{
-			if (type != POINT_MOTION_TYPE)
-				return;
+        void MovementInform(uint32 type, uint32 id)
+        {
+            if (type != POINT_MOTION_TYPE)
+                return;
 
-			if (id == 0)
-				me->RemoveAllAuras();
-		}
-	};
+            if (id == 0)
+                me->RemoveAllAuras();
+        }
+    };
 };
 
 // Twilight Fissure

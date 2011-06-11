@@ -108,7 +108,7 @@ public:
         void JustDied(Unit* /*Killer*/)
         {
             DoScriptText(SAY_DEATH, me);
-		}
+        }
 
         void EnterCombat(Unit * who)
         {
@@ -186,7 +186,7 @@ public:
                         break;
                     case 2:
                         DoScriptText(SAY_DRUID, me);
-						//deactivated because of some problems - couldn´t remove the new stats value
+                        //deactivated because of some problems - couldn´t remove the new stats value
                         //DoCast(me, SPELL_DRUID);
                         break;
                     case 3:

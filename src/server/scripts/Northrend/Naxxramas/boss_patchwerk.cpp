@@ -22,7 +22,7 @@
  * Living Poisen *
  * ************* */
 
-#define SPELL_DEATH		5
+#define SPELL_DEATH        5
 #define NAXXMAP         533
 
 class naxx_mob_poisen : public CreatureScript

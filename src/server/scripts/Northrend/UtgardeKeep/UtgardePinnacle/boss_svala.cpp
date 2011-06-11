@@ -266,7 +266,7 @@ public:
 
     void Reset()
     {
-	    if (IsHeroic())
+        if (IsHeroic())
             DoCast(me, SPELL_SHADOWS_IN_THE_DARK);
     }
 
@@ -436,29 +436,29 @@ public:
                 }
             } else uiCallFlamesTimer -= diff;
 
-			if (this->HealthBelowPct(nextPercentageForSacrifice))
-			{
-				pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-				if (pSacrificeTarget)
-				{
-					DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
-					me->GetMotionMaster()->Clear();
-					DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
+            if (this->HealthBelowPct(nextPercentageForSacrifice))
+            {
+                pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+                if (pSacrificeTarget)
+                {
+                    DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
+                    me->GetMotionMaster()->Clear();
+                    DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
                     me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_TRIGGER, true);
                     me->CastSpell(me, SPELL_RITUAL_OF_THE_SWORD_DISARM, true);
-					//Spell doesn't teleport
-					DoTeleportPlayer(pSacrificeTarget, 296.632f, -346.075f, 90.63f, 4.6f);
-					Phase = SACRIFICING;
+                    //Spell doesn't teleport
+                    DoTeleportPlayer(pSacrificeTarget, 296.632f, -346.075f, 90.63f, 4.6f);
+                    Phase = SACRIFICING;
 
-					for (uint8 i = 0; i < 3; ++i)
-						if (Creature* pRitualChanneler = me->SummonCreature(CREATURE_RITUAL_CHANNELER, RitualChannelerPos[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, uiSacrificeTimer))
-							if (pRitualChanneler->AI())
-								pRitualChanneler->AI()->SetGUID(pSacrificeTarget->GetGUID());
+                    for (uint8 i = 0; i < 3; ++i)
+                        if (Creature* pRitualChanneler = me->SummonCreature(CREATURE_RITUAL_CHANNELER, RitualChannelerPos[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, uiSacrificeTimer))
+                            if (pRitualChanneler->AI())
+                                pRitualChanneler->AI()->SetGUID(pSacrificeTarget->GetGUID());
 
-				}
-				if (nextPercentageForSacrifice > 0)
-					nextPercentageForSacrifice -= 50;
-			}
+                }
+                if (nextPercentageForSacrifice > 0)
+                    nextPercentageForSacrifice -= 50;
+            }
             DoMeleeAttackIfReady();
         }
         else  //SACRIFICING
@@ -467,11 +467,11 @@ public:
             {
                 if (pSacrificeTarget && !summons.empty())
                 {
-					if (IsHeroic())
-						me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_HERO, false);
-					else
-						me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE, false);
-					summons.DespawnAll();
+                    if (IsHeroic())
+                        me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_HERO, false);
+                    else
+                        me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE, false);
+                    summons.DespawnAll();
                 }
                 bMove = false;
                 Phase = NORMAL;

@@ -727,45 +727,45 @@ public:
         mob_shadow_issureAI(Creature* c) : ScriptedAI(c) {}
 
 
-		uint32 m_uiShadowIssure_Timer;
+        uint32 m_uiShadowIssure_Timer;
 
-		void AttackStart(){}
-		void Reset()
-		{
-			m_uiShadowIssure_Timer = 4000;
-			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-			me->StopMoving();
-		}
+        void AttackStart(){}
+        void Reset()
+        {
+            m_uiShadowIssure_Timer = 4000;
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            me->StopMoving();
+        }
 
-		void UpdateAI(const uint32 uiDiff)
-		{
-			if (m_uiShadowIssure_Timer)
-				if (m_uiShadowIssure_Timer < uiDiff)
-				{
-					Map *map = me->GetMap();
-					if (map->IsDungeon())
-					{
-						Map::PlayerList const &PlayerList = map->GetPlayers();
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (m_uiShadowIssure_Timer)
+                if (m_uiShadowIssure_Timer < uiDiff)
+                {
+                    Map *map = me->GetMap();
+                    if (map->IsDungeon())
+                    {
+                        Map::PlayerList const &PlayerList = map->GetPlayers();
 
-						if (PlayerList.isEmpty())
-							return;
+                        if (PlayerList.isEmpty())
+                            return;
 
-						for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-						{
-							if (i->getSource()->isAlive() && me->GetDistance2d(i->getSource()->GetPositionX(), i->getSource()->GetPositionY()) < 2)
-								i->getSource()->DealDamage(i->getSource(), i->getSource()->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-						}
-					}
-					me->ForcedDespawn();
-				}
-				else m_uiShadowIssure_Timer -= uiDiff;
-		}
-	};
+                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            if (i->getSource()->isAlive() && me->GetDistance2d(i->getSource()->GetPositionX(), i->getSource()->GetPositionY()) < 2)
+                                i->getSource()->DealDamage(i->getSource(), i->getSource()->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                        }
+                    }
+                    me->ForcedDespawn();
+                }
+                else m_uiShadowIssure_Timer -= uiDiff;
+        }
+    };
 };
 
 void AddSC_boss_kelthuzad()
 {
     new boss_kelthuzad();
     new at_kelthuzad_center();
-	new mob_shadow_issure();
+    new mob_shadow_issure();
 }

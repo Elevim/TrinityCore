@@ -849,7 +849,7 @@ Player::Player (WorldSession *session): Unit(), m_achievementMgr(this), m_reputa
 
     SetPendingBind(NULL, 0);
 
-	m_anticheat = new AntiCheat(this);
+    m_anticheat = new AntiCheat(this);
 }
 
 Player::~Player ()
@@ -886,7 +886,7 @@ Player::~Player ()
     delete m_declinedname;
     delete m_runes;
 
-	delete m_anticheat;
+    delete m_anticheat;
 
     sWorld->DecreasePlayerCount();
 }
@@ -15280,8 +15280,8 @@ bool Player::SatisfyQuestExclusiveGroup(Quest const* qInfo, bool msg)
     ObjectMgr::ExclusiveQuestGroups::iterator iter = sObjectMgr->mExclusiveQuestGroups.lower_bound(qInfo->GetExclusiveGroup());
     ObjectMgr::ExclusiveQuestGroups::iterator end  = sObjectMgr->mExclusiveQuestGroups.upper_bound(qInfo->GetExclusiveGroup());
 
-	// disabled assert as it is actually possible to have a quest associated with an exclusivequestgroup while the group does not exist.
-	// This is the case when all quests of that exclusivequestgroup are disabled.
+    // disabled assert as it is actually possible to have a quest associated with an exclusivequestgroup while the group does not exist.
+    // This is the case when all quests of that exclusivequestgroup are disabled.
     //ASSERT(iter != end);                                      // always must be found if qInfo->ExclusiveGroup != 0
 
     for (; iter != end; ++iter)
@@ -18494,8 +18494,8 @@ void Player::_SaveInventory(SQLTransaction& trans)
         if (item->GetState() != ITEM_REMOVED)
         {
             Item *test = GetItemByPos(item->GetBagSlot(), item->GetSlot());
-	    // Perform AntiCheat-Check (item-dupe)
-	    GetAntiCheat()->DoAntiCheatCheck(CHECK_ITEM_UPDATE, item, test);
+        // Perform AntiCheat-Check (item-dupe)
+        GetAntiCheat()->DoAntiCheatCheck(CHECK_ITEM_UPDATE, item, test);
             if (test == NULL)
             {
                 uint32 bagTestGUID = 0;

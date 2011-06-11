@@ -70,17 +70,17 @@ enum eEnums
     GO_KELTHUZAD_PORTAL04   = 181405,
     GO_KELTHUZAD_TRIGGER    = 181444,
 
-	GO_PORTAL_MAEXXNA		= 181575,
-	GO_PORTAL_THADDIUS		= 181576,
-	GO_PORTAL_LOATHEB		= 181577,
-	GO_PORTAL_4HORSE		= 181578,
+    GO_PORTAL_MAEXXNA        = 181575,
+    GO_PORTAL_THADDIUS        = 181576,
+    GO_PORTAL_LOATHEB        = 181577,
+    GO_PORTAL_4HORSE        = 181578,
 
     SPELL_ERUPTION          = 29371,
 
-	NPC_POISEN				= 16027,
-	NPC_LANE1				= 1000000,
-	NPC_LANE2				= 1000001,
-	NPC_LANE3				= 1000002
+    NPC_POISEN                = 16027,
+    NPC_LANE1                = 1000000,
+    NPC_LANE2                = 1000001,
+    NPC_LANE3                = 1000002
 };
 
 const float HeiganPos[2] = {2796, -3707};
@@ -154,19 +154,19 @@ public:
         time_t minHorsemenDiedTime;
         time_t maxHorsemenDiedTime;
 
-		uint64 PortalMaexxnaGUID;
-		uint64 PortalThaddiusGUID;
-		uint64 PortalLoathebGUID;
-		uint64 Portal4HorseGUID;
+        uint64 PortalMaexxnaGUID;
+        uint64 PortalThaddiusGUID;
+        uint64 PortalLoathebGUID;
+        uint64 Portal4HorseGUID;
 
-		uint64 uiLane1GUID;
-		uint64 uiLane2GUID;
-		uint64 uiLane3GUID;
+        uint64 uiLane1GUID;
+        uint64 uiLane2GUID;
+        uint64 uiLane3GUID;
 
-		uint32 Lane1Timer;
-		uint32 Lane2Timer;
-		uint32 Lane3Timer;
-		
+        uint32 Lane1Timer;
+        uint32 Lane2Timer;
+        uint32 Lane3Timer;
+        
         void Initialize()
         {
             uiLane1GUID = 0;
@@ -242,18 +242,18 @@ public:
                 case GO_KELTHUZAD_TRIGGER:
                     uiKelthuzadTrigger = go->GetGUID();
                     break;
-				case GO_PORTAL_MAEXXNA:
-					PortalMaexxnaGUID = go->GetGUID();
-					break;
+                case GO_PORTAL_MAEXXNA:
+                    PortalMaexxnaGUID = go->GetGUID();
+                    break;
                 case GO_PORTAL_THADDIUS:
-					PortalThaddiusGUID = go->GetGUID();
-					break;
+                    PortalThaddiusGUID = go->GetGUID();
+                    break;
                 case GO_PORTAL_LOATHEB:
-					PortalLoathebGUID = go->GetGUID();
-					break;
+                    PortalLoathebGUID = go->GetGUID();
+                    break;
                 case GO_PORTAL_4HORSE:
-					Portal4HorseGUID = go->GetGUID();
-					break;
+                    Portal4HorseGUID = go->GetGUID();
+                    break;
                 default:
                     break;
             }
@@ -419,30 +419,30 @@ public:
         }
 
         void Update(uint32 uiDiff)
-	    {
-		    if (Lane1Timer < uiDiff)
-		    {
-			    if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE1)))
-				    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3183.495779f, -3143.447998f, 294.062897f, 3.981270f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
-					    pTemp->SendMonsterMove(3165.249023f, -3166.019043f, 294.063446f, 9000);
+        {
+            if (Lane1Timer < uiDiff)
+            {
+                if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE1)))
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3183.495779f, -3143.447998f, 294.062897f, 3.981270f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
+                        pTemp->SendMonsterMove(3165.249023f, -3166.019043f, 294.063446f, 9000);
                 Lane1Timer = 4000;
-		    }else Lane1Timer -= uiDiff; 
+            }else Lane1Timer -= uiDiff; 
 
-		    if (Lane2Timer < uiDiff)
-		    {
-			    if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE2)))
-				    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3174.359619f, -3137.360840f, 294.062897f, 4.044f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
-					    pTemp->SendMonsterMove(3155.766113f, -3158.337158f, 294.062897f, 9000);
-			    Lane2Timer = 4000;
-		    }else Lane2Timer -= uiDiff; 
+            if (Lane2Timer < uiDiff)
+            {
+                if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE2)))
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3174.359619f, -3137.360840f, 294.062897f, 4.044f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
+                        pTemp->SendMonsterMove(3155.766113f, -3158.337158f, 294.062897f, 9000);
+                Lane2Timer = 4000;
+            }else Lane2Timer -= uiDiff; 
 
-		    if (Lane3Timer < uiDiff)
-		    {
-			    if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE3)))
-				    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3192.833740f, -3151.343506f, 294.003479f, 4.044f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
-					    pTemp->SendMonsterMove(3173.857178f, -3173.015625f, 294.063354f, 9000);
-			    Lane3Timer = 4000;
-		    }else Lane3Timer -= uiDiff;
+            if (Lane3Timer < uiDiff)
+            {
+                if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE3)))
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3192.833740f, -3151.343506f, 294.003479f, 4.044f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
+                        pTemp->SendMonsterMove(3173.857178f, -3173.015625f, 294.063354f, 9000);
+                Lane3Timer = 4000;
+            }else Lane3Timer -= uiDiff;
         }
 
         bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target = NULL*/, uint32 /*miscvalue1 = 0*/)

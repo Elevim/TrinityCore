@@ -3146,10 +3146,10 @@ void ObjectMgr::LoadAntiCheatConfig()
     //                                                            9              10        11             12
                                                            "action1,   actionparam1,  action2,  actionparam2,"
                                                            "description FROM anticheat_config");
-	
+    
     uint32 count = 0;
 
-	// MaNGOS hat in der Console eine Ausgabe "Ladebalken"
+    // MaNGOS hat in der Console eine Ausgabe "Ladebalken"
     if (!result)
     {
         //barGoLink bar(1);

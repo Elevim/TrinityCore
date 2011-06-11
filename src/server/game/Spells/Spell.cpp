@@ -1260,7 +1260,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         }
 
         /* process anticheat check */
-		if (caster->GetTypeId() == TYPEID_PLAYER)
+        if (caster->GetTypeId() == TYPEID_PLAYER)
             caster->ToPlayer()->GetAntiCheat()->DoAntiCheatCheck(CHECK_DAMAGE_SPELL, m_spellInfo->Id, 0, damageInfo.damage);
 
         caster->DealSpellDamage(&damageInfo, true);
@@ -2923,7 +2923,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const * triggere
 
         TriggerGlobalCooldown();
 
-		//item: first cast may destroy item and second cast causes crash
+        //item: first cast may destroy item and second cast causes crash
         if (!m_casttime && !m_spellInfo->StartRecoveryTime && !m_castItemGUID && GetCurrentContainer() == CURRENT_GENERIC_SPELL)
             cast(true);
     }

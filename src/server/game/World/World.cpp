@@ -589,11 +589,11 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_INTERVAL_DISCONNECT_TOLERANCE] = sConfig->GetIntDefault("DisconnectToleranceInterval", 0);
     m_bool_configs[CONFIG_STATS_SAVE_ONLY_ON_LOGOUT] = sConfig->GetBoolDefault("PlayerSave.Stats.SaveOnlyOnLogout", true);
 
-	// AntiCheat
-	m_bool_configs[CONFIG_BOOL_ANTICHEAT_ENABLE] = sConfig->GetBoolDefault("Anticheat.Enable", false);
-	m_bool_configs[CONFIG_BOOL_ANTICHEAT_DEBUG] = sConfig->GetBoolDefault("Anticheat.Debug", false);
-	m_int_configs[CONFIG_UINT32_ANTICHEAT_ACTION_DELAY] = sConfig->GetIntDefault("Anticheat.DelayAfterAction", 30);
-	m_int_configs[CONFIG_UINT32_ANTICHEAT_GMLEVEL] = sConfig->GetIntDefault("Anticheat.GmLevel", 0);
+    // AntiCheat
+    m_bool_configs[CONFIG_BOOL_ANTICHEAT_ENABLE] = sConfig->GetBoolDefault("Anticheat.Enable", false);
+    m_bool_configs[CONFIG_BOOL_ANTICHEAT_DEBUG] = sConfig->GetBoolDefault("Anticheat.Debug", false);
+    m_int_configs[CONFIG_UINT32_ANTICHEAT_ACTION_DELAY] = sConfig->GetIntDefault("Anticheat.DelayAfterAction", 30);
+    m_int_configs[CONFIG_UINT32_ANTICHEAT_GMLEVEL] = sConfig->GetIntDefault("Anticheat.GmLevel", 0);
 
     m_int_configs[CONFIG_MIN_LEVEL_STAT_SAVE] = sConfig->GetIntDefault("PlayerSave.Stats.MinLevel", 0);
     if (m_int_configs[CONFIG_MIN_LEVEL_STAT_SAVE] > MAX_LEVEL)
@@ -1586,7 +1586,7 @@ void World::SetInitialWorldSettings()
     sLog->outString("Loading GM tickets...");
     sTicketMgr->LoadTickets();
 
-	sLog->outString( "Loading AntiCheat config..." );
+    sLog->outString( "Loading AntiCheat config..." );
     sObjectMgr->LoadAntiCheatConfig();
 
     sLog->outString("Loading GM surveys...");

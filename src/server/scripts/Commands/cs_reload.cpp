@@ -153,7 +153,7 @@ public:
             { "waypoint_scripts",             SEC_ADMINISTRATOR, true,  &HandleReloadWpScriptsCommand,                  "", NULL },
             { "vehicle_accessory",            SEC_ADMINISTRATOR, true,  &HandleReloadVehicleAccessoryCommand,           "", NULL },
             { "vehicle_template_accessory",   SEC_ADMINISTRATOR, true,  &HandleReloadVehicleTemplateAccessoryCommand,   "", NULL },
-			{ "anticheat",                    SEC_ADMINISTRATOR, true,  &HandleReloadAntiCheatCommand,                  "", NULL },
+            { "anticheat",                    SEC_ADMINISTRATOR, true,  &HandleReloadAntiCheatCommand,                  "", NULL },
             { NULL,                           0,                 false, NULL,                                           "", NULL }
         };
         static ChatCommand commandTable[] =
@@ -195,7 +195,7 @@ public:
 
         HandleReloadVehicleAccessoryCommand(handler, "");
         HandleReloadVehicleTemplateAccessoryCommand(handler, "");
-		HandleReloadAntiCheatCommand(handler, "");
+        HandleReloadAntiCheatCommand(handler, "");
 
         HandleReloadAutobroadcastCommand(handler, "");
         return true;
@@ -1272,13 +1272,13 @@ public:
         return true;
     }
 
-	static bool HandleReloadAntiCheatCommand(ChatHandler* handler, const char* /*args*/)
-	{
-		sLog->outString( "Re-Loading anticheat config table...");
-		sObjectMgr->LoadAntiCheatConfig();
-		handler->SendGlobalGMSysMessage("Anticheat config reloaded.");
-		return true;
-	}
+    static bool HandleReloadAntiCheatCommand(ChatHandler* handler, const char* /*args*/)
+    {
+        sLog->outString( "Re-Loading anticheat config table...");
+        sObjectMgr->LoadAntiCheatConfig();
+        handler->SendGlobalGMSysMessage("Anticheat config reloaded.");
+        return true;
+    }
 };
 
 void AddSC_reload_commandscript()
