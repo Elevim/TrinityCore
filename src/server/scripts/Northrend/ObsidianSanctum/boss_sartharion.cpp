@@ -115,7 +115,7 @@ enum eEnums
 
     SPELL_FLAME_TSUNAMI_DMG_AURA                = 57492,    // periodic damage, npc has this aura
     SPELL_FLAME_TSUNAMI_BUFF                    = 60430,
-    
+
 
     NPC_FLAME_TSUNAMI                           = 30616,    // for the flame waves
     NPC_LAVA_BLAZE                              = 30643,    // adds spawning from flame strike
@@ -278,7 +278,7 @@ public:
         m_uiCleaveTimer = 7000;
         m_uiLavaStrikeTimer = 5000;
 
-//        uiSarPortalGuid = 0;  
+//        uiSarPortalGuid = 0;
         m_bHasCalledTenebron = false;
         m_bHasCalledShadron = false;
         m_bHasCalledVesperon = false;
@@ -391,7 +391,7 @@ public:
     {
         DoScriptText(SAY_SARTHARION_AGGRO,me);
         DoZoneInCombat();
-
+        me->CallForHelp(50000.0f);
         if (pInstance)
         {
             pInstance->SetData(TYPE_SARTHARION_EVENT, IN_PROGRESS);
@@ -428,7 +428,7 @@ public:
                 pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_TWILIGHT_DUO,H_ACHIEV_TWILIGHT_DUO));
                 pInstance->DoCompleteAchievement(RAID_MODE(ACHIEV_TWILIGHT_ZONE,H_ACHIEV_TWILIGHT_ZONE));
             }
-       
+
             pInstance->SetData(TYPE_SARTHARION_EVENT, DONE);
         }
     }
@@ -599,7 +599,7 @@ public:
                 uiSarPortalGuid = pPortal->GetGUID();
                 pPortal->SetPhaseMask(2, true);
             }
-			
+
         //Return since we have no target
         if (!UpdateVictim())
             return;
@@ -839,7 +839,7 @@ struct dummy_dragonAI : public ScriptedAI
         }
 
         me->RemoveAurasDueToSpell(SPELL_WILL_OF_SARTHARION);
-        
+
         if (uiMyPortalGuid)
             if (GameObject* pPortal = GameObject::GetGameObject(*me, uiMyPortalGuid))
                 pPortal->SetPhaseMask(1, true);
@@ -937,7 +937,7 @@ struct dummy_dragonAI : public ScriptedAI
                 if (boss_sartharion::boss_sartharionAI* pSartharionAI = CAST_AI(boss_sartharion::boss_sartharionAI, pSartharion->AI()))
                     uiPortalGuid = pSartharionAI->uiSarPortalGuid;
         }
-        else 
+        else
             uiPortalGuid = uiMyPortalGuid;
 
         if (GameObject* pPortal = GameObject::GetGameObject(*me, uiPortalGuid))
@@ -1424,7 +1424,7 @@ public:
         }
 
     InstanceScript* pInstance;
-  
+
     void Reset()
     {
         me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
@@ -1448,7 +1448,7 @@ public:
             if (map->IsDungeon())
             {
                 Map::PlayerList const &PlayerList = map->GetPlayers();
- 
+
                 if (PlayerList.isEmpty())
                     return;
 
@@ -1519,7 +1519,7 @@ public:
     {
         if (pInstance)
         {
-            me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER, me);                
+            me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER, me);
         }
     }
 
@@ -1534,12 +1534,12 @@ public:
             Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
             if (pVesperon)
                 (CAST_AI(mob_vesperon::mob_vesperonAI, pVesperon->AI()))->m_bHasPortalOpen = false;
-          
+
             if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_TORMENT_VESP_ACO);
             else
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_TORMENT_VESP);
-            
+
             Map *map = me->GetMap();
             if (map->IsDungeon())
             {
@@ -1607,7 +1607,7 @@ public:
         }
         m_uiHatchEggTimer = 20000;
     }
-    
+
     // void JustDied()
     // {
         // me->DisappearAndDie();
@@ -1625,18 +1625,18 @@ public:
                     if (Unit *pTarget = pTenebron->AI()->SelectTarget(SELECT_TARGET_RANDOM))
                         pCreature->AI()->AttackStart(pTarget);
             }
-            else   
+            else
                 if (Creature *pCreature = pTenebron->SummonCreature(NPC_TWILIGHT_WHELP, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300*IN_MILLISECONDS))
                     if (Unit *pTarget = pTenebron->AI()->SelectTarget(SELECT_TARGET_RANDOM))
                         pCreature->AI()->AttackStart(pTarget);
-             
+
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
 
         }
         me->DisappearAndDie();
       }
-    
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (m_uiHatchEggTimer <= uiDiff)
@@ -1648,9 +1648,9 @@ public:
                 SpawnWhelps();
         }
         else
-            m_uiHatchEggTimer -= uiDiff;      
+            m_uiHatchEggTimer -= uiDiff;
     }
-    
+
 
     void AttackStart(Unit* pWho) {}
     void MoveInLineOfSight(Unit* pWho) {}

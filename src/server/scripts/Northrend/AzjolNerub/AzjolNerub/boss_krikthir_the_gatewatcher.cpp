@@ -122,6 +122,7 @@ public:
         void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
+            me->CallForHelp(1000.0f);
             Summon();
             uiSummonTimer = 15*IN_MILLISECONDS;
 

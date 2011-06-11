@@ -53,6 +53,7 @@ public:
         void EnterCombat(Unit * /*who*/)
         {
             _EnterCombat();
+            me->CallForHelp(1500.0f);
             events.ScheduleEvent(EVENT_CLOUD, 15000);
             events.ScheduleEvent(EVENT_INJECT, 20000);
             events.ScheduleEvent(EVENT_SPRAY, 15000+rand()%15000); //not sure

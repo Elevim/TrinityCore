@@ -92,6 +92,7 @@ public:
         {
             _EnterCombat();
             DoPlaySoundToSet(me, SOUND_AGGRO);
+            me->CallForHelp(5000.0f);
             events.ScheduleEvent(EVENT_STRIKE, 8000); // 30000
             events.ScheduleEvent(EVENT_SHOUT, 16000); // 25000
             events.ScheduleEvent(EVENT_COMMAND, 40000);
