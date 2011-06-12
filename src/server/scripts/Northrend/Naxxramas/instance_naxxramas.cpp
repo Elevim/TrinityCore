@@ -18,6 +18,19 @@
 #include "ScriptPCH.h"
 #include "naxxramas.h"
 
+// Slime lane spawns
+struct Location
+{
+    float x,y,z;
+};
+
+ static Location SlimeLane1Spawn = { 3140.50f, -3121.59f, 293.342f };
+ static Location SlimeLane1Direction = { 3135.23f, -3155.60f, 293.477f };
+ static Location SlimeLane2Spawn = { 3150.56f, -3123.39f, 293.334f };
+ static Location SlimeLane2Direction = { 3144.73f, -3157.55f, 293.523f };
+ static Location SlimeLane3Spawn = { 3160.44f, -3125.83f, 293.328f };
+ static Location SlimeLane3Direction = { 3152.57f, -3161.14f, 293.505f };
+
 const DoorData doorData[] =
 {
     {181126,    BOSS_ANUBREKHAN, DOOR_TYPE_ROOM,     BOUNDARY_S},
@@ -174,8 +187,8 @@ public:
             uiLane3GUID = 0;
 
             Lane1Timer = 1000;
-            Lane2Timer = 2500;
-            Lane3Timer = 4000;
+            Lane2Timer = 3000;
+            Lane3Timer = 5000;
         }
 
         void OnCreatureCreate(Creature* creature)
@@ -423,25 +436,25 @@ public:
             if (Lane1Timer < uiDiff)
             {
                 if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE1)))
-                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3183.495779f, -3143.447998f, 294.062897f, 3.981270f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
-                        pTemp->SendMonsterMove(3165.249023f, -3166.019043f, 294.063446f, 9000);
-                Lane1Timer = 4000;
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane1Spawn.x, SlimeLane1Spawn.y, SlimeLane1Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 12000))
+                        pTemp->GetMotionMaster()->MovePoint(0, SlimeLane1Direction.x, SlimeLane1Direction.y, SlimeLane1Direction.z);
+                Lane1Timer = 5500;
             }else Lane1Timer -= uiDiff; 
 
             if (Lane2Timer < uiDiff)
             {
                 if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE2)))
-                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3174.359619f, -3137.360840f, 294.062897f, 4.044f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
-                        pTemp->SendMonsterMove(3155.766113f, -3158.337158f, 294.062897f, 9000);
-                Lane2Timer = 4000;
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane2Spawn.x, SlimeLane2Spawn.y, SlimeLane2Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 12000))
+                        pTemp->GetMotionMaster()->MovePoint(0, SlimeLane2Direction.x, SlimeLane2Direction.y, SlimeLane2Direction.z);
+                Lane2Timer = 5500;
             }else Lane2Timer -= uiDiff; 
 
             if (Lane3Timer < uiDiff)
             {
                 if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE3)))
-                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, 3192.833740f, -3151.343506f, 294.003479f, 4.044f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 9000))
-                        pTemp->SendMonsterMove(3173.857178f, -3173.015625f, 294.063354f, 9000);
-                Lane3Timer = 4000;
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane3Spawn.x, SlimeLane3Spawn.y, SlimeLane3Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 12000))
+                        pTemp->GetMotionMaster()->MovePoint(0, SlimeLane3Direction.x, SlimeLane3Direction.y, SlimeLane3Direction.z);
+                Lane3Timer = 5500;
             }else Lane3Timer -= uiDiff;
         }
 

@@ -39,7 +39,10 @@ public:
     {
         naxx_mob_poisenAI(Creature* c) : ScriptedAI(c) {}
 
-    void Reset(){}
+    void Reset()
+    {
+         me->SetSpeed(MOVE_RUN, 0.4f, true);
+    }
 
     void MoveInLineOfSight(Unit *pWho)
     {
@@ -50,14 +53,14 @@ public:
             if (pMap != NAXXMAP)
                 return;
 
-        if (me->IsWithinDistInMap(pWho, 2.0f))
+        if (me->IsWithinDistInMap(pWho, 1.0f))
         {
             if (pWho->GetTypeId() != TYPEID_PLAYER)
                 return;
 
             pWho->CastSpell(pWho,SPELL_DEATH, true);
             me->ForcedDespawn();
-       }
+        }
     }
 
     void UpdateAI(uint32 const uiDiff)
