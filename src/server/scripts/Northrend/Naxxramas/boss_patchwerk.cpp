@@ -55,7 +55,7 @@ public:
 
         if (me->IsWithinDistInMap(pWho, 1.3f))
         {
-            if (pWho->GetTypeId() != TYPEID_PLAYER && !TYPEID_GAMEOBJECT)
+            if (pWho->GetTypeId() != TYPEID_PLAYER && pWho->GetTypeId() != TYPEID_GAMEOBJECT)
                 return;
 
             if (pWho->GetTypeId() == TYPEID_PLAYER)
