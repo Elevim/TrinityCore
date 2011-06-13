@@ -436,25 +436,25 @@ public:
             if (Lane1Timer < uiDiff)
             {
                 if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE1)))
-                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane1Spawn.x, SlimeLane1Spawn.y, SlimeLane1Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 12000))
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane1Spawn.x, SlimeLane1Spawn.y, SlimeLane1Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 9000))
                         pTemp->GetMotionMaster()->MovePoint(0, SlimeLane1Direction.x, SlimeLane1Direction.y, SlimeLane1Direction.z);
-                Lane1Timer = 5500;
+                Lane1Timer = 4000;
             }else Lane1Timer -= uiDiff; 
 
             if (Lane2Timer < uiDiff)
             {
                 if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE2)))
-                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane2Spawn.x, SlimeLane2Spawn.y, SlimeLane2Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 12000))
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane2Spawn.x, SlimeLane2Spawn.y, SlimeLane2Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 9000))
                         pTemp->GetMotionMaster()->MovePoint(0, SlimeLane2Direction.x, SlimeLane2Direction.y, SlimeLane2Direction.z);
-                Lane2Timer = 5500;
+                Lane2Timer = 4000;
             }else Lane2Timer -= uiDiff; 
 
             if (Lane3Timer < uiDiff)
             {
                 if(Creature* pTrigger = instance->GetCreature(GetData64(DATA_LANE3)))
-                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane3Spawn.x, SlimeLane3Spawn.y, SlimeLane3Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 12000))
+                    if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane3Spawn.x, SlimeLane3Spawn.y, SlimeLane3Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 9000))
                         pTemp->GetMotionMaster()->MovePoint(0, SlimeLane3Direction.x, SlimeLane3Direction.y, SlimeLane3Direction.z);
-                Lane3Timer = 5500;
+                Lane3Timer = 4000;
             }else Lane3Timer -= uiDiff;
         }
 

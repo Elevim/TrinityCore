@@ -53,7 +53,7 @@ public:
             if (pMap != NAXXMAP)
                 return;
 
-        if (me->IsWithinDistInMap(pWho, 1.3f))
+        if (me->IsWithinDistInMap(pWho, 1.0f))
         {
             if (pWho->GetTypeId() != TYPEID_PLAYER && pWho->GetTypeId() != TYPEID_GAMEOBJECT)
                 return;
