@@ -55,6 +55,9 @@ public:
 
         if (me->IsWithinDistInMap(pWho, 1.3f))
         {
+            if (pWho->GetTypeId() != TYPEID_PLAYER && !TYPEID_GAMEOBJECT)
+                return;
+
             if (pWho->GetTypeId() == TYPEID_PLAYER)
             {
                 pWho->CastSpell(pWho,SPELL_DEATH, true);
