@@ -31,7 +31,8 @@ enum Events
     EVENT_NONE,
     EVENT_MARK,
     EVENT_CAST,
-    EVENT_BERSERK,
+    //EVENT_BERSERK,
+    EVENT_RANGECHECK,
 };
 
 const Position WaypointPositions[12] =
@@ -110,6 +111,9 @@ public:
         bool encounterActionReset;
         bool doDelayPunish;
 
+        bool isBerserk;
+        uint16 markCount;
+
         void Reset()
         {
             if (!encounterActionReset)
@@ -129,6 +133,8 @@ public:
             encounterActionReset = false;
             doDelayPunish = false;
             _Reset();
+            isBerserk = false;
+            markCount = 0;
         }
 
         bool DoEncounterAction(Unit *who, bool attack, bool reset, bool checkAllDead)
@@ -257,6 +263,31 @@ public:
             }
         }
 
+        bool IsThereaTargettoAttack()
+        {
+            Map* pMap = me->GetMap();
+            if (pMap && pMap->IsDungeon())
+            {
+                Map::PlayerList const &players = pMap->GetPlayers();
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    if (itr->getSource()->IsInRange(me, 0.0F, 15.0f, true))
+                    {
+                        return true;
+                    }
+            }
+            return false;
+        }
+
+        void Berserk()
+        {
+            if (!isBerserk)
+            {
+                DoScriptText(SAY_SPECIAL[id], me);
+                DoCast(me, SPELL_BERSERK);
+                isBerserk = true;
+            }
+        }
+
         void MoveInLineOfSight(Unit *who)
         {
             BossAI::MoveInLineOfSight(who);
@@ -326,7 +357,8 @@ public:
 
             events.ScheduleEvent(EVENT_MARK, 15000);
             events.ScheduleEvent(EVENT_CAST, 20000+rand()%5000);
-            events.ScheduleEvent(EVENT_BERSERK, 15*100*1000);
+            //events.ScheduleEvent(EVENT_BERSERK, 15*100*1000);
+            events.ScheduleEvent(EVENT_RANGECHECK, 15000);
         }
 
         void UpdateAI(const uint32 diff)
@@ -340,10 +372,18 @@ public:
             if (!UpdateVictim() || !CheckInRoom() || !movementCompleted)
                 return;
 
+            if (isBerserk)
+            {
+
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STAT_CASTING))
                 return;
+
+            if (markCount >= 100)
+            {
+                Berserk();
+            }
 
             while (uint32 eventId = events.ExecuteEvent())
             {
@@ -352,8 +392,9 @@ public:
                     case EVENT_MARK:
                         if (!(rand()%5))
                             DoScriptText(SAY_SPECIAL[id], me);
-                        DoCastAOE(SPELL_MARK[id]);
-                        events.ScheduleEvent(EVENT_MARK, 15000);
+                        DoCastAOE(SPELL_MARK[id], isBerserk);
+                        ++markCount;
+                        events.ScheduleEvent(EVENT_MARK, (!isBerserk)? 15000 : 7500);
                         break;
                     case EVENT_CAST:
                         if (!(rand()%5))
@@ -369,10 +410,20 @@ public:
 
                         events.ScheduleEvent(EVENT_CAST, 15000);
                         break;
-                    case EVENT_BERSERK:
+                    /*case EVENT_BERSERK:
                         DoScriptText(SAY_SPECIAL[id], me);
-                        DoCast(me, EVENT_BERSERK);
+                        DoCast(me, SPELL_BERSERK);
+                        break;*/
+                    case EVENT_RANGECHECK:
+                        if (!isBerserk)
+                        {
+                            if (!IsThereaTargettoAttack())
+                            {
+                                Berserk();
+                            }else events.ScheduleEvent(EVENT_RANGECHECK, 2000);
+                        }
                         break;
+                    }
                 }
             }
 
