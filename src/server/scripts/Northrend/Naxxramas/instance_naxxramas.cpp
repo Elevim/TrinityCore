@@ -83,17 +83,17 @@ enum eEnums
     GO_KELTHUZAD_PORTAL04   = 181405,
     GO_KELTHUZAD_TRIGGER    = 181444,
 
-    GO_PORTAL_MAEXXNA        = 181575,
-    GO_PORTAL_THADDIUS        = 181576,
-    GO_PORTAL_LOATHEB        = 181577,
+    GO_PORTAL_MAEXXNA       = 181575,
+    GO_PORTAL_THADDIUS      = 181576,
+    GO_PORTAL_LOATHEB       = 181577,
     GO_PORTAL_4HORSE        = 181578,
 
     SPELL_ERUPTION          = 29371,
 
-    NPC_POISEN                = 16027,
-    NPC_LANE1                = 1000000,
-    NPC_LANE2                = 1000001,
-    NPC_LANE3                = 1000002
+    NPC_POISEN              = 16027,
+    NPC_LANE1               = 1000000,
+    NPC_LANE2               = 1000001,
+    NPC_LANE3               = 1000002
 };
 
 const float HeiganPos[2] = {2796, -3707};
