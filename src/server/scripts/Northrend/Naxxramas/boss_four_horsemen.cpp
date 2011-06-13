@@ -372,9 +372,6 @@ public:
             if (!UpdateVictim() || !CheckInRoom() || !movementCompleted)
                 return;
 
-            if (isBerserk)
-            {
-
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STAT_CASTING))
@@ -394,7 +391,7 @@ public:
                             DoScriptText(SAY_SPECIAL[id], me);
                         DoCastAOE(SPELL_MARK[id], isBerserk);
                         ++markCount;
-                        events.ScheduleEvent(EVENT_MARK, (!isBerserk)? 15000 : 7500);
+                        events.ScheduleEvent(EVENT_MARK, (!isBerserk) ? 15000 : 7500);
                         break;
                     case EVENT_CAST:
                         if (!(rand()%5))
@@ -423,7 +420,6 @@ public:
                             }else events.ScheduleEvent(EVENT_RANGECHECK, 2000);
                         }
                         break;
-                    }
                 }
             }
 
