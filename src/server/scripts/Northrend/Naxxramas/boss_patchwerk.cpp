@@ -41,7 +41,7 @@ public:
 
     void Reset()
     {
-         me->SetSpeed(MOVE_RUN, 0.4f, true);
+         me->SetSpeed(MOVE_RUN, 0.6f, true);
     }
 
     void MoveInLineOfSight(Unit *pWho)
@@ -53,13 +53,19 @@ public:
             if (pMap != NAXXMAP)
                 return;
 
-        if (me->IsWithinDistInMap(pWho, 1.0f))
+        if (me->IsWithinDistInMap(pWho, 1.3f))
         {
-            if (pWho->GetTypeId() != TYPEID_PLAYER)
-                return;
+            if (pWho->GetTypeId() == TYPEID_PLAYER)
+            {
+                pWho->CastSpell(pWho,SPELL_DEATH, true);
+                me->ForcedDespawn();
+            }
 
-            pWho->CastSpell(pWho,SPELL_DEATH, true);
-            me->ForcedDespawn();
+            if (pWho->GetTypeId() == TYPEID_GAMEOBJECT)
+            {
+                //DoCast(me, SPELL_DEATH, true);
+                me->ForcedDespawn();
+            }
         }
     }
 
