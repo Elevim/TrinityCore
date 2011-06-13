@@ -911,12 +911,8 @@ class spell_biting_cold : public SpellScriptLoader
 
             void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
             {
-                Unit* caster = GetCaster();
                 Unit* target = GetTarget();
                 bool found = false;
-
-                if (!caster)
-                    return;
 
                 for (TargetList::iterator itr = listOfTargets.begin(); itr != listOfTargets.end(); ++itr)
                 {
@@ -935,6 +931,7 @@ class spell_biting_cold : public SpellScriptLoader
                         else
                             itr->second++;
                     }
+
                     found = true;
                     break;
                 }
