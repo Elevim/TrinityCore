@@ -17,21 +17,16 @@
 
 /*
     TODO:
-        Add achievments
-        Boombot explosion only hurt allies to the npc at the moment
-        Boombot explosion visual
         Fix void zone damage
-        If the boss is to close to a scrap pile -> no summon 
+        If the boss is to close to a scrap pile -> no summon  -- Needs retail confirmation
         make the life sparks visible...     /? Need test
-        Phase transition kneel/stand up animation
-        Proper scripts for adds (scrapbots should enter vehicle)
         Codestyle
 */
 
-#include "ScriptPCH.h"
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
+#include "SpellAuraEffects.h"
 #include "ulduar.h"
 
 enum Spells
@@ -45,8 +40,6 @@ enum Spells
 
     SPELL_GRAVITY_BOMB_10                       = 63024,
     SPELL_GRAVITY_BOMB_25                       = 64234,
-    SPELL_GRAVITY_BOMB_AURA_10                  = 63025,
-    SPELL_GRAVITY_BOMB_AURA_25                  = 63233,
 
     SPELL_HEARTBREAK_10                         = 65737,
     SPELL_HEARTBREAK_25                         = 64193,
@@ -186,7 +179,7 @@ class boss_xt002 : public CreatureScript
 
         CreatureAI* GetAI(Creature* pCreature) const
         {
-        return GetUlduarAI<boss_xt002_AI>(pCreature);
+            return GetUlduarAI<boss_xt002_AI>(pCreature);
         }
 
         struct boss_xt002_AI : public BossAI
@@ -195,18 +188,28 @@ class boss_xt002 : public CreatureScript
             {
             }
 
+            // Achievement related
+            bool HealthRecovered;       // Did a scrapbot recover XT-002's health during the encounter?
+            bool HardMode;              // Are we in hard mode? Or: was the heart killed during phase 2?
+            bool GravityBombCasualty;   // Did someone die because of Gravity Bomb damage?
+
             uint8 _phase;
             uint8 _heartExposed;
 
             uint32 transferHealth;
             bool enterHardMode;
-            bool hardMode;
+            
 
             void Reset()
             {
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NOT_SELECTABLE);
+                _Reset();
 
-                hardMode = false;
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                HealthRecovered = false;
+                GravityBombCasualty = false;
+                HardMode = false;
+
                 enterHardMode = false;
 
                 _phase = 1;
@@ -240,9 +243,9 @@ class boss_xt002 : public CreatureScript
                 switch (action)
                 {
                     case ACTION_ENTER_HARD_MODE:
-                        if (!hardMode)
+                        if (!HardMode)
                         {
-                            hardMode = true;
+                            HardMode = true;
 
                             // Enter hard mode
                             enterHardMode = true;
@@ -274,7 +277,7 @@ class boss_xt002 : public CreatureScript
                 DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
             }
 
-            void JustDied(Unit * /*victim*/)
+            void JustDied(Unit* /*victim*/)
             {
                 DoScriptText(SAY_DEATH, me);
                 _JustDied();
@@ -283,7 +286,7 @@ class boss_xt002 : public CreatureScript
 
             void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/)
             {
-                if (!hardMode && _phase == 1 && !HealthAbovePct(100 - 25 * (_heartExposed+1)))
+                if (!HardMode && _phase == 1 && !HealthAbovePct(100 - 25 * (_heartExposed+1)))
                     ExposeHeart();
             }
 
@@ -336,6 +339,12 @@ class boss_xt002 : public CreatureScript
 
                  if (_phase == 1)
                     DoMeleeAttackIfReady();
+            }
+
+            void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply)
+            {
+                if (apply && who->GetEntry() == NPC_XS013_SCRAPBOT)
+                    HealthRecovered = true;
             }
 
             void ExposeHeart()
@@ -392,7 +401,7 @@ class boss_xt002 : public CreatureScript
                 heart->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 heart->RemoveAurasDueToSpell(SPELL_EXPOSED_HEART);
 
-                if (!hardMode)
+                if (!HardMode)
                 {
                     if (!transferHealth)
                         transferHealth = (heart->GetMaxHealth() - heart->GetHealth());
@@ -403,6 +412,7 @@ class boss_xt002 : public CreatureScript
         };
 };
 
+typedef boss_xt002::boss_xt002_AI XT002AI;
 
 /*-------------------------------------------------------
  *
@@ -431,7 +441,7 @@ public:
         InstanceScript* m_pInstance;
         uint32 _damageTaken;
 
-        void DamageTaken(Unit * /*pDone*/, uint32 &damage)
+        void DamageTaken(Unit* /*pDone*/, uint32 &damage)
         {
             Creature* XT002 = me->GetCreature(*me, m_pInstance->GetData64(BOSS_XT002));
             if (!XT002 || !XT002->AI())
@@ -455,49 +465,48 @@ public:
  *///----------------------------------------------------
 class mob_scrapbot : public CreatureScript
 {
-public:
-    mob_scrapbot() : CreatureScript("mob_scrapbot") { }
+    public:
+        mob_scrapbot() : CreatureScript("mob_scrapbot") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new mob_scrapbotAI(pCreature);
-    }
-
-    struct mob_scrapbotAI : public ScriptedAI
-    {
-        mob_scrapbotAI(Creature* pCreature) : ScriptedAI(pCreature)
+        CreatureAI* GetAI(Creature* pCreature) const
         {
-            m_pInstance = me->GetInstanceScript();
+            return new mob_scrapbotAI(pCreature);
         }
 
-        InstanceScript* m_pInstance;
-
-        void Reset()
+        struct mob_scrapbotAI : public ScriptedAI
         {
-            me->SetReactState(REACT_PASSIVE);
-
-            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(BOSS_XT002)))
-                me->GetMotionMaster()->MoveFollow(pXT002, 0.0f, 0.0f);
-        }
-
-        void UpdateAI(const uint32 /*diff*/)
-        {
-            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(BOSS_XT002)))
+            mob_scrapbotAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                if (me->GetDistance2d(pXT002) <= 0.5)
-                {
-                    // TODO Send raid message
-
-                    // Increase health with 1 percent
-                    pXT002->ModifyHealth(int32(pXT002->CountPctFromMaxHealth(1)));
-
-                    // Despawns the scrapbot
-                    me->DespawnOrUnsummon();
-                }
+                Instance = me->GetInstanceScript();
             }
-        }
-    };
 
+            InstanceScript* Instance;
+            uint32 RangeCheckTimer;
+
+            void Reset()
+            {
+                me->SetReactState(REACT_PASSIVE);
+
+                RangeCheckTimer = 500;
+
+                if (Creature* pXT002 = me->GetCreature(*me, Instance->GetData64(BOSS_XT002)))
+                    me->GetMotionMaster()->MoveFollow(pXT002, 0.0f, 0.0f);
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                if (RangeCheckTimer <= diff)
+                {
+                    if (Creature* pXT002 = me->GetCreature(*me, Instance->GetData64(BOSS_XT002)))
+                    {
+                        if (me->IsWithinMeleeRange(pXT002))
+                            DoCast(pXT002, SPELL_SCRAPBOT_RIDE_VEHICLE);
+                    }
+                }
+                else
+                    RangeCheckTimer -= diff;
+            }
+        };
 };
 
 /*-------------------------------------------------------
@@ -584,6 +593,29 @@ public:
  *        XE-321 BOOMBOT
  *
  *///----------------------------------------------------
+class BoomEvent : public BasicEvent
+{
+    public:
+        BoomEvent(Creature* me) : _me(me)
+        {
+        }
+
+        bool Execute(uint64 /*time*/, uint32 /*diff*/)
+        {
+            // This hack is here because we suspect our implementation of spell effect execution on targets
+            // is done in the wrong order. We suspect that EFFECT_0 needs to be applied on all targets,
+            // then EFFECT_1, etc - instead of applying each effect on target1, then target2, etc.
+            // The above situation causes the visual for this spell to be bugged, so we remove the instakill
+            // effect and implement a script hack for that.
+            
+            _me->CastSpell(_me, SPELL_BOOM, false);
+            return true;
+        }
+
+    private:
+        Creature* _me;
+};
+
 class mob_boombot : public CreatureScript
 {
     public:
@@ -607,18 +639,48 @@ class mob_boombot : public CreatureScript
 
                 DoCast(SPELL_AURA_BOOMBOT); // For achievement
 
+                // HACK/workaround:
+                // these values aren't confirmed - lack of data - and the values in DB are incorrect
+                // these values are needed for correct damage of Boom spell
+                me->SetFloatValue(UNIT_FIELD_MINDAMAGE, 15000.0f);
+                me->SetFloatValue(UNIT_FIELD_MAXDAMAGE, 18000.0f);
+
+                // Todo: proper waypoints?
                 if (Creature* pXT002 = me->GetCreature(*me, _instance->GetData64(BOSS_XT002)))
                     me->GetMotionMaster()->MoveFollow(pXT002, 0.0f, 0.0f);
             }
 
             void DamageTaken(Unit* /*who*/, uint32& damage)
             {
-                if (damage >= me->GetHealth() && !_boomed)
+                if (damage >= (me->GetHealth() - me->GetMaxHealth() * 0.5f) && !_boomed)
                 {
                     _boomed = true; // Prevent recursive calls
-                    DoCast(SPELL_BOOM); //TODO: Figure out why visual doesn't always work like it should
+
+                    WorldPacket data(SMSG_SPELLINSTAKILLLOG, 8+8+4);
+                    data << uint64(me->GetGUID());
+                    data << uint64(me->GetGUID());
+                    data << uint32(SPELL_BOOM);
+                    me->SendMessageToSet(&data, false);
+
+                    me->DealDamage(me, me->GetHealth(), NULL, NODAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+
                     damage = 0;
+
+                    // Visual only seems to work if the instant kill event is delayed
+                    // Casting done from player and caster source has the same targetinfo flags,
+                    // so that can't be the issue
+                    // See InstantKillEvent class
+                    // Schedule 1s delayed
+                    me->m_Events.AddEvent(new BoomEvent(me), me->m_Events.CalculateTime(1*IN_MILLISECONDS));
                 }
+            }
+
+            void UpdateAI(uint32 const diff)
+            {
+                if (!UpdateVictim())
+                    return;
+
+                // No melee attack
             }
 
            private:
@@ -646,7 +708,7 @@ public:
     struct mob_life_sparkAI : public ScriptedAI
     {
         mob_life_sparkAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
+        {   
             m_pInstance = pCreature->GetInstanceScript();
         }
 
@@ -714,14 +776,14 @@ class spell_xt002_searing_light_spawn_life_spark : public SpellScriptLoader
         }
 };
 
-class spell_xt002_gravity_bomb_spawn_void_zone : public SpellScriptLoader
+class spell_xt002_gravity_bomb_aura : public SpellScriptLoader
 {
     public:
-        spell_xt002_gravity_bomb_spawn_void_zone() : SpellScriptLoader("spell_xt002_gravity_bomb_spawn_void_zone") { }
+        spell_xt002_gravity_bomb_aura() : SpellScriptLoader("spell_xt002_gravity_bomb_aura") { }
 
-        class spell_xt002_gravity_bomb_spawn_void_zone_AuraScript : public AuraScript
+        class spell_xt002_gravity_bomb_aura_AuraScript : public AuraScript
         {
-            PrepareAuraScript(spell_xt002_gravity_bomb_spawn_void_zone_AuraScript);
+            PrepareAuraScript(spell_xt002_gravity_bomb_aura_AuraScript);
 
             bool Validate(SpellEntry const* /*spell*/)
             {
@@ -738,15 +800,63 @@ class spell_xt002_gravity_bomb_spawn_void_zone : public SpellScriptLoader
                             plr->CastSpell(plr, SPELL_SUMMON_VOID_ZONE, true);
             }
 
+            void OnPeriodic(AuraEffect const* aurEff)
+            {
+                Unit* xt002 = GetCaster();
+                if (!xt002)
+                    return;
+
+                Unit* owner = GetOwner()->ToUnit();
+                if (!owner)
+                    return;
+
+                if (aurEff->GetAmount() >= int32(owner->GetHealth()))
+                    if (XT002AI* xt002AI = CAST_AI(XT002AI, xt002->GetAI()))
+                        xt002AI->GravityBombCasualty = true;
+            }
+
             void Register()
             {
-                AfterEffectRemove += AuraEffectRemoveFn(spell_xt002_gravity_bomb_spawn_void_zone_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_xt002_gravity_bomb_aura_AuraScript::OnPeriodic, EFFECT_2, SPELL_AURA_PERIODIC_DAMAGE);
+                AfterEffectRemove += AuraEffectRemoveFn(spell_xt002_gravity_bomb_aura_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
             }
         };
 
         AuraScript* GetAuraScript() const
         {
-            return new spell_xt002_gravity_bomb_spawn_void_zone_AuraScript();
+            return new spell_xt002_gravity_bomb_aura_AuraScript();
+        }
+};
+
+class spell_xt002_gravity_bomb_damage : public SpellScriptLoader
+{
+    public:
+        spell_xt002_gravity_bomb_damage() : SpellScriptLoader("spell_xt002_gravity_bomb_damage") { }
+
+        class spell_xt002_gravity_bomb_damage_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_xt002_gravity_bomb_damage_SpellScript);
+
+            void HandleScript(SpellEffIndex /*eff*/)
+            {
+                Unit* caster = GetCaster();
+                if (!caster)
+                    return;
+
+                if (GetHitDamage() >= int32(GetHitUnit()->GetHealth()))
+                    if (XT002AI* xt002AI = CAST_AI(XT002AI, GetCaster()->GetAI()))
+                        xt002AI->GravityBombCasualty = true;
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_xt002_gravity_bomb_damage_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_xt002_gravity_bomb_damage_SpellScript();
         }
 };
 
@@ -918,6 +1028,57 @@ class spell_xt002_stand : public SpellScriptLoader
         }
 };
 
+class achievement_nerf_engineering : public AchievementCriteriaScript
+{
+    public:
+        achievement_nerf_engineering() : AchievementCriteriaScript("achievement_nerf_engineering") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (!target)
+                return false;
+
+            if (XT002AI* xt002AI = CAST_AI(XT002AI, target->GetAI()))
+                return !xt002AI->HealthRecovered;
+
+            return false;
+        }
+};
+
+class achievement_heartbreaker : public AchievementCriteriaScript
+{
+    public:
+        achievement_heartbreaker() : AchievementCriteriaScript("achievement_heartbreaker") { }
+
+        bool OnCheck(Player* /*source*/, Unit* target)
+        {
+            if (!target)
+                return false;
+
+            if (XT002AI* xt002AI = CAST_AI(XT002AI, target->GetAI()))
+                return xt002AI->HardMode;
+
+            return false;
+        }
+};
+
+class achievement_nerf_gravity_bombs : public AchievementCriteriaScript
+{
+    public:
+        achievement_nerf_gravity_bombs() : AchievementCriteriaScript("achievement_nerf_gravity_bombs") { }
+
+        bool OnCheck(Player* source, Unit* target)
+        {
+            if (!target)
+                return false;
+
+            if (XT002AI* xt002AI = CAST_AI(XT002AI, target->GetAI()))
+                return !xt002AI->GravityBombCasualty;
+
+            return false;
+        }
+};
+
 void AddSC_boss_xt002()
 {
     new mob_xt002_heart();
@@ -929,9 +1090,14 @@ void AddSC_boss_xt002()
     new boss_xt002();
 
     new spell_xt002_searing_light_spawn_life_spark();
-    new spell_xt002_gravity_bomb_spawn_void_zone();
+    new spell_xt002_gravity_bomb_aura();
+    new spell_xt002_gravity_bomb_damage();
     new spell_xt002_heart_overload_periodic();
     new spell_xt002_tympanic_tantrum();
     new spell_xt002_submerged();
     new spell_xt002_stand();
+
+    new achievement_nerf_engineering();
+    new achievement_heartbreaker();
+    new achievement_nerf_gravity_bombs();
 }
