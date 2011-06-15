@@ -22,8 +22,12 @@
  * Living Poisen *
  * ************* */
 
-#define SPELL_DEATH        5
-#define NAXXMAP         533
+#define SPELL_DEATH         5
+#define NAXXMAP             533
+#define uiPatchwerkGUID     128135
+#define uiLane1GUID         3000004
+#define uiLane2GUID         3000005
+#define uiLane3GUID         3000006
 
 class naxx_mob_poisen : public CreatureScript
 {
@@ -55,18 +59,12 @@ public:
 
         if (me->IsWithinDistInMap(pWho, 1.0f))
         {
-            if (pWho->GetTypeId() != TYPEID_PLAYER && pWho->GetTypeId() != TYPEID_GAMEOBJECT)
+            if (pWho->GetTypeId() != TYPEID_PLAYER)
                 return;
 
             if (pWho->GetTypeId() == TYPEID_PLAYER)
             {
                 pWho->CastSpell(pWho,SPELL_DEATH, true);
-                me->ForcedDespawn();
-            }
-
-            if (pWho->GetTypeId() == TYPEID_GAMEOBJECT)
-            {
-                //DoCast(me, SPELL_DEATH, true);
                 me->ForcedDespawn();
             }
         }
