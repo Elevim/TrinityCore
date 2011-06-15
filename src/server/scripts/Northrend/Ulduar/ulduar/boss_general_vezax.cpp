@@ -15,7 +15,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
 #include "ulduar.h"
 
 enum VezaxYells
@@ -41,6 +44,7 @@ enum VezaxSpells
 {
     SPELL_AURA_OF_DESPAIR                        = 62692,
     SPELL_MARK_OF_THE_FACELESS                   = 63276,
+    SPELL_MARK_OF_THE_FACELESS_DAMAGE            = 63278,
     SPELL_SARONITE_BARRIER                       = 63364,
     SPELL_SEARING_FLAMES                         = 62661,
     SPELL_SHADOW_CRASH                           = 62660,
@@ -465,4 +469,5 @@ void AddSC_boss_general_vezax()
     new boss_general_vezax();
     new boss_saronite_animus();
     new npc_saronite_vapors();
+    new spell_mark_of_the_faceless();
 }

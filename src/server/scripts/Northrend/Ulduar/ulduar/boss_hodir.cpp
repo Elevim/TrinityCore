@@ -15,8 +15,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include "ScriptPCH.h"
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
@@ -646,10 +644,10 @@ class npc_hodir_priest : public CreatureScript
             }
 
             void JustDied(Unit* /*who*/)
-             {
+ 	        {
                 if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
-              }
+  	        }
 
         private:
             InstanceScript* instance;
@@ -708,10 +706,10 @@ class npc_hodir_shaman : public CreatureScript
             }
 
             void JustDied(Unit* /*who*/)
-             {
+ 	        {
                 if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
-              }
+  	        }
 
         private:
             InstanceScript* instance;
@@ -769,10 +767,10 @@ class npc_hodir_druid : public CreatureScript
             }
 
             void JustDied(Unit* /*who*/)
-             {
+ 	        {
                 if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
-              }
+  	        }
 
         private:
             InstanceScript* instance;
@@ -832,7 +830,7 @@ class npc_hodir_mage : public CreatureScript
                     switch (eventId)
                     {
                         case EVENT_CONJURE_FIRE:
-                            if (summons.size() >= RAID_MODE(2, 4))
+                            if (summons.size() >= RAID_MODE<uint64>(2, 4))
                                 break;
                             DoCast(me, SPELL_CONJURE_FIRE, true);
                             events.ScheduleEvent(EVENT_CONJURE_FIRE, urand(15000, 20000));
@@ -849,10 +847,10 @@ class npc_hodir_mage : public CreatureScript
             }
 
             void JustDied(Unit* /*who*/)
-             {
-                  if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
+ 	        {
+  	            if (Creature* Hodir = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(BOSS_HODIR) : 0))
                     Hodir->AI()->DoAction(ACTION_I_HAVE_THE_COOLEST_FRIENDS);
-              }
+  	        }
 
         private:
             InstanceScript* instance;
