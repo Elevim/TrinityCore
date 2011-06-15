@@ -144,7 +144,7 @@ public:
 
         InstanceScript* pInstance;
 
-        void JustDied(Unit * /*who*/)
+        void JustDied(Unit* /*who*/)
         {
             if (pInstance)
             {
