@@ -441,19 +441,6 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                         break;
                     }
 
-                    //Emalon 25er Nova
-                    case 65279:
-                    {
-                        if(unitTarget->GetGUID() == m_caster->GetGUID())
-                            return;
-                        float distance = m_caster->GetDistance2d(unitTarget);
-                        if(distance >= 100)
-                            damage = 0;
-                        else if(distance < 100 && distance > 7)
-                            damage *= (7/distance);
-                        break;
-                    }
-
                     // Loken Pulsing Shockwave
                     case 59837:
                     case 52942:
@@ -1405,11 +1392,12 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                             ++aItr;
 
                     // selected from list 3
-                    for (uint32 i = 0; i < std::min(size_t(3), attackers.size()); ++i)
+                    uint32 maxTargets = std::min<uint32>(3, attackers.size());
+                    for (uint32 i = 0; i < maxTargets; ++i)
                     {
                         Unit::AttackerSet::iterator aItr = attackers.begin();
-                        std::advance(aItr, rand() % attackers.size());
-                        AddUnitTarget((*aItr), 1);
+                        std::advance(aItr, urand(0, attackers.size() - 1));
+                        AddUnitTarget(*aItr, 1);
                         attackers.erase(aItr);
                     }
 
@@ -1781,7 +1769,7 @@ void Spell::EffectTriggerSpell(SpellEffIndex effIndex)
                     m_caster->RemoveAura(iter);
                 }
                 else
-                    iter++;
+                    ++iter;
             }
             return;
         }
@@ -1858,17 +1846,11 @@ void Spell::EffectJump(SpellEffIndex effIndex)
     if (m_caster->isInFlight())
         return;
 
-    float x, y, z, o;
+    float x, y, z;
     if (m_targets.getUnitTarget())
-    {
         m_targets.getUnitTarget()->GetContactPoint(m_caster, x, y, z, CONTACT_DISTANCE);
-        o = m_caster->GetOrientation();
-    }
     else if (m_targets.getGOTarget())
-    {
         m_targets.getGOTarget()->GetContactPoint(m_caster, x, y, z, CONTACT_DISTANCE);
-        o = m_caster->GetOrientation();
-    }
     else
     {
         sLog->outError("Spell::EffectJump - unsupported target mode for spell ID %u", m_spellInfo->Id);
@@ -1886,7 +1868,7 @@ void Spell::EffectJumpDest(SpellEffIndex effIndex)
         return;
 
     // Init dest coordinates
-    float x, y, z, o;
+    float x, y, z;
     if (m_targets.HasDst())
     {
         m_targets.m_dstPos.GetPosition(x, y, z);
@@ -1903,10 +1885,7 @@ void Spell::EffectJumpDest(SpellEffIndex effIndex)
             else if (m_caster->GetTypeId() == TYPEID_PLAYER)
                 pTarget = ObjectAccessor::GetUnit(*m_caster, m_caster->ToPlayer()->GetSelection());
 
-            o = pTarget ? pTarget->GetOrientation() : m_caster->GetOrientation();
         }
-        else
-            o = m_caster->GetOrientation();
     }
     else
     {
@@ -3500,7 +3479,7 @@ void Spell::EffectEnchantItemPerm(SpellEffIndex effIndex)
         if (!item_owner)
             return;
 
-        if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_MODERATOR && sWorld->getBoolConfig(CONFIG_GM_LOG_TRADE))
+        if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld->getBoolConfig(CONFIG_GM_LOG_TRADE))
         {
             sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
                 p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
@@ -3561,7 +3540,7 @@ void Spell::EffectEnchantItemPrismatic(SpellEffIndex effIndex)
     if (!item_owner)
         return;
 
-    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_MODERATOR && sWorld->getBoolConfig(CONFIG_GM_LOG_TRADE))
+    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld->getBoolConfig(CONFIG_GM_LOG_TRADE))
     {
         sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
@@ -3691,7 +3670,7 @@ void Spell::EffectEnchantItemTmp(SpellEffIndex effIndex)
     if (!item_owner)
         return;
 
-    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_MODERATOR && sWorld->getBoolConfig(CONFIG_GM_LOG_TRADE))
+    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld->getBoolConfig(CONFIG_GM_LOG_TRADE))
     {
         sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(temp): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
@@ -3879,14 +3858,7 @@ void Spell::EffectTaunt(SpellEffIndex /*effIndex*/)
     }
 
     if (m_spellInfo->Id == 62124)
-    {
-        int32 damageDone = int32(1 + m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.5f);
-        bool is_crit = m_caster->isSpellCrit(unitTarget, m_spellInfo, m_spellSchoolMask, m_attackType);
-        if (is_crit)
-            damageDone *= 2;
-        m_caster->DealDamage(unitTarget, damageDone, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_HOLY, m_spellInfo, false);
-        m_caster->SendSpellNonMeleeDamageLog(unitTarget, m_spellInfo->Id, damageDone, SPELL_SCHOOL_MASK_HOLY, 0, 0, false, false, is_crit);
-    }
+        m_caster->CastSpell(unitTarget, 67485, true);
 
     // Also use this effect to set the taunter's threat to the taunted creature's highest value
     if (unitTarget->getThreatManager().getCurrentVictim())
@@ -6042,6 +6014,10 @@ void Spell::EffectKnockBack(SpellEffIndex effIndex)
 {
     if (!unitTarget)
         return;
+
+    if (Creature* creatureTarget = unitTarget->ToCreature())
+        if (creatureTarget->isWorldBoss() || creatureTarget->IsDungeonBoss())
+            return;
 
     // Typhoon
     if (m_spellInfo->SpellFamilyName == SPELLFAMILY_DRUID && m_spellInfo->SpellFamilyFlags[1] & 0x01000000)
