@@ -205,9 +205,9 @@ public:
                 case 15930: uiFeugen = creature->GetGUID(); return;
                 case 15929: uiStalagg = creature->GetGUID(); return;
                 case 15990: uiKelthuzad = creature->GetGUID(); return;
-                case NPC_LANE1: uiLane1GUID =creature->GetGUID(); return;
-                case NPC_LANE2: uiLane2GUID =creature->GetGUID(); return;
-                case NPC_LANE3: uiLane3GUID =creature->GetGUID(); return;
+                case NPC_LANE1: uiLane1GUID = creature->GetGUID(); return;
+                case NPC_LANE2: uiLane2GUID = creature->GetGUID(); return;
+                case NPC_LANE3: uiLane3GUID = creature->GetGUID(); return;
             }
 
             AddMinion(creature, true);
