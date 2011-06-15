@@ -553,10 +553,51 @@ class go_naxx_portal : public GameObjectScript
         }
 };
 
+#define	SPELL_EMBALMING_CLOUD =  28322
+
+class naxx_mob_slime : public CreatureScript
+{
+public:
+    naxx_mob_slime() : CreatureScript("naxx_mob_slime") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new naxx_mob_slimeAI (pCreature);
+    }
+    struct naxx_mob_slimeAI : public ScriptedAI
+    {
+        naxx_mob_slimeAI(Creature* c) : ScriptedAI(c) {}
+
+	uint32 embalmingCloud;
+
+    	void Reset()
+    	{
+		embalmingCloud = 10000;
+    	}
+
+    	void EnterCombat(Unit* who)
+    	{
+    		me->CallForHelp(100.0f);
+    	}
+    	void UpdateAI(uint32 const uiDiff)
+    	{
+        	if (!UpdateVictim())
+                	return;
+
+
+		if (embalmingCloud < uiDiff){
+			DoCastAOE(SPELL_EMBALMING_CLOUD);
+			embalmingCloud = 10000;
+		}
+		else embalmingCloud -= uiDiff;
+    	}
+    };
+};
 
 void AddSC_instance_naxxramas()
 {
     new instance_naxxramas();
     new at_naxxramas_frostwyrm_wing();
     new go_naxx_portal();
+    new naxx_mob_slime();
 }
