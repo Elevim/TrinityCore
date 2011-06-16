@@ -15,9 +15,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
 #include "ulduar.h"
-#include "Vehicle.h"
 
 /* ScriptData
 SDName: boss_kologarn
@@ -95,7 +97,7 @@ class boss_kologarn : public CreatureScript
 
         CreatureAI* GetAI(Creature* pCreature) const
         {
-            return new boss_kologarnAI (pCreature);
+            return GetUlduarAI<boss_kologarnAI>(pCreature);
         }
 
         struct boss_kologarnAI : public BossAI
@@ -142,7 +144,7 @@ class boss_kologarn : public CreatureScript
                 eyebeamTarget = 0;
             }
 
-            void JustDied(Unit * /*victim*/)
+            void JustDied(Unit* /*victim*/)
             {
                 DoScriptText(SAY_DEATH, me);
                 DoCast(SPELL_KOLOGARN_PACIFY);
@@ -183,11 +185,11 @@ class boss_kologarn : public CreatureScript
                         instance->SetData64(DATA_RIGHT_ARM, who->GetGUID());
                 }
 
+                if (!isEncounterInProgress)
+                    return;
+
                 if (!apply)
                 {
-                    if (!isEncounterInProgress)
-                        return;
-
                     who->CastSpell(me, SPELL_ARM_DEAD_DAMAGE, true);
 
                     if (Creature* rubbleStalker = who->FindNearestCreature(NPC_RUBBLE_STALKER, 70.0f))
@@ -435,7 +437,7 @@ class spell_ulduar_stone_grip_cast_target : public SpellScriptLoader
 
             void HandleForceCast(SpellEffIndex i)
             {
-                Player * plr = GetHitPlayer();
+                Player* plr = GetHitPlayer();
                 if (!plr)
                     return;
 
@@ -486,6 +488,8 @@ class spell_ulduar_cancel_stone_grip : public SpellScriptLoader
                         break;
                     case RAID_DIFFICULTY_25MAN_NORMAL:
                         target->RemoveAura(SpellMgr::CalculateSpellEffectAmount(GetSpellInfo(), EFFECT_1));
+                        break;
+                    default:
                         break;
                 }
             }

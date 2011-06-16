@@ -353,8 +353,8 @@ public:
         mob_nerubar_victimAI(Creature *c) : ScriptedAI(c) {}
 
         void Reset() {}
-        void EnterCombat(Unit * /*who*/) {}
-        void MoveInLineOfSight(Unit * /*who*/) {}
+        void EnterCombat(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
 
         void JustDied(Unit* Killer)
         {
@@ -588,10 +588,10 @@ public:
             Phase = 1;
             go_caribouGUID = 0;
         }
-        void EnterCombat(Unit * /*who*/) {}
-        void MoveInLineOfSight(Unit * /*who*/) {}
+        void EnterCombat(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
 
-        void JustDied(Unit * /*who*/)
+        void JustDied(Unit* /*who*/)
         {
             if (GameObject *go_caribou = me->GetMap()->GetGameObject(go_caribouGUID))
                 go_caribou->SetLootState(GO_JUST_DEACTIVATED);
@@ -2559,7 +2559,7 @@ public:
         }
 
         if (uiAction == GOSSIP_ACTION_TRADE)
-            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+            pPlayer->GetSession()->SendListInventory(pCreature->GetGUID());
 
         return true;
     }

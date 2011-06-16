@@ -553,7 +553,7 @@ class go_naxx_portal : public GameObjectScript
         }
 };
 
-#define	SPELL_EMBALMING_CLOUD  28322
+#define	SPELL_EMBALMING_CLOUD       28322
 
 class naxx_mob_slime : public CreatureScript
 {
@@ -568,22 +568,22 @@ public:
     {
         naxx_mob_slimeAI(Creature* c) : ScriptedAI(c) {}
 
-	uint32 embalmingCloud;
+	    uint32 embalmingCloud;
 
     	void Reset()
     	{
-		embalmingCloud = 10000;
+		    embalmingCloud = 10000;
     	}
 
     	void EnterCombat(Unit* who)
     	{
     		me->CallForHelp(100.0f);
     	}
+
     	void UpdateAI(uint32 const uiDiff)
     	{
         	if (!UpdateVictim())
                 	return;
-
 
 		if (embalmingCloud < uiDiff){
 			DoCastAOE(SPELL_EMBALMING_CLOUD);
@@ -592,7 +592,6 @@ public:
 		else embalmingCloud -= uiDiff;
     
 	        DoMeleeAttackIfReady();
-
     	}
     };
 };

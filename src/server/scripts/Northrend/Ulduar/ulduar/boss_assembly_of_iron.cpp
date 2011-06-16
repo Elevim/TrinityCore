@@ -204,7 +204,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_steelbreakerAI (pCreature);
+        return GetUlduarAI<boss_steelbreakerAI>(pCreature);
     }
 
     struct boss_steelbreakerAI : public ScriptedAI
@@ -230,7 +230,7 @@ public:
         InstanceScript* pInstance;
         uint32 phase;
 
-        void EnterCombat(Unit * who)
+        void EnterCombat(Unit* who)
         {
             StartEncounter(pInstance, me, who);
             DoScriptText(SAY_STEELBREAKER_AGGRO, me);
@@ -291,7 +291,7 @@ public:
                 pInstance->SetData(BOSS_ASSEMBLY_OF_IRON, DONE);
         }
 
-        void KilledUnit(Unit * /*who*/)
+        void KilledUnit(Unit* /*who*/)
         {
             DoScriptText(RAND(SAY_STEELBREAKER_SLAY_1, SAY_STEELBREAKER_SLAY_2), me);
 
@@ -299,7 +299,7 @@ public:
                 DoCast(me, SPELL_ELECTRICAL_CHARGE);
         }
 
-        void SpellHit(Unit * /*from*/, const SpellEntry *spell)
+        void SpellHit(Unit* /*from*/, const SpellEntry *spell)
         {
             if (spell->Id == SPELL_SUPERCHARGE)
                 DoAction(EVENT_UPDATEPHASE);
@@ -350,7 +350,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_runemaster_molgeimAI (pCreature);
+        return GetUlduarAI<boss_runemaster_molgeimAI>(pCreature);
     }
 
     struct boss_runemaster_molgeimAI : public ScriptedAI
@@ -438,12 +438,12 @@ public:
                 pInstance->SetData(BOSS_ASSEMBLY_OF_IRON, DONE);
         }
 
-        void KilledUnit(Unit * /*who*/)
+        void KilledUnit(Unit* /*who*/)
         {
             DoScriptText(RAND(SAY_MOLGEIM_SLAY_1, SAY_MOLGEIM_SLAY_2), me);
         }
 
-        void SpellHit(Unit * /*from*/, const SpellEntry *spell)
+        void SpellHit(Unit* /*from*/, const SpellEntry *spell)
         {
             if (spell->Id == SPELL_SUPERCHARGE)
                 DoAction(EVENT_UPDATEPHASE);
@@ -591,7 +591,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_stormcaller_brundirAI (pCreature);
+        return GetUlduarAI<boss_stormcaller_brundirAI>(pCreature);
     }
 
     struct boss_stormcaller_brundirAI : public ScriptedAI
@@ -683,12 +683,12 @@ public:
                 pInstance->SetData(BOSS_ASSEMBLY_OF_IRON, DONE);
         }
 
-        void KilledUnit(Unit * /*who*/)
+        void KilledUnit(Unit* /*who*/)
         {
             DoScriptText(RAND(SAY_BRUNDIR_SLAY_1, SAY_BRUNDIR_SLAY_2), me);
         }
 
-        void SpellHit(Unit * /*from*/, const SpellEntry *spell)
+        void SpellHit(Unit* /*from*/, const SpellEntry *spell)
         {
             if (spell->Id == SPELL_SUPERCHARGE)
                 DoAction(EVENT_UPDATEPHASE);

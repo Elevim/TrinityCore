@@ -391,7 +391,7 @@ bool AchievementCriteriaDataSet::Meets(Player const* source, Unit const* target,
     return true;
 }
 
-AchievementMgr::AchievementMgr(Player *player)
+AchievementMgr::AchievementMgr(Player* player)
 {
     m_player = player;
 }

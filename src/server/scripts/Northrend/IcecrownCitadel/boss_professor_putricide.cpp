@@ -717,10 +717,12 @@ class spell_putricide_gaseous_bloat : public SpellScriptLoader
             void HandleExtraEffect(AuraEffect const* /*aurEff*/)
             {
                 Unit* target = GetTarget();
-                Unit* caster = GetCaster();
-                target->RemoveAuraFromStack(GetSpellProto()->Id, GetCasterGUID());
-                if (!target->HasAura(GetId()) && caster && caster->GetTypeId() == TYPEID_UNIT)
-                    caster->ToCreature()->DespawnOrUnsummon();
+                if (Unit* caster = GetCaster())
+                {
+                    target->RemoveAuraFromStack(GetSpellProto()->Id, GetCasterGUID());
+                    if (!target->HasAura(GetId())&& caster->GetTypeId() == TYPEID_UNIT)
+                        caster->ToCreature()->DespawnOrUnsummon();
+                }
             }
 
             void Register()
@@ -1232,8 +1234,6 @@ class spell_putricide_mutated_plague : public SpellScriptLoader
 
             void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
-                if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_STACK)
-                    return;
                 uint32 healSpell = uint32(SpellMgr::CalculateSpellEffectAmount(GetSpellProto(), 0));
                 GetTarget()->CastSpell(GetTarget(), healSpell, true, NULL, NULL, GetCasterGUID());
             }

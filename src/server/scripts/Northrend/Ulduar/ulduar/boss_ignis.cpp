@@ -15,7 +15,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
 #include "ulduar.h"
 
 enum Yells
@@ -115,16 +118,14 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_ignis_AI (pCreature);
+        return GetUlduarAI<boss_ignis_AI>(pCreature);
     }
 
     struct boss_ignis_AI : public BossAI
     {
         boss_ignis_AI(Creature *pCreature) : BossAI(pCreature, BOSS_IGNIS), vehicle(me->GetVehicleKit())
         {
-            assert(vehicle);
-            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+            ASSERT(vehicle);
         }
 
         Vehicle *vehicle;
@@ -431,7 +432,7 @@ class spell_ignis_slag_pot : public SpellScriptLoader
         class spell_ignis_slag_pot_AuraScript : public AuraScript
         {
             PrepareAuraScript(spell_ignis_slag_pot_AuraScript)
-            bool Validate(SpellEntry const * /*spellEntry*/)
+            bool Validate(SpellEntry const* /*spellEntry*/)
             {
                 if (!sSpellStore.LookupEntry(SPELL_SLAG_POT_DAMAGE))
                     return false;
@@ -442,13 +443,13 @@ class spell_ignis_slag_pot : public SpellScriptLoader
                 return true;
             }
 
-            void HandleEffectPeriodic(AuraEffect const * aurEff)
+            void HandleEffectPeriodic(AuraEffect const* aurEff)
             {
                 Unit* aurEffCaster = aurEff->GetCaster();
                 if (!aurEffCaster)
                     return;
 
-                Unit * target = GetTarget();
+                Unit* target = GetTarget();
                 aurEffCaster->CastSpell(target, SPELL_SLAG_POT_DAMAGE, true);
                 if (target->isAlive() && !GetDuration())
                      target->CastSpell(target, SPELL_SLAG_IMBUED, true);

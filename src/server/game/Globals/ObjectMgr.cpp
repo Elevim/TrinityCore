@@ -45,8 +45,6 @@
 #include "ScriptMgr.h"
 #include "SpellScript.h"
 #include "PoolMgr.h"
-#include "QueryResult.h"
-
 
 ScriptMapMap sQuestEndScripts;
 ScriptMapMap sQuestStartScripts;
@@ -224,7 +222,7 @@ bool SpellClickInfo::IsFitToRequirements(Unit const* clicker, Unit const* clicke
         if (clicker->HasAura(auraForbidden))
             return false;
 
-    Unit const * summoner = NULL;
+    Unit const* summoner = NULL;
     // Check summoners for party
     if (clickee->isSummon())
         summoner = clickee->ToTempSummon()->GetSummoner();
@@ -989,7 +987,7 @@ void ObjectMgr::LoadCreatureAddons()
     sLog->outString();
 }
 
-CreatureAddon const * ObjectMgr::GetCreatureAddon(uint32 lowguid)
+CreatureAddon const* ObjectMgr::GetCreatureAddon(uint32 lowguid)
 {
     CreatureAddonContainer::const_iterator itr = CreatureAddonStore.find(lowguid);
     if (itr != CreatureAddonStore.end())
@@ -998,7 +996,7 @@ CreatureAddon const * ObjectMgr::GetCreatureAddon(uint32 lowguid)
     return NULL;
 }
 
-CreatureAddon const * ObjectMgr::GetCreatureTemplateAddon(uint32 entry)
+CreatureAddon const* ObjectMgr::GetCreatureTemplateAddon(uint32 entry)
 {
     CreatureAddonContainer::const_iterator itr = CreatureTemplateAddonStore.find(entry);
     if (itr != CreatureTemplateAddonStore.end())
@@ -1124,9 +1122,9 @@ void ObjectMgr::ChooseCreatureFlags(const CreatureTemplate *cinfo, uint32& npcfl
     }
 }
 
-CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32 &displayID)
+CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32* displayID)
 {
-    CreatureModelInfo const* minfo = GetCreatureModelInfo(displayID);
+    CreatureModelInfo const* minfo = GetCreatureModelInfo(*displayID);
     if (!minfo)
         return NULL;
 
@@ -1135,13 +1133,11 @@ CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32 &display
     {
         CreatureModelInfo const *minfo_tmp = GetCreatureModelInfo(minfo->modelid_other_gender);
         if (!minfo_tmp)
-        {
-            sLog->outErrorDb("Model (Entry: %u) has modelid_other_gender %u not found in table `creature_model_info`. ", displayID, minfo->modelid_other_gender);
-        }
+            sLog->outErrorDb("Model (Entry: %u) has modelid_other_gender %u not found in table `creature_model_info`. ", *displayID, minfo->modelid_other_gender);
         else
         {
             // Model ID changed
-            displayID = minfo->modelid_other_gender;
+            *displayID = minfo->modelid_other_gender;
             return minfo_tmp;
         }
     }
@@ -1576,12 +1572,6 @@ void ObjectMgr::LoadCreatures()
         {
             sLog->outErrorDb("Table `creature` have creature (GUID: %u Entry: %u) with `phaseMask`=0 (not visible for anyone), set to 1.", guid, data.id);
             data.phaseMask = 1;
-        }
-
-        if (data.npcflag & UNIT_NPC_FLAG_SPELLCLICK)
-        {
-            sLog->outErrorDb("Table `creature` have creature (GUID: %u Entry: %u) with npcflag UNIT_NPC_FLAG_SPELLCLICK (%u) set, it is expected to be set by code handling `npc_spellclick_spells` content.", guid, data.id, UNIT_NPC_FLAG_SPELLCLICK);
-            data.npcflag &= ~UNIT_NPC_FLAG_SPELLCLICK;
         }
 
         // Add to grid if not managed by the game event or pool system
@@ -3136,8 +3126,8 @@ void ObjectMgr::PlayerCreateInfoAddItemHelper(uint32 race_, uint32 class_, uint3
     }
 }
 
-
 void ObjectMgr::LoadAntiCheatConfig()
+
 {
     //                                                             0             1           2                 3           4
     QueryResult result  = CharacterDatabase.Query("SELECT checktype, check_period,alarmscount, disableoperation, messagenum,"
@@ -3145,23 +3135,17 @@ void ObjectMgr::LoadAntiCheatConfig()
                                                            "intparam1, intparam2,  floatparam1,  floatparam2,"
     //                                                            9              10        11             12
                                                            "action1,   actionparam1,  action2,  actionparam2,"
-                                                           "description FROM anticheat_config");
-    
+                                                           "description FROM anticheat_config"); 
+
     uint32 count = 0;
 
-    // MaNGOS hat in der Console eine Ausgabe "Ladebalken"
     if (!result)
     {
-        //barGoLink bar(1);
-        //bar.step();
-
         sLog->outString();
         sLog->outString(">> Loaded %u anticheat config definitions", count);
         sLog->outErrorDb("Error loading `anticheat_config` table or table is empty.");
         return;
     }
-
-    //barGoLink bar( (int)result->GetRowCount() );
 
     m_AntiCheatConfig.clear();
 
@@ -3184,34 +3168,34 @@ void ObjectMgr::LoadAntiCheatConfig()
         AntiCheatConfigEntry.disableOperation = fields[3].GetBool();
         AntiCheatConfigEntry.messageNum  = fields[4].GetUInt32();
 
-        for (int i=0; i < ANTICHEAT_CHECK_PARAMETERS; ++i )
+
+        for (int i=0; i < ANTICHEAT_CHECK_PARAMETERS; ++i)
+
         {
             AntiCheatConfigEntry.checkParam[i] = fields[5+i].GetUInt32();
         }
 
-        for (int i=0; i < ANTICHEAT_CHECK_PARAMETERS; ++i )
+        for (int i=0; i < ANTICHEAT_CHECK_PARAMETERS; ++i)
         {
             AntiCheatConfigEntry.checkFloatParam[i] = fields[5+ANTICHEAT_CHECK_PARAMETERS+i].GetFloat();
         }
 
-        for (int i=0; i < ANTICHEAT_ACTIONS; ++i )
+        for (int i=0; i < ANTICHEAT_ACTIONS; ++i)
+
         {
             AntiCheatConfigEntry.actionType[i] = fields[5+ANTICHEAT_CHECK_PARAMETERS*2+i*2].GetUInt32();
             AntiCheatConfigEntry.actionParam[i] = fields[6+ANTICHEAT_CHECK_PARAMETERS*2+i*2].GetUInt32();
         };
 
         AntiCheatConfigEntry.description  = fields[5+ANTICHEAT_CHECK_PARAMETERS*2+ANTICHEAT_ACTIONS*2].GetCString();
-
         m_AntiCheatConfig.insert(std::make_pair(AntiCheatConfigEntry.checkType, AntiCheatConfigEntry));
 
         ++count;
     }
     while (result->NextRow());
 
-
     sLog->outString();
     sLog->outString( ">> Loaded %u anticheat config definitions", count);
-
 }
 
 AntiCheatConfig const* ObjectMgr::GetAntiCheatConfig(uint32 checkType) const
@@ -5003,7 +4987,7 @@ void ObjectMgr::LoadEventScripts()
     // Load all possible script entries from spells
     for (uint32 i = 1; i < sSpellStore.GetNumRows(); ++i)
     {
-        SpellEntry const * spell = sSpellStore.LookupEntry(i);
+        SpellEntry const* spell = sSpellStore.LookupEntry(i);
         if (spell)
         {
             for (uint8 j = 0; j < MAX_SPELL_EFFECTS; ++j)
@@ -5017,9 +5001,9 @@ void ObjectMgr::LoadEventScripts()
         }
     }
 
-    for(size_t path_idx = 0; path_idx < sTaxiPathNodesByPath.size(); ++path_idx)
+    for (size_t path_idx = 0; path_idx < sTaxiPathNodesByPath.size(); ++path_idx)
     {
-        for(size_t node_idx = 0; node_idx < sTaxiPathNodesByPath[path_idx].size(); ++node_idx)
+        for (size_t node_idx = 0; node_idx < sTaxiPathNodesByPath[path_idx].size(); ++node_idx)
         {
             TaxiPathNodeEntry const& node = sTaxiPathNodesByPath[path_idx][node_idx];
 
@@ -5145,7 +5129,7 @@ void ObjectMgr::ValidateSpellScripts()
 
     for (SpellScriptsMap::iterator itr = mSpellScripts.begin(); itr != mSpellScripts.end();)
     {
-        SpellEntry const * spellEntry = sSpellStore.LookupEntry(itr->first);
+        SpellEntry const* spellEntry = sSpellStore.LookupEntry(itr->first);
         std::vector<std::pair<SpellScriptLoader *, SpellScriptsMap::iterator> > SpellScriptLoaders;
         sScriptMgr->CreateSpellScriptLoaders(itr->first, SpellScriptLoaders);
         itr = mSpellScripts.upper_bound(itr->first);
@@ -5537,12 +5521,29 @@ void ObjectMgr::ReturnOrDeleteOldMails(bool serverUp)
     PreparedQueryResult result = CharacterDatabase.Query(stmt);
     if (!result)
     {
-        sLog->outString(">> No expired mails found or DB table `mail` is empty.");
+        sLog->outString(">> No expired mails found.");
         sLog->outString();
         return;                                             // any mails need to be returned or deleted
     }
 
-    uint32 count = 0;
+    std::map<uint32 /*messageId*/, MailItemInfoVec> itemsCache;
+    stmt = CharacterDatabase.GetPreparedStatement(CHAR_GET_EXPIRED_MAIL_ITEMS);
+    stmt->setUInt64(0, basetime);
+    if (PreparedQueryResult items = CharacterDatabase.Query(stmt))
+    {
+        MailItemInfo item;
+        do
+        {
+            Field* fields = items->Fetch();
+            item.item_guid = fields[0].GetUInt32();
+            item.item_template = fields[1].GetUInt32();
+            uint32 mailId = fields[2].GetUInt32();
+            itemsCache[mailId].push_back(item);
+        } while (items->NextRow());
+    }
+
+    uint32 deletedCount = 0;
+    uint32 returnedCount = 0;
     do
     {
 
@@ -5573,21 +5574,9 @@ void ObjectMgr::ReturnOrDeleteOldMails(bool serverUp)
         // Delete or return mail
         if (has_items)
         {
-            stmt = CharacterDatabase.GetPreparedStatement(CHAR_GET_MAIL_ITEM_LITE);
-            stmt->setUInt32(0, m->messageID);
-            if (PreparedQueryResult resultItems = CharacterDatabase.Query(stmt))
-            {
-                do
-                {
-                    Field *fields2 = resultItems->Fetch();
+            // read items from cache
+            m->items.swap(itemsCache[m->messageID]);
 
-                    uint32 item_guid_low = fields2[0].GetUInt32();
-                    uint32 item_template = fields2[1].GetUInt32();
-
-                    m->AddItem(item_guid_low, item_template);
-                }
-                while (resultItems->NextRow());
-            }
             // if it is mail from non-player, or if it's already return mail, it shouldn't be returned, but deleted
             if (m->messageType != MAIL_NORMAL || (m->checked & (MAIL_CHECK_MASK_COD_PAYMENT | MAIL_CHECK_MASK_RETURNED)))
             {
@@ -5624,6 +5613,7 @@ void ObjectMgr::ReturnOrDeleteOldMails(bool serverUp)
                     CharacterDatabase.Execute(stmt);
                 }
                 delete m;
+                ++returnedCount;
                 continue;
             }
         }
@@ -5632,11 +5622,11 @@ void ObjectMgr::ReturnOrDeleteOldMails(bool serverUp)
         stmt->setUInt32(0, m->messageID);
         CharacterDatabase.Execute(stmt);
         delete m;
-        ++count;
+        ++deletedCount;
     }
     while (result->NextRow());
 
-    sLog->outString(">> Loaded %u mails in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+    sLog->outString(">> Processed %u expired mails: %u deleted and %u returned in %u ms", deletedCount + returnedCount, deletedCount, returnedCount, GetMSTimeDiffToNow(oldMSTime));
     sLog->outString();
 }
 
@@ -5875,7 +5865,7 @@ uint32 ObjectMgr::GetTaxiMountDisplayId(uint32 id, uint32 team, bool allowed_alt
     }
 
     // minfo is not actually used but the mount_id was updated
-    CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(mount_id);
+    sObjectMgr->GetCreatureModelRandomGender(&mount_id);
 
     return mount_id;
 }
@@ -7290,7 +7280,7 @@ void ObjectMgr::LoadQuestPOI()
             int32  x                  = fields[2].GetInt32();
             int32  y                  = fields[3].GetInt32();
 
-            if(POIs[questId].size() <= id + 1)
+            if (POIs[questId].size() <= id + 1)
                 POIs[questId].resize(id + 10);
 
             QuestPOIPoint point(x, y);
@@ -8090,8 +8080,15 @@ void ObjectMgr::LoadFishingBaseSkillLevel()
     sLog->outString();
 }
 
-bool ObjectMgr::CheckDeclinedNames(std::wstring mainpart, DeclinedName const& names)
+bool ObjectMgr::CheckDeclinedNames(std::wstring w_ownname, DeclinedName const& names)
 {
+    // get main part of the name
+    std::wstring mainpart = GetMainPartOfName(w_ownname, 0);
+    // prepare flags
+    bool x = true;
+    bool y = true;
+
+    // check declined names
     for (uint8 i =0; i < MAX_DECLINED_NAME_CASES; ++i)
     {
         std::wstring wname;
@@ -8099,9 +8096,12 @@ bool ObjectMgr::CheckDeclinedNames(std::wstring mainpart, DeclinedName const& na
             return false;
 
         if (mainpart != GetMainPartOfName(wname, i+1))
-            return false;
+            x = false;
+
+        if (w_ownname != wname)
+            y = false;
     }
-    return true;
+    return (x || y);
 }
 
 uint32 ObjectMgr::GetAreaTriggerScriptId(uint32 trigger_id)
@@ -8336,7 +8336,7 @@ void ObjectMgr::LoadMailLevelRewards()
     sLog->outString();
 }
 
-void ObjectMgr::AddSpellToTrainer( uint32 entry, uint32 spell, uint32 spellCost, uint32 reqSkill, uint32 reqSkillValue, uint32 reqLevel)
+void ObjectMgr::AddSpellToTrainer(uint32 entry, uint32 spell, uint32 spellCost, uint32 reqSkill, uint32 reqSkillValue, uint32 reqLevel)
 {
     if (entry >= TRINITY_TRAINER_START_REF)
         return;
@@ -8620,55 +8620,53 @@ void ObjectMgr::LoadGossipMenuItems()
 
         GossipMenuItems gMenuItem;
 
-        gMenuItem.menu_id               = fields[0].GetUInt32();
-        gMenuItem.id                    = fields[1].GetUInt32();
-        gMenuItem.option_icon           = fields[2].GetUInt8();
-        gMenuItem.option_text           = fields[3].GetString();
-        gMenuItem.option_id             = fields[4].GetUInt32();
-        gMenuItem.npc_option_npcflag    = fields[5].GetUInt32();
-        gMenuItem.action_menu_id        = fields[6].GetUInt32();
-        gMenuItem.action_poi_id         = fields[7].GetUInt32();
-        gMenuItem.action_script_id      = fields[8].GetUInt32();
-        gMenuItem.box_coded             = fields[9].GetUInt8() != 0;
-        gMenuItem.box_money             = fields[10].GetUInt32();
-        gMenuItem.box_text              = fields[11].GetString();
+        gMenuItem.MenuId                = fields[0].GetUInt32();
+        gMenuItem.OptionIndex           = fields[1].GetUInt32();
+        gMenuItem.OptionIcon            = fields[2].GetUInt8();
+        gMenuItem.OptionText            = fields[3].GetString();
+        gMenuItem.OptionType            = fields[4].GetUInt32();
+        gMenuItem.OptionNpcflag         = fields[5].GetUInt32();
+        gMenuItem.ActionMenuId          = fields[6].GetUInt32();
+        gMenuItem.ActionPoiId           = fields[7].GetUInt32();
+        gMenuItem.ActionScriptId        = fields[8].GetUInt32();
+        gMenuItem.BoxCoded              = fields[9].GetBool();
+        gMenuItem.BoxMoney              = fields[10].GetUInt32();
+        gMenuItem.BoxText               = fields[11].GetString();
 
-        if (gMenuItem.option_icon >= GOSSIP_ICON_MAX)
+        if (gMenuItem.OptionIcon >= GOSSIP_ICON_MAX)
         {
-            sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u has unknown icon id %u. Replacing with GOSSIP_ICON_CHAT", gMenuItem.menu_id, gMenuItem.id, gMenuItem.option_icon);
-            gMenuItem.option_icon = GOSSIP_ICON_CHAT;
+            sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u has unknown icon id %u. Replacing with GOSSIP_ICON_CHAT", gMenuItem.MenuId, gMenuItem.OptionIndex, gMenuItem.OptionIcon);
+            gMenuItem.OptionIcon = GOSSIP_ICON_CHAT;
         }
 
-        if (gMenuItem.option_id >= GOSSIP_OPTION_MAX)
-            sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u has unknown option id %u. Option will not be used", gMenuItem.menu_id, gMenuItem.id, gMenuItem.option_id);
+        if (gMenuItem.OptionType >= GOSSIP_OPTION_MAX)
+            sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u has unknown option id %u. Option will not be used", gMenuItem.MenuId, gMenuItem.OptionIndex, gMenuItem.OptionType);
 
-        if (gMenuItem.action_poi_id && !GetPointOfInterest(gMenuItem.action_poi_id))
+        if (gMenuItem.ActionPoiId && !GetPointOfInterest(gMenuItem.ActionPoiId))
         {
-            sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u use non-existing action_poi_id %u, ignoring", gMenuItem.menu_id, gMenuItem.id, gMenuItem.action_poi_id);
-            gMenuItem.action_poi_id = 0;
+            sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u use non-existing action_poi_id %u, ignoring", gMenuItem.MenuId, gMenuItem.OptionIndex, gMenuItem.ActionPoiId);
+            gMenuItem.ActionPoiId = 0;
         }
 
-        if (gMenuItem.action_script_id)
+        if (gMenuItem.ActionScriptId)
         {
-            if (gMenuItem.option_id != GOSSIP_OPTION_GOSSIP)
+            if (gMenuItem.OptionType != GOSSIP_OPTION_GOSSIP)
             {
-                sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u have action_script_id %u but option_id is not GOSSIP_OPTION_GOSSIP, ignoring", gMenuItem.menu_id, gMenuItem.id, gMenuItem.action_script_id);
+                sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u have action_script_id %u but option_id is not GOSSIP_OPTION_GOSSIP, ignoring", gMenuItem.MenuId, gMenuItem.OptionIndex, gMenuItem.ActionScriptId);
                 continue;
             }
 
-            if (sGossipScripts.find(gMenuItem.action_script_id) == sGossipScripts.end())
+            if (sGossipScripts.find(gMenuItem.ActionScriptId) == sGossipScripts.end())
             {
-                sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u have action_script_id %u that does not exist in `gossip_scripts`, ignoring", gMenuItem.menu_id, gMenuItem.id, gMenuItem.action_script_id);
+                sLog->outErrorDb("Table gossip_menu_option for menu %u, id %u have action_script_id %u that does not exist in `gossip_scripts`, ignoring", gMenuItem.MenuId, gMenuItem.OptionIndex, gMenuItem.ActionScriptId);
                 continue;
             }
 
-            gossipScriptSet.erase(gMenuItem.action_script_id);
+            gossipScriptSet.erase(gMenuItem.ActionScriptId);
         }
 
-        m_mGossipMenuItemsMap.insert(GossipMenuItemsMap::value_type(gMenuItem.menu_id, gMenuItem));
-
+        m_mGossipMenuItemsMap.insert(GossipMenuItemsMap::value_type(gMenuItem.MenuId, gMenuItem));
         ++count;
-
     }
     while (result->NextRow());
 
@@ -8697,7 +8695,7 @@ bool ObjectMgr::RemoveVendorItem(uint32 entry, uint32 item, bool savetodb)
     if (iter == m_mCacheVendorItemMap.end())
         return false;
 
-    if(!iter->second.RemoveItem(item))
+    if (!iter->second.RemoveItem(item))
         return false;
 
     if (savetodb) WorldDatabase.PExecute("DELETE FROM npc_vendor WHERE entry='%u' AND item='%u'", entry, item);
@@ -8775,7 +8773,7 @@ bool ObjectMgr::IsVendorItemValid(uint32 vendor_entry, uint32 item_id, int32 max
         if (pl)
             ChatHandler(pl).PSendSysMessage(LANG_ITEM_ALREADY_IN_LIST, item_id, ExtendedCost);
         else
-            sLog->outErrorDb( "Table `npc_vendor` has duplicate items %u (with extended cost %u) for vendor (Entry: %u), ignoring", item_id, ExtendedCost, vendor_entry);
+            sLog->outErrorDb("Table `npc_vendor` has duplicate items %u (with extended cost %u) for vendor (Entry: %u), ignoring", item_id, ExtendedCost, vendor_entry);
         return false;
     }
 

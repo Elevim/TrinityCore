@@ -56,7 +56,6 @@ public:
             { "equiperror",     SEC_ADMINISTRATOR,  false, &HandleDebugSendEquipErrorCommand,     "", NULL },
             { "largepacket",    SEC_ADMINISTRATOR,  false, &HandleDebugSendLargePacketCommand,    "", NULL },
             { "opcode",         SEC_ADMINISTRATOR,  false, &HandleDebugSendOpcodeCommand,         "", NULL },
-            { "poi",            SEC_ADMINISTRATOR,  false, &HandleDebugSendPoiCommand,            "", NULL },
             { "qpartymsg",      SEC_ADMINISTRATOR,  false, &HandleDebugSendQuestPartyMsgCommand,  "", NULL },
             { "qinvalidmsg",    SEC_ADMINISTRATOR,  false, &HandleDebugSendQuestInvalidMsgCommand, "", NULL },
             { "sellerror",      SEC_ADMINISTRATOR,  false, &HandleDebugSendSellErrorCommand,      "", NULL },
@@ -218,32 +217,6 @@ public:
         return true;
     }
 
-    static bool HandleDebugSendPoiCommand(ChatHandler* handler, const char* args)
-    {
-        if (!*args)
-            return false;
-
-        Player *pPlayer = handler->GetSession()->GetPlayer();
-        Unit* target = handler->getSelectedUnit();
-        if (!target)
-        {
-            handler->SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
-            return true;
-        }
-
-        char* icon_text = strtok((char*)args, " ");
-        char* flags_text = strtok(NULL, " ");
-        if (!icon_text || !flags_text)
-            return false;
-
-        uint32 icon = atol(icon_text);
-        uint32 flags = atol(flags_text);
-
-        sLog->outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon, flags);
-        pPlayer->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
-        return true;
-    }
-
     static bool HandleDebugSendEquipErrorCommand(ChatHandler* handler, const char* args)
     {
         if (!*args)
@@ -277,7 +250,7 @@ public:
     static bool HandleDebugSendOpcodeCommand(ChatHandler* handler, const char* /*args*/)
     {
         Unit *unit = handler->getSelectedUnit();
-        Player *player = NULL;
+        Player* player = NULL;
         if (!unit || (unit->GetTypeId() != TYPEID_PLAYER))
             player = handler->GetSession()->GetPlayer();
         else
@@ -759,7 +732,7 @@ public:
         handler->PSendSysMessage("Hostil reference list of %s (guid %u)", target->GetName(), target->GetGUIDLow());
         while (ref)
         {
-            if (Unit * unit = ref->getSource()->getOwner())
+            if (Unit* unit = ref->getSource()->getOwner())
             {
                 ++cnt;
                 handler->PSendSysMessage("   %u.   %s   (guid %u)  - threat %f", cnt, unit->GetName(), unit->GetGUIDLow(), ref->getThreat());

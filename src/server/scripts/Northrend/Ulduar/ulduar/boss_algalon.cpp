@@ -15,7 +15,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
 #include "ulduar.h"
 
 #define GAMEOBJECT_GIVE_OF_THE_OBSERVER 194821
@@ -75,7 +76,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_algalonAI(pCreature);
+        return GetUlduarAI<boss_algalonAI>(pCreature);
     }
 
     struct boss_algalonAI : public ScriptedAI
@@ -125,7 +126,7 @@ public:
                 pInstance->SetData(BOSS_ALGALON, IN_PROGRESS);
         }
 
-        void KilledUnit(Unit * /*victim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
             DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
         }

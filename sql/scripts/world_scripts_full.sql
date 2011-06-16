@@ -169,7 +169,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_scarlet_miner_cart' WHERE `entr
 UPDATE `creature_template` SET `ScriptName`='npc_scarlet_miner' WHERE `entry`=28841;
 UPDATE `creature_template` SET `ScriptName`='npc_crusade_persuaded' WHERE `entry` IN (28939,28940,28610);
 UPDATE `creature_template` SET `ScriptName`='mob_scarlet_courier' WHERE `entry`=29076;
-UPDATE `creature_template` SET `AIName`='ArchorAI', `ScriptName`='' WHERE `entry` IN (29102,29103);
+UPDATE `creature_template` SET `AIName`='ArcherAI', `ScriptName`='' WHERE `entry` IN (29102,29103);
 UPDATE `creature_template` SET `AIName`='TurretAI', `ScriptName`='' WHERE `entry`=29104;
 UPDATE `creature_template` SET `ScriptName`='npc_highlord_darion_mograine' WHERE `entry`=29173;
 UPDATE `creature_template` SET `ScriptName`='npc_the_lich_king_tirion_dawn' WHERE `entry` IN (29183,29175);
@@ -1042,7 +1042,6 @@ UPDATE `creature_template` SET `ScriptName`='mob_webwrap' WHERE `entry`=16486;
 UPDATE `creature_template` SET `ScriptName`='boss_noth' WHERE `entry`=15954;
 UPDATE `creature_template` SET `ScriptName`='boss_heigan' WHERE `entry`=15936;
 UPDATE `creature_template` SET `ScriptName`='boss_loatheb' WHERE `entry`=16011;
-UPDATE `creature_template` SET `ScriptName`='mob_loatheb_spore' WHERE `entry`=16286;
 UPDATE `creature_template` SET `ScriptName`='boss_razuvious' WHERE `entry`=16061;
 UPDATE `creature_template` SET `ScriptName`='boss_gothik' WHERE `entry`=16060;
 UPDATE `creature_template` SET `ScriptName`='mob_gothik_minion' where `entry` IN (16124,16125,16126,16127,16148,16149,16150);
@@ -1953,6 +1952,7 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 52408, 'spell_gen_seaforium_blast'),
 ( 25281, 'spell_gen_turkey_marker'),
 (-55428, 'spell_gen_lifeblood'),
+( 65917, 'spell_gen_magic_rooster'),
 -- instances
 -- Black Temple
 ( 41475, 'spell_boss_lady_malande_shield'),
@@ -2233,6 +2233,7 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 55804, 'spell_q12937_relief_for_the_fallen'),
 ( 54798, 'spell_q12851_going_bearback'),
 (  8593, 'spell_symbol_of_life_dummy'),
+( 52090, 'spell_q12659_ahunaes_knife'),
 -- item
 ( 23074, 'spell_item_arcanite_dragonling'),
 (  8063, 'spell_item_deviate_fish'),
