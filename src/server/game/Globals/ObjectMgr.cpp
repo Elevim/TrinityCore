@@ -45,8 +45,6 @@
 #include "ScriptMgr.h"
 #include "SpellScript.h"
 #include "PoolMgr.h"
-#include "QueryResult.h"
-
 
 ScriptMapMap sQuestEndScripts;
 ScriptMapMap sQuestStartScripts;
@@ -1124,9 +1122,9 @@ void ObjectMgr::ChooseCreatureFlags(const CreatureTemplate *cinfo, uint32& npcfl
     }
 }
 
-CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32 &displayID)
+CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32* displayID)
 {
-    CreatureModelInfo const* minfo = GetCreatureModelInfo(displayID);
+    CreatureModelInfo const* minfo = GetCreatureModelInfo(*displayID);
     if (!minfo)
         return NULL;
 
@@ -1135,13 +1133,11 @@ CreatureModelInfo const* ObjectMgr::GetCreatureModelRandomGender(uint32 &display
     {
         CreatureModelInfo const *minfo_tmp = GetCreatureModelInfo(minfo->modelid_other_gender);
         if (!minfo_tmp)
-        {
-            sLog->outErrorDb("Model (Entry: %u) has modelid_other_gender %u not found in table `creature_model_info`. ", displayID, minfo->modelid_other_gender);
-        }
+            sLog->outErrorDb("Model (Entry: %u) has modelid_other_gender %u not found in table `creature_model_info`. ", *displayID, minfo->modelid_other_gender);
         else
         {
             // Model ID changed
-            displayID = minfo->modelid_other_gender;
+            *displayID = minfo->modelid_other_gender;
             return minfo_tmp;
         }
     }
@@ -3128,93 +3124,6 @@ void ObjectMgr::PlayerCreateInfoAddItemHelper(uint32 race_, uint32 class_, uint3
             }
         }
     }
-}
-
-
-void ObjectMgr::LoadAntiCheatConfig()
-{
-    //                                                             0             1           2                 3           4
-    QueryResult result  = CharacterDatabase.Query("SELECT checktype, check_period,alarmscount, disableoperation, messagenum,"
-    //                                                             5          6             7             8
-                                                           "intparam1, intparam2,  floatparam1,  floatparam2,"
-    //                                                            9              10        11             12
-                                                           "action1,   actionparam1,  action2,  actionparam2,"
-                                                           "description FROM anticheat_config");
-    
-    uint32 count = 0;
-
-    // MaNGOS hat in der Console eine Ausgabe "Ladebalken"
-    if (!result)
-    {
-        //barGoLink bar(1);
-        //bar.step();
-
-        sLog->outString();
-        sLog->outString(">> Loaded %u anticheat config definitions", count);
-        sLog->outErrorDb("Error loading `anticheat_config` table or table is empty.");
-        return;
-    }
-
-    //barGoLink bar( (int)result->GetRowCount() );
-
-    m_AntiCheatConfig.clear();
-
-    do
-    {
-        Field* fields = result->Fetch();
-
-        AntiCheatConfig AntiCheatConfigEntry;
-
-        AntiCheatConfigEntry.checkType = fields[0].GetUInt32();
-
-        if (AntiCheatConfigEntry.checkType > 9999)
-        {
-            sLog->outErrorDb("Wrong check type id %u in `anticheat_config` table, ignoring.",AntiCheatConfigEntry.checkType);
-            continue;
-        }
-
-        AntiCheatConfigEntry.checkPeriod = fields[1].GetUInt32();
-        AntiCheatConfigEntry.alarmsCount = fields[2].GetUInt32();
-        AntiCheatConfigEntry.disableOperation = fields[3].GetBool();
-        AntiCheatConfigEntry.messageNum  = fields[4].GetUInt32();
-
-        for (int i=0; i < ANTICHEAT_CHECK_PARAMETERS; ++i )
-        {
-            AntiCheatConfigEntry.checkParam[i] = fields[5+i].GetUInt32();
-        }
-
-        for (int i=0; i < ANTICHEAT_CHECK_PARAMETERS; ++i )
-        {
-            AntiCheatConfigEntry.checkFloatParam[i] = fields[5+ANTICHEAT_CHECK_PARAMETERS+i].GetFloat();
-        }
-
-        for (int i=0; i < ANTICHEAT_ACTIONS; ++i )
-        {
-            AntiCheatConfigEntry.actionType[i] = fields[5+ANTICHEAT_CHECK_PARAMETERS*2+i*2].GetUInt32();
-            AntiCheatConfigEntry.actionParam[i] = fields[6+ANTICHEAT_CHECK_PARAMETERS*2+i*2].GetUInt32();
-        };
-
-        AntiCheatConfigEntry.description  = fields[5+ANTICHEAT_CHECK_PARAMETERS*2+ANTICHEAT_ACTIONS*2].GetCString();
-
-        m_AntiCheatConfig.insert(std::make_pair(AntiCheatConfigEntry.checkType, AntiCheatConfigEntry));
-
-        ++count;
-    }
-    while (result->NextRow());
-
-
-    sLog->outString();
-    sLog->outString( ">> Loaded %u anticheat config definitions", count);
-
-}
-
-AntiCheatConfig const* ObjectMgr::GetAntiCheatConfig(uint32 checkType) const
-{
-    AntiCheatConfigMap::const_iterator itr = m_AntiCheatConfig.find(checkType);
-    if (itr == m_AntiCheatConfig.end())
-        return NULL;
-    else
-        return &itr->second;
 }
 
 void ObjectMgr::LoadPlayerInfo()
@@ -5875,7 +5784,7 @@ uint32 ObjectMgr::GetTaxiMountDisplayId(uint32 id, uint32 team, bool allowed_alt
     }
 
     // minfo is not actually used but the mount_id was updated
-    CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(mount_id);
+    sObjectMgr->GetCreatureModelRandomGender(&mount_id);
 
     return mount_id;
 }
@@ -8090,8 +7999,15 @@ void ObjectMgr::LoadFishingBaseSkillLevel()
     sLog->outString();
 }
 
-bool ObjectMgr::CheckDeclinedNames(std::wstring mainpart, DeclinedName const& names)
+bool ObjectMgr::CheckDeclinedNames(std::wstring w_ownname, DeclinedName const& names)
 {
+    // get main part of the name
+    std::wstring mainpart = GetMainPartOfName(w_ownname, 0);
+    // prepare flags
+    bool x = true;
+    bool y = true;
+
+    // check declined names
     for (uint8 i =0; i < MAX_DECLINED_NAME_CASES; ++i)
     {
         std::wstring wname;
@@ -8099,9 +8015,12 @@ bool ObjectMgr::CheckDeclinedNames(std::wstring mainpart, DeclinedName const& na
             return false;
 
         if (mainpart != GetMainPartOfName(wname, i+1))
-            return false;
+            x = false;
+
+        if (w_ownname != wname)
+            y = false;
     }
-    return true;
+    return (x || y);
 }
 
 uint32 ObjectMgr::GetAreaTriggerScriptId(uint32 trigger_id)
