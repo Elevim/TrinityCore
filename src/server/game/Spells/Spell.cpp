@@ -1260,7 +1260,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         }
 
         /* process anticheat check */
-        if (caster->GetUnit()->GetPlayer())
+        if (caster->GetTypeId() == TYPEID_PLAYER)
             ((Player*)caster)->GetAntiCheat()->DoAntiCheatCheck(CHECK_DAMAGE_SPELL, m_spellInfo->Id, 0, damageInfo.damage);
 
         caster->DealSpellDamage(&damageInfo, true);

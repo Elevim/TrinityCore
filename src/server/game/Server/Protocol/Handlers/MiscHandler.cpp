@@ -1096,13 +1096,11 @@ void WorldSession::HandleNextCinematicCamera(WorldPacket & /*recv_data*/)
 
 void WorldSession::HandleMoveTimeSkippedOpcode(WorldPacket & recv_data)
 {
-    /*  WorldSession::Update(getMSTime());*/
     
 	uint32 time_skipped;
     uint64 guid;
 
     recv_data.readPackGUID(guid);
-    recv_data >> time_skipped;
 	recv_data.read_skip<uint32>();
 
 	sLog->outStaticDebug("WORLD: Time Lag/Synchronization Resent/Update, data = %d", time_skipped);
@@ -1123,50 +1121,12 @@ void WorldSession::HandleMoveUnRootAck(WorldPacket& recv_data)
 {
     // no used
     recv_data.rpos(recv_data.wpos());                       // prevent warnings spam
-/*
-    uint64 guid;
-    recv_data >> guid;
-
-    // now can skip not our packet
-    if (_player->GetGUID() != guid)
-    {
-        recv_data.rpos(recv_data.wpos());                   // prevent warnings spam
-        return;
-    }
-
-    sLog->outDebug(LOG_FILTER_PACKETIO, "WORLD: CMSG_FORCE_MOVE_UNROOT_ACK");
-
-    recv_data.read_skip<uint32>();                          // unk
-
-    MovementInfo movementInfo;
-    movementInfo.guid = guid;
-    ReadMovementInfo(recv_data, &movementInfo);
-    recv_data.read_skip<float>();                           // unk2
-*/
 }
 
 void WorldSession::HandleMoveRootAck(WorldPacket& recv_data)
 {
     // no used
     recv_data.rpos(recv_data.wpos());                       // prevent warnings spam
-/*
-    uint64 guid;
-    recv_data >> guid;
-
-    // now can skip not our packet
-    if (_player->GetGUID() != guid)
-    {
-        recv_data.rpos(recv_data.wpos());                   // prevent warnings spam
-        return;
-    }
-
-    sLog->outDebug(LOG_FILTER_PACKETIO, "WORLD: CMSG_FORCE_MOVE_ROOT_ACK");
-
-    recv_data.read_skip<uint32>();                          // unk
-
-    MovementInfo movementInfo;
-    ReadMovementInfo(recv_data, &movementInfo);
-*/
 }
 
 void WorldSession::HandleSetActionBarToggles(WorldPacket& recv_data)
@@ -1188,11 +1148,6 @@ void WorldSession::HandleSetActionBarToggles(WorldPacket& recv_data)
 void WorldSession::HandleWardenDataOpcode(WorldPacket& recv_data)
 {
     recv_data.read_skip<uint8>();
-    /*
-        uint8 tmp;
-        recv_data >> tmp;
-        sLog->outDebug("Received opcode CMSG_WARDEN_DATA, not resolve.uint8 = %u", tmp);
-    */
 }
 
 void WorldSession::HandlePlayedTime(WorldPacket& recv_data)
