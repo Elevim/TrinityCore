@@ -553,7 +553,7 @@ class go_naxx_portal : public GameObjectScript
         }
 };
 
-#define	SPELL_EMBALMING_CLOUD =  28322
+#define	SPELL_EMBALMING_CLOUD  28322
 
 class naxx_mob_slime : public CreatureScript
 {
@@ -590,6 +590,9 @@ public:
 			embalmingCloud = 10000;
 		}
 		else embalmingCloud -= uiDiff;
+    
+	        DoMeleeAttackIfReady();
+
     	}
     };
 };
