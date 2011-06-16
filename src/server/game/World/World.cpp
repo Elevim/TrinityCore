@@ -1589,6 +1589,9 @@ void World::SetInitialWorldSettings()
     sLog->outString( "Loading AntiCheat config..." );
     sObjectMgr->LoadAntiCheatConfig();
 
+	sLog->outString( "Loading AntiCheat config..." );
+    sObjectMgr->LoadAntiCheatConfig();
+
     sLog->outString("Loading GM surveys...");
     sTicketMgr->LoadSurveys();
 

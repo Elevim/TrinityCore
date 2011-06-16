@@ -849,6 +849,8 @@ Player::Player (WorldSession *session): Unit(), m_achievementMgr(this), m_reputa
     isDebugAreaTriggers = false;
 
     SetPendingBind(NULL, 0);
+
+	m_anticheat = new AntiCheat(this);
 }
 
 Player::~Player ()
@@ -884,6 +886,8 @@ Player::~Player ()
 
     delete m_declinedname;
     delete m_runes;
+
+	delete m_anticheat;
 
     sWorld->DecreasePlayerCount();
 }

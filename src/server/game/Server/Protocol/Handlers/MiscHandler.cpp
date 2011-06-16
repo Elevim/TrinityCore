@@ -1097,33 +1097,18 @@ void WorldSession::HandleNextCinematicCamera(WorldPacket & /*recv_data*/)
 void WorldSession::HandleMoveTimeSkippedOpcode(WorldPacket & recv_data)
 {
     /*  WorldSession::Update(getMSTime());*/
-
-
-    uint32 time_skipped;
+    
+	uint32 time_skipped;
     uint64 guid;
 
     recv_data.readPackGUID(guid);
     recv_data >> time_skipped;
-    recv_data.read_skip<uint32>();
+	recv_data.read_skip<uint32>();
 
-    sLog->outStaticDebug("WORLD: Time Lag/Synchronization Resent/Update, data = %d", time_skipped);
+	sLog->outStaticDebug("WORLD: Time Lag/Synchronization Resent/Update, data = %d", time_skipped);
 
     if (GetPlayer()->GetGUID() == guid)
         GetPlayer()->GetAntiCheat()->SetTimeSkipped(time_skipped);
-
-    /*
-        uint64 guid;
-        uint32 time_skipped;
-        recv_data >> guid;
-        recv_data >> time_skipped;
-        sLog->outDebug(LOG_FILTER_PACKETIO, "WORLD: CMSG_MOVE_TIME_SKIPPED");
-
-        /// TODO
-        must be need use in Trinity
-        We substract server Lags to move time (AntiLags)
-        for exmaple
-        GetPlayer()->ModifyLastMoveTime(-int32(time_skipped));
-    */
 }
 
 void WorldSession::HandleFeatherFallAck(WorldPacket &recv_data)

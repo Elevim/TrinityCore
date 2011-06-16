@@ -1259,6 +1259,10 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                 caster->ToPlayer()->CastItemCombatSpell(unitTarget, m_attackType, procVictim, procEx);
         }
 
+        /* process anticheat check */
+        if (caster->GetUnit()->GetPlayer())
+            ((Player*)caster)->GetAntiCheat()->DoAntiCheatCheck(CHECK_DAMAGE_SPELL, m_spellInfo->Id, 0, damageInfo.damage);
+
         caster->DealSpellDamage(&damageInfo, true);
 
         // Haunt

@@ -36,6 +36,7 @@
 #include "Unit.h"
 #include "Util.h"                                           // for Tokens typedef
 #include "WorldSession.h"
+#include "../AntiCheat/AntiCheat.h"
 
 #include<string>
 #include<vector>
@@ -1035,6 +1036,10 @@ class Player : public Unit, public GridObject<Player>
     public:
         explicit Player (WorldSession *session);
         ~Player ();
+
+		AntiCheat* m_anticheat;
+		/* ANTICHEAT ENGINE */
+		AntiCheat* GetAntiCheat() { return m_anticheat; }
 
         void CleanupsBeforeDelete(bool finalCleanup = true);
 
@@ -2758,6 +2763,8 @@ class Player : public Unit, public GridObject<Player>
         InstanceTimeMap _instanceResetTimes;
         InstanceSave* _pendingBind;
         uint32 _pendingBindTimer;
+
+
 };
 
 void AddItemsSetItem(Player*player, Item *item);
