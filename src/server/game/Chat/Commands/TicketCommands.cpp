@@ -171,7 +171,7 @@ bool ChatHandler::HandleGMTicketAssignToCommand(const char* args)
     uint64 targetAccId = sObjectMgr->GetPlayerAccountIdByGUID(targetGuid);
     uint32 targetGmLevel = sAccountMgr->GetSecurity(targetAccId, realmID);
     // Target must exist and have administrative rights
-    if (!targetGuid || targetGmLevel <= SEC_MODERATOR)
+    if (!targetGuid || targetGmLevel == SEC_PLAYER)
     {
         SendSysMessage(LANG_COMMAND_TICKETASSIGNERROR_A);
         return true;
@@ -242,7 +242,7 @@ bool ChatHandler::HandleGMTicketUnAssignCommand(const char* args)
     ticket->SaveToDB(trans);
     sTicketMgr->UpdateLastChange();
 
-    std::string msg = ticket->FormatMessageString(*this, NULL, ticket->GetAssignedToName(), player->GetName(), NULL);
+    std::string msg = ticket->FormatMessageString(*this, NULL, ticket->GetAssignedToName().c_str(), player->GetName(), NULL);
     SendGlobalGMSysMessage(msg.c_str());
     return true;
 }
@@ -278,7 +278,7 @@ bool ChatHandler::HandleGMTicketCommentCommand(const char* args)
     ticket->SaveToDB(trans);
     sTicketMgr->UpdateLastChange();
 
-    std::string msg = ticket->FormatMessageString(*this, NULL, ticket->GetAssignedToName(), NULL, NULL);
+    std::string msg = ticket->FormatMessageString(*this, NULL, ticket->GetAssignedToName().c_str(), NULL, NULL);
     msg += PGetParseString(LANG_COMMAND_TICKETLISTADDCOMMENT, player->GetName(), comment);
     SendGlobalGMSysMessage(msg.c_str());
 
