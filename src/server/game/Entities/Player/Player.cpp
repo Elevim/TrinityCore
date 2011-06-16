@@ -1,4 +1,4 @@
-/*
+15306/*
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
@@ -15303,7 +15303,7 @@ bool Player::SatisfyQuestExclusiveGroup(Quest const* qInfo, bool msg)
     ObjectMgr::ExclusiveQuestGroups::iterator iter = sObjectMgr->mExclusiveQuestGroups.lower_bound(qInfo->GetExclusiveGroup());
     ObjectMgr::ExclusiveQuestGroups::iterator end  = sObjectMgr->mExclusiveQuestGroups.upper_bound(qInfo->GetExclusiveGroup());
 
-    ASSERT(iter != end);                                      // always must be found if qInfo->ExclusiveGroup != 0
+    //ASSERT(iter != end);                                      // always must be found if qInfo->ExclusiveGroup != 0
 
     for (; iter != end; ++iter)
     {
