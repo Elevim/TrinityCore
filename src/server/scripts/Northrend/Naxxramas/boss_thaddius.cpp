@@ -21,32 +21,32 @@
 //Stalagg
 enum StalaggYells
 {
-    SAY_STAL_AGGRO                    = -1533023, //not used
-    SAY_STAL_SLAY                    = -1533024, //not used
-    SAY_STAL_DEATH                    = -1533025  //not used
+    SAY_STAL_AGGRO                      = -1533023, //not used
+    SAY_STAL_SLAY                       = -1533024, //not used
+    SAY_STAL_DEATH                      = -1533025  //not used
 };
 
 enum StalagSpells
 {
-    SPELL_POWERSURGE                = 28134,
-    H_SPELL_POWERSURGE                = 54529,
-    SPELL_MAGNETIC_PULL                = 28338,
-    SPELL_STALAGG_TESLA                = 28097
+    SPELL_POWERSURGE                    = 28134,
+    H_SPELL_POWERSURGE                  = 54529,
+    SPELL_MAGNETIC_PULL                 = 28338,
+    SPELL_STALAGG_TESLA                 = 28097
 };
 
 //Feugen
 enum FeugenYells
 {
-    SAY_FEUG_AGGRO                    = -1533026, //not used
-    SAY_FEUG_SLAY                    = -1533027, //not used
-    SAY_FEUG_DEATH                    = -1533028 //not used
+    SAY_FEUG_AGGRO                      = -1533026, //not used
+    SAY_FEUG_SLAY                       = -1533027, //not used
+    SAY_FEUG_DEATH                      = -1533028  //not used
 };
 
 enum FeugenSpells
 {
-    SPELL_STATICFIELD                = 28135,
-    H_SPELL_STATICFIELD                = 54528,
-    SPELL_FEUGEN_TESLA                = 28109
+    SPELL_STATICFIELD                   = 28135,
+    H_SPELL_STATICFIELD                 = 54528,
+    SPELL_FEUGEN_TESLA                  = 28109
 };
 
 // Thaddius DoAction
@@ -59,41 +59,41 @@ enum ThaddiusActions
 };
 
 //generic
-#define C_TESLA_COIL                16218           //the coils (emotes "Tesla Coil overloads!")
+#define C_TESLA_COIL                    16218           //the coils (emotes "Tesla Coil overloads!")
 
 //Tesla Spells (deals damage to the group if Stalagg or Feugen are too far away)
 enum TeslaSpells
 {
-    SPELL_SHOCK                        = 28099,
-    SPELL_STALAGG_CHAIN                = 28096,
-    SPELL_STALAGG_TESLA_PASSIVE        = 28097,
-    SPELL_FEUGEN_TESLA_PASSIVE        = 28109,
-    SPELL_FEUGEN_CHAIN                = 28111
+    SPELL_SHOCK                         = 28099,
+    SPELL_STALAGG_CHAIN                 = 28096,
+    SPELL_STALAGG_TESLA_PASSIVE         = 28097,
+    SPELL_FEUGEN_TESLA_PASSIVE          = 28109,
+    SPELL_FEUGEN_CHAIN                  = 28111
 };
 
 //Thaddius
 enum ThaddiusYells
 {
-    SAY_GREET                        = -1533029, //not used
-    SAY_AGGRO_1                        = -1533030,
-    SAY_AGGRO_2                        = -1533031,
-    SAY_AGGRO_3                        = -1533032,
-    SAY_SLAY                        = -1533033,
-    SAY_ELECT                        = -1533034, //not used
-    SAY_DEATH                        = -1533035,
-    SAY_SCREAM1                        = -1533036, //not used
-    SAY_SCREAM2                        = -1533037, //not used
-    SAY_SCREAM3                        = -1533038, //not used
-    SAY_SCREAM4                        = -1533039 //not used
+    SAY_GREET                           = -1533029, //not used
+    SAY_AGGRO_1                         = -1533030,
+    SAY_AGGRO_2                         = -1533031,
+    SAY_AGGRO_3                         = -1533032,
+    SAY_SLAY                            = -1533033,
+    SAY_ELECT                           = -1533034, //not used
+    SAY_DEATH                           = -1533035,
+    SAY_SCREAM1                         = -1533036, //not used
+    SAY_SCREAM2                         = -1533037, //not used
+    SAY_SCREAM3                         = -1533038, //not used
+    SAY_SCREAM4                         = -1533039 //not used
 };
 
 enum ThaddiusSpells
 {
-    SPELL_POLARITY_SHIFT            = 28089,
-    SPELL_BALL_LIGHTNING            = 28299,
-    SPELL_CHAIN_LIGHTNING            = 28167,
-    H_SPELL_CHAIN_LIGHTNING            = 54531,
-    SPELL_BERSERK                    = 27680
+    SPELL_POLARITY_SHIFT                = 28089,
+    SPELL_BALL_LIGHTNING                = 28299,
+    SPELL_CHAIN_LIGHTNING               = 28167,
+    H_SPELL_CHAIN_LIGHTNING             = 54531,
+    SPELL_BERSERK                       = 27680
 };
 
 enum Events
