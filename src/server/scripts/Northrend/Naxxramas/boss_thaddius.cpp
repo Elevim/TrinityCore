@@ -399,7 +399,7 @@ public:
                 if (ShockTimer <= uiDiff)
                 {
                     if (Creature *pTesla = Creature::GetCreature(*me, TeslaGuid))
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 50000, true))
                             pTesla->CastSpell(pTarget, SPELL_SHOCK, true);
                     ShockTimer = 1000;
                     bShock = true;
