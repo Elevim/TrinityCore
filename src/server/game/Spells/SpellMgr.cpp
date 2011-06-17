@@ -4005,6 +4005,11 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AuraInterruptFlags = AURA_INTERRUPT_FLAG_HITBYSPELL | AURA_INTERRUPT_FLAG_TAKE_DAMAGE;
             ++count;
             break;
+        // Naxxramas Spells
+        case 28099:
+            spellInfo->rangeIndex = 13;
+            ++count;
+            break;
         // ULDUAR SPELLS
         //
         case 63342: // Focused Eyebeam Summon Trigger (Kologarn)
