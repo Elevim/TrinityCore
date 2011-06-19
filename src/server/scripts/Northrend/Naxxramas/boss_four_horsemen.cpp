@@ -133,7 +133,6 @@ public:
             encounterActionReset = false;
             doDelayPunish = false;
             _Reset();
-            isBerserk = false;
             markCount = 0;
         }
 
@@ -280,8 +279,10 @@ public:
 
         void Berserk()
         {
-            if (!isBerserk)
+
+            if(!isBerserk)
             {
+                me->GetInstanceScript()->SetData(DATA_HORSEMEN0+id, DATA_HORSEMEN_BESERK);
                 DoScriptText(SAY_SPECIAL[id], me);
                 DoCast(me, SPELL_BERSERK);
                 isBerserk = true;
@@ -401,6 +402,34 @@ public:
                         {
                             if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 45.0f))
                                 DoCast(pTarget, SPELL_PRIMARY(id));
+
+                              if (id == 2){
+                                    Map *map = me->GetMap();
+                                    Map::PlayerList const &PlayerList = map->GetPlayers();
+
+                                    if (PlayerList.isEmpty())
+                                        return;
+
+                                    uint8 targetcount = 0;
+                                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                                    {
+                                        if (i->getSource()->isAlive() && me->GetDistance2d(i->getSource()->GetPositionX(), i->getSource()->GetPositionY()) < 8.0f){
+                                            targetcount++;
+                                        }
+                                    }
+                                    uint8 j = 0;
+                                    for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                                    {
+                                        if (j > targetcount)
+                                            break;
+                                        if (i->getSource()->isAlive() && me->GetDistance2d(i->getSource()->GetPositionX(), i->getSource()->GetPositionY()) < 8.0f)
+                                            i->getSource()->DealDamage(i->getSource(), (uint32)15226, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_FIRE, NULL, false);
+
+                                        j++;
+
+                                    }
+                                }
+
                         }
                         else
                             DoCast(me->getVictim(), SPELL_PRIMARY(id));
@@ -414,7 +443,7 @@ public:
                     case EVENT_RANGECHECK:
                         if (!isBerserk)
                         {
-                            if (!IsThereaTargettoAttack())
+                            if (!IsThereaTargettoAttack() || me->GetInstanceScript()->GetData(DATA_HORSEMEN_BESERK))
                             {
                                 Berserk();
                             }else events.ScheduleEvent(EVENT_RANGECHECK, 2000);

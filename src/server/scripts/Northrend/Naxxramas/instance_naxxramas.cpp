@@ -24,6 +24,7 @@ struct Location
     float x,y,z;
 };
 
+
  static Location SlimeLane1Spawn = { 3140.50f, -3121.59f, 293.342f };
  static Location SlimeLane1Direction = { 3134.92f, -3157.50f, 293.477f };
  static Location SlimeLane2Spawn = { 3150.56f, -3123.39f, 293.334f };
@@ -166,6 +167,7 @@ public:
 
         time_t minHorsemenDiedTime;
         time_t maxHorsemenDiedTime;
+        uint32 horsemenBeserk;
 
         uint64 PortalMaexxnaGUID;
         uint64 PortalThaddiusGUID;
@@ -179,7 +181,7 @@ public:
         uint32 Lane1Timer;
         uint32 Lane2Timer;
         uint32 Lane3Timer;
-        
+
         void Initialize()
         {
             uiLane1GUID = 0;
@@ -189,6 +191,8 @@ public:
             Lane1Timer = 1000;
             Lane2Timer = 3000;
             Lane3Timer = 5000;
+
+            horsemenBeserk = 0;
         }
 
         void OnCreatureCreate(Creature* creature)
@@ -323,6 +327,10 @@ public:
                         minHorsemenDiedTime = 0;
                         maxHorsemenDiedTime = 0;
                     }
+                    else if (value == DATA_HORSEMEN_BESERK)
+                    {
+                        horsemenBeserk = 1;
+                    }
                     else if (value == DONE)
                     {
                         time_t now = time(NULL);
@@ -332,7 +340,7 @@ public:
 
                         maxHorsemenDiedTime = now;
                     }
-                    break; 
+                    break;
             }
         }
 
@@ -378,6 +386,11 @@ public:
             return 0;
         }
 
+        bool getHorsemenBeserk()
+        {
+            return horsemenBeserk;
+        }
+
         bool SetBossState(uint32 id, EncounterState state)
         {
             if (!InstanceScript::SetBossState(id, state))
@@ -397,7 +410,7 @@ public:
                 if (GameObject* pThaddiusPortal = instance->GetGameObject(PortalThaddiusGUID))
                     pThaddiusPortal->SetPhaseMask(1, true);
             }
-            
+
             if (id == BOSS_MAEXXNA && state == DONE)
             {
                 if (GameObject* pMaexxnaPortal = instance->GetGameObject(PortalMaexxnaGUID))
@@ -431,6 +444,16 @@ public:
             }
         }
 
+        uint32 GetData(uint32 id)
+        {
+            switch (id)
+            {
+                case DATA_HORSEMEN_BESERK:
+                    return horsemenBeserk;
+            }
+
+        }
+
         void Update(uint32 uiDiff)
         {
             if (Lane1Timer < uiDiff)
@@ -439,7 +462,7 @@ public:
                     if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane1Spawn.x, SlimeLane1Spawn.y, SlimeLane1Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 9000))
                         pTemp->GetMotionMaster()->MovePoint(0, SlimeLane1Direction.x, SlimeLane1Direction.y, SlimeLane1Direction.z);
                 Lane1Timer = 4000;
-            }else Lane1Timer -= uiDiff; 
+            }else Lane1Timer -= uiDiff;
 
             if (Lane2Timer < uiDiff)
             {
@@ -447,7 +470,7 @@ public:
                     if (Creature* pTemp = pTrigger->SummonCreature(NPC_POISEN, SlimeLane2Spawn.x, SlimeLane2Spawn.y, SlimeLane2Spawn.z, 4.636764f, TEMPSUMMON_TIMED_DESPAWN, 9000))
                         pTemp->GetMotionMaster()->MovePoint(0, SlimeLane2Direction.x, SlimeLane2Direction.y, SlimeLane2Direction.z);
                 Lane2Timer = 4000;
-            }else Lane2Timer -= uiDiff; 
+            }else Lane2Timer -= uiDiff;
 
             if (Lane3Timer < uiDiff)
             {
@@ -527,7 +550,7 @@ class at_naxxramas_frostwyrm_wing : public AreaTriggerScript
 /* Naxxramas Portal */
 
 #define NaxxMap          533
-#define NaxxX            2957.200928f       
+#define NaxxX            2957.200928f
 #define NaxxY            -3434.486084f
 #define NaxxZ            299.550476f
 #define NaxxO            6.256170f
@@ -543,7 +566,7 @@ class go_naxx_portal : public GameObjectScript
 
             if (!pInstance)
                 return false;
-            
+
             if (pPlayer)
             {
                pPlayer->TeleportTo(NaxxMap, NaxxX, NaxxY, NaxxZ, NaxxO, true);
@@ -590,7 +613,7 @@ public:
 			embalmingCloud = 10000;
 		}
 		else embalmingCloud -= uiDiff;
-    
+
 	        DoMeleeAttackIfReady();
     	}
     };
