@@ -381,9 +381,94 @@ public:
     }
 };
 
+enum Spells_Ravenous_Jaws
+{
+    SPELL_TRASH = 3391,
+};
+
+#define NPC_RAVENOUS_JAWS_KILL_CREDIT 29391
+#define NPC_RAVENOUS_JAWS 29392
+
+class mob_ravenous_jaws : public CreatureScript
+{
+    public:
+    mob_ravenous_jaws() : CreatureScript("mob_ravenous_jaws") {};
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_ravenous_jawsAI (pCreature);
+    }
+
+    struct mob_ravenous_jawsAI : public ScriptedAI
+    {
+
+        mob_ravenous_jawsAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint32 ui_Trash;
+
+        void Reset()
+        {
+            ui_Trash = 10000;
+        }
+
+        void UpdateAI(uint32 const uiDiff)
+        {
+            if (!UpdateVictim())
+                	return;
+
+            if (ui_Trash <= uiDiff)
+            {
+                DoCast(me, SPELL_TRASH);
+                ui_Trash = 10000;
+            }else ui_Trash -= uiDiff;
+
+            DoMeleeAttackIfReady();
+        }
+
+        void JustDied(Unit* /*Killer*/)
+        {
+            me->SummonCreature(NPC_RAVENOUS_JAWS_KILL_CREDIT,me->GetPositionX(), me->GetPositionY(),me->GetPositionZ(),me->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 120000);
+        }
+    };
+};
+
+class ItemUse_gore_bladder : public ItemScript
+{
+    public:
+
+        ItemUse_gore_bladder()
+            : ItemScript("gore_bladder")
+        {
+        }
+
+        bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/)
+        {
+            Map* map = player->GetMap();
+            Creature* target = map->GetCreature(NPC_RAVENOUS_JAWS_KILL_CREDIT);
+            Creature* shark = map->GetCreature(NPC_RAVENOUS_JAWS);
+
+            if(target)
+            {
+                player->Kill(target);
+            }
+            else return false;
+
+            if(shark)
+            {
+                shark->ForcedDespawn(0);
+            }
+            else return false;
+
+            return true;
+        }
+};
+
+
 void AddSC_icecrown()
 {
+    new mob_ravenous_jaws;
     new npc_arete;
+    new ItemUse_gore_bladder;
     new npc_dame_evniki_kapsalis;
     new npc_squire_david;
     new npc_argent_valiant;
