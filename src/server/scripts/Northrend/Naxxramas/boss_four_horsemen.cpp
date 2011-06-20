@@ -414,7 +414,7 @@ public:
                                     for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                                     {
                                         if (i->getSource()->isAlive() && me->GetDistance2d(i->getSource()->GetPositionX(), i->getSource()->GetPositionY()) < 8.0f){
-                                            targetcount++;
+                                            ++targetcount;
                                         }
                                     }
                                     uint8 j = 0;
@@ -425,7 +425,7 @@ public:
                                         if (i->getSource()->isAlive() && me->GetDistance2d(i->getSource()->GetPositionX(), i->getSource()->GetPositionY()) < 8.0f)
                                             i->getSource()->DealDamage(i->getSource(), (uint32)15226, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_FIRE, NULL, false);
 
-                                        j++;
+                                        ++j;
 
                                     }
                                 }
