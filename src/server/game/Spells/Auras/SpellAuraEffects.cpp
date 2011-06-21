@@ -5958,6 +5958,14 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                 case 71563:
                     if (Aura* newAura = target->AddAura(71564, target))
                         newAura->SetStackAmount(newAura->GetSpellProto()->StackAmount);
+                     break;
+                case 34477: //Misdirection
+                case 57934: //Tricks of Trade
+                {
+                    if(Unit* caster = GetCaster())
+                        caster->getThreatManager().modifyThreatPercent(0, 0);
+                    return;
+                }
             }
         }
         // AT REMOVE
@@ -6092,6 +6100,22 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                         }
                     }
                     break;
+                case SPELLFAMILY_ROGUE:
+                    switch(GetId())
+                    {
+                        case 57934:                                 // Tricks of the Trade, main spell
+                        {
+                            if (apply)
+                                GetHolder()->SetAuraCharges(1);     // not have proper charges set in spell data
+                            else
+                            {
+                                // used for direct in code aura removes and spell proc event charges expire
+                                if (m_removeMode != AURA_REMOVE_BY_DEFAULT)
+                                    target->getHostileRefManager().ResetThreatRedirection();
+                            }
+                            return;
+                        }
+                    }
                 case SPELLFAMILY_HUNTER:
                     // Misdirection
                     if (GetId() == 34477)
