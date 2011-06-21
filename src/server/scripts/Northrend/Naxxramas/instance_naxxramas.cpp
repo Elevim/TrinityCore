@@ -386,10 +386,6 @@ public:
             return 0;
         }
 
-        bool getHorsemenBeserk()
-        {
-            return horsemenBeserk;
-        }
 
         bool SetBossState(uint32 id, EncounterState state)
         {

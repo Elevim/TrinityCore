@@ -443,10 +443,10 @@ public:
                     case EVENT_RANGECHECK:
                         if (!isBerserk)
                         {
-                            if (!IsThereaTargettoAttack() || me->GetInstanceScript()->GetData(DATA_HORSEMEN_BESERK))
+                            if (!IsThereaTargettoAttack() || me->GetInstanceScript()->GetData(DATA_HORSEMEN_BESERK) == 1)
                             {
                                 Berserk();
-                            }else events.ScheduleEvent(EVENT_RANGECHECK, 2000);
+                            }else events.ScheduleEvent(EVENT_RANGECHECK, 15000);
                         }
                         break;
                 }
