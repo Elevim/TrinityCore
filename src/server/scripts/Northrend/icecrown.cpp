@@ -443,13 +443,13 @@ class ItemUse_gore_bladder : public ItemScript
 
         bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/)
         {
-            Map* map = player->GetMap();
-            Creature* target = map->GetCreature(NPC_RAVENOUS_JAWS_KILL_CREDIT);
-            Creature* shark = map->GetCreature(NPC_RAVENOUS_JAWS);
+            Creature* target = player->FindNearestCreature(NPC_RAVENOUS_JAWS_KILL_CREDIT, 10.0f, true);
+            Creature* shark = player->FindNearestCreature(NPC_RAVENOUS_JAWS,10.0f,false);
 
-            if(target)
+            if(target && target->isAlive())
             {
                 player->Kill(target);
+                player->KilledMonsterCredit(target->GetEntry(),target->GetGUID());
             }
             else return false;
 
