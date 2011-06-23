@@ -848,7 +848,7 @@ void Unit::CastSpell(Unit* Victim, SpellEntry const *spellInfo, bool triggered, 
             originalCaster=owner->GetGUID();
 
     SpellCastTargets targets;
-    targets.setUnitTarget(Victim);
+    targets.SetUnitTarget(Victim);
 
     if (castItem)
         sLog->outStaticDebug("WORLD: cast Item spellId - %i", spellInfo->Id);
@@ -891,7 +891,7 @@ void Unit::CastCustomSpell(uint32 spellId, CustomSpellValues const &value, Unit*
     }
 
     SpellCastTargets targets;
-    targets.setUnitTarget(Victim);
+    targets.SetUnitTarget(Victim);
 
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
@@ -930,9 +930,9 @@ void Unit::CastSpell(float x, float y, float z, uint32 spellId, bool triggered, 
     Spell* spell = new Spell(this, spellInfo, triggered, originalCaster);
 
     SpellCastTargets targets;
-    targets.setDst(x, y, z, GetOrientation());
+    targets.SetDst(x, y, z, GetOrientation());
     if (OriginalVictim)
-        targets.setUnitTarget(OriginalVictim);
+        targets.SetUnitTarget(OriginalVictim);
     spell->m_CastItem = castItem;
     spell->prepare(&targets, triggeredByAura);
 }
@@ -966,7 +966,7 @@ void Unit::CastSpell(GameObject *go, uint32 spellId, bool triggered, Item *castI
     Spell* spell = new Spell(this, spellInfo, triggered, originalCaster);
 
     SpellCastTargets targets;
-    targets.setGOTarget(go);
+    targets.SetGOTarget(go);
     spell->m_CastItem = castItem;
     spell->prepare(&targets, triggeredByAura);
 }
