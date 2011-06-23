@@ -31,8 +31,10 @@ enum Events
     EVENT_NONE,
     EVENT_MARK,
     EVENT_CAST,
+    EVENT_GLOBAL_BESERK,
     //EVENT_BERSERK,
     EVENT_RANGECHECK,
+    EVENT_RANGECHECK_SECOND,
 };
 
 const Position WaypointPositions[12] =
@@ -132,8 +134,10 @@ public:
             encounterActionAttack = false;
             encounterActionReset = false;
             doDelayPunish = false;
+            isBerserk = false;
             _Reset();
             markCount = 0;
+            me->GetInstanceScript()->SetData(DATA_HORSEMEN0+id, DATA_HORSEMEN_BESERK_0);
         }
 
         bool DoEncounterAction(Unit *who, bool attack, bool reset, bool checkAllDead)
@@ -279,10 +283,9 @@ public:
 
         void Berserk()
         {
-
             if(!isBerserk)
             {
-                me->GetInstanceScript()->SetData(DATA_HORSEMEN0+id, DATA_HORSEMEN_BESERK);
+                me->GetInstanceScript()->SetData(DATA_HORSEMEN0+id, DATA_HORSEMEN_BESERK_1);
                 DoScriptText(SAY_SPECIAL[id], me);
                 DoCast(me, SPELL_BERSERK);
                 isBerserk = true;
@@ -360,6 +363,7 @@ public:
             events.ScheduleEvent(EVENT_CAST, 20000+rand()%5000);
             //events.ScheduleEvent(EVENT_BERSERK, 15*100*1000);
             events.ScheduleEvent(EVENT_RANGECHECK, 15000);
+            events.ScheduleEvent(EVENT_GLOBAL_BESERK, 2000);
         }
 
         void UpdateAI(const uint32 diff)
@@ -443,11 +447,23 @@ public:
                     case EVENT_RANGECHECK:
                         if (!isBerserk)
                         {
-                            if (!IsThereaTargettoAttack() || me->GetInstanceScript()->GetData(DATA_HORSEMEN_BESERK) == 1)
+                            if (!IsThereaTargettoAttack())
                             {
-                                Berserk();
-                            }else events.ScheduleEvent(EVENT_RANGECHECK, 15000);
+                                events.ScheduleEvent(EVENT_RANGECHECK_SECOND, 10000);
+                            }else events.ScheduleEvent(EVENT_RANGECHECK, 2000);
                         }
+                        break;
+                    case EVENT_RANGECHECK_SECOND:
+                        if (!IsThereaTargettoAttack())
+                        {
+                                Berserk();
+                        }
+                        break;
+                    case EVENT_GLOBAL_BESERK:
+                        if (me->GetInstanceScript()->GetData(DATA_HORSEMEN_BESERK) == 1)
+                        {
+                            Berserk();
+                        }else events.ScheduleEvent(EVENT_GLOBAL_BESERK, 100);
                         break;
                 }
             }

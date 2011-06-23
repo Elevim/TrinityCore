@@ -327,7 +327,11 @@ public:
                         minHorsemenDiedTime = 0;
                         maxHorsemenDiedTime = 0;
                     }
-                    else if (value == DATA_HORSEMEN_BESERK)
+                    else if (value == DATA_HORSEMEN_BESERK_0)
+                    {
+                        horsemenBeserk = 0;
+                    }
+                    else if (value == DATA_HORSEMEN_BESERK_1)
                     {
                         horsemenBeserk = 1;
                     }
