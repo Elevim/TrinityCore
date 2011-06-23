@@ -391,6 +391,7 @@ public:
     {
         DoScriptText(SAY_SARTHARION_AGGRO,me);
         DoZoneInCombat();
+        me->CallForHelp(50000.0f);
         if (pInstance)
         {
             pInstance->SetData(TYPE_SARTHARION_EVENT, IN_PROGRESS);
