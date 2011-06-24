@@ -51,11 +51,6 @@ enum Yells
     SAY_TRANSFORM_2                               = -1604009
 };
 
-enum Achievements
-{
-    ACHIEV_WHAT_THE_ECK                           = 1864,
-};
-
 enum Displays
 {
     DISPLAY_RHINO                                 = 26265,
@@ -277,21 +272,7 @@ public:
             DoScriptText(SAY_DEATH, me);
 
             if (pInstance)
-            {
-                if (IsHeroic())
-                {
-                    AchievementEntry const *achievWhatTheEck = GetAchievementStore()->LookupEntry(ACHIEV_WHAT_THE_ECK);
-                    if (achievWhatTheEck)
-                    {
-                        Map::PlayerList const &players = pInstance->instance->GetPlayers();
-                        for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                            if (itr->getSource()->HasAura(SPELL_ECK_RESIDUE))
-                                itr->getSource()->CompletedAchievement(achievWhatTheEck);
-                    }
-                }
-
                 pInstance->SetData(DATA_GAL_DARAH_EVENT, DONE);
-            }
         }
 
         void KilledUnit(Unit* victim)
