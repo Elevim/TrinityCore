@@ -3893,10 +3893,6 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->EffectMiscValue[0] |= 1;
             ++count;
             break;
-        case 52025: // Cleansing Totem Effect
-            spellInfo->EffectDieSides[1] = 1;
-            ++count;
-            break;
         case 51904: // Summon Ghouls On Scarlet Crusade (core does not know the triggered spell is summon spell)
             spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
             ++count;
@@ -4182,7 +4178,6 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AreaGroupId = 0; // originally, these require area 4522, which is... outside of Icecrown Citadel
             ++count;
             break;
-        case 70588: // Suppression
         case 70602: // Corruption
             spellInfo->AttributesEx |= SPELL_ATTR1_STACK_FOR_DIFF_CASTERS;
             ++count;
