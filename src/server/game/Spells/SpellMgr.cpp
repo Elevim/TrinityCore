@@ -3259,7 +3259,7 @@ bool SpellMgr::CanAurasStack(Aura const *aura1, Aura const *aura2, bool sameCast
     if (spellId_1 == spellId_2)
     {
         // Hack for Incanter's Absorption
-        if (spellId_1 == 44413)
+        if (spellId_1 == 44413 || spellId_1 == 29306 || spellId_1 == 60708)
             return true;
         if (aura1->GetCastItemGUID() && aura2->GetCastItemGUID())
             if (aura1->GetCastItemGUID() != aura2->GetCastItemGUID() && (GetSpellCustomAttr(spellId_1) & SPELL_ATTR0_CU_ENCHANT_PROC))
@@ -3665,6 +3665,7 @@ void SpellMgr::LoadSpellCustomAttr()
             ++count;
             break;
         case 49838: // Stop Time
+        case 57491:  // Flame tsunami damage aura
             spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
             ++count;
             break;
