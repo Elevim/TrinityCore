@@ -2471,20 +2471,20 @@ void AuraEffect::TriggerSpell(Unit* target, Unit* caster) const
     }
 
     // Reget trigger spell proto
-    triggeredSpellInfo = sSpellStore.LookupEntry(triggerSpellId);
-
-    if (triggeredSpellInfo)
+    if (triggeredSpellInfo = sSpellStore.LookupEntry(triggerSpellId))
     {
-        Unit* triggerCaster = GetTriggeredSpellCaster(triggeredSpellInfo, caster, triggerTarget);
-        triggerCaster->CastSpell(triggerTarget, triggeredSpellInfo, true, NULL, this);
-        sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "AuraEffect::TriggerSpell: Spell %u Trigger %u", GetId(), triggeredSpellInfo->Id);
+        if (Unit* triggerCaster = GetTriggeredSpellCaster(triggeredSpellInfo, caster, target))
+        {
+            triggerCaster->CastSpell(target, triggeredSpellInfo, true, NULL, this);
+            sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "AuraEffect::HandlePeriodicTriggerSpellAuraTick: Spell %u Trigger %u", GetId(), triggeredSpellInfo->Id);
+        }
     }
     else
     {
-        Creature* c = triggerTarget->ToCreature();
-        if (!c || (c && !sScriptMgr->OnDummyEffect(caster, GetId(), SpellEffIndex(GetEffIndex()), triggerTarget->ToCreature())) ||
-            (c && !c->AI()->sOnDummyEffect(caster, GetId(), SpellEffIndex(GetEffIndex()))))
-            sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "AuraEffect::TriggerSpell: Spell %u has non-existent spell %u in EffectTriggered[%d] and is therefor not triggered.", GetId(), triggerSpellId, GetEffIndex());
+        Creature* c = target->ToCreature();
+        if (!c || !sScriptMgr->OnDummyEffect(caster, GetId(), SpellEffIndex(GetEffIndex()), target->ToCreature()) ||
+            !c->AI()->sOnDummyEffect(caster, GetId(), SpellEffIndex(GetEffIndex())))
+            sLog->outDebug(LOG_FILTER_SPELLS_AURAS, "AuraEffect::HandlePeriodicTriggerSpellAuraTick: Spell %u has non-existent spell %u in EffectTriggered[%d] and is therefor not triggered.", GetId(), triggerSpellId, GetEffIndex());
     }
 }
 
@@ -6284,6 +6284,7 @@ void AuraEffect::HandleAuraDummy(AuraApplication const* aurApp, uint8 mode, bool
                 //break;
             break;
         }
+
         case SPELLFAMILY_PRIEST:
         {
             //if (!(mode & AURA_EFFECT_HANDLE_REAL))
