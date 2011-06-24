@@ -1612,6 +1612,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_eonars_gift' WHERE `entry`=3322
 UPDATE `creature_template` SET `ScriptName`='npc_healthy_spore' WHERE `entry`=33215;
 UPDATE `creature_template` SET `ScriptName`='npc_unstable_sun_beam' WHERE `entry`=33050;
 UPDATE `creature_template` SET `ScriptName`='npc_iron_roots' WHERE `entry` IN (33088,33168);
+UPDATE `creature_template` SET `ScriptName`='npc_feral_defender' WHERE `entry`=34035;
+UPDATE `creature_template` SET `ScriptName`='npc_sanctum_sentry' WHERE `entry`=34014;
+UPDATE `creature_template` SET `ScriptName`='npc_auriaya_seeping_trigger' WHERE `entry` =34098;
 
 
 /* UN'GORO CRATER */
@@ -1877,9 +1880,6 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 (10062,11,0,0, 'achievement_quick_shave'),
 (10063,11,0,0, 'achievement_quick_shave'),
 (7625,11,0,0, 'achievement_bg_sa_artillery'),
-<<<<<<< HEAD
-(7628,11,0,0, 'achievement_bg_sa_artillery');
-=======
 (7628,11,0,0, 'achievement_bg_sa_artillery'),
 (5541,11,0,0,'achievement_arena_2v2_kills'),
 (5542,11,0,0,'achievement_arena_3v3_kills'),
@@ -1893,7 +1893,6 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 (12971,11,0,0,'achievement_portal_jockey'),
 (12980,11,0,0,'achievement_portal_jockey');
 
->>>>>>> d9ccb71... Scripts/Naxxramas: Removed deprecated DoCompleteAchievement
 /* SPELLS */
 INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 -- generic
@@ -2131,8 +2130,6 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 71390, 'spell_blood_queen_pact_of_the_darkfallen'),
 ( 71340, 'spell_blood_queen_pact_of_the_darkfallen_dmg'),
 ( 71341, 'spell_blood_queen_pact_of_the_darkfallen_dmg_target'),
-<<<<<<< HEAD
-=======
 ( 70078, 'spell_svalna_caress_of_death'),
 ( 70053, 'spell_svalna_revive_champion'),
 ( 71462, 'spell_svalna_remove_spear'),
@@ -2151,7 +2148,6 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 71970, 'spell_dreamwalker_nightmare_cloud'),
 ( 72868, 'spell_putricide_slime_puddle_aura'),
 ( 72869, 'spell_putricide_slime_puddle_aura'),
->>>>>>> 0ab5cde... Scripts/Icecrown Citadel:
 ( 71357, 'spell_frostwarden_handler_order_whelp'),
 ( 71350, 'spell_frostwarden_handler_focus_fire'),
 ( 71376, 'spell_rimefang_icy_blast'),
@@ -2210,6 +2206,20 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 63981, 'spell_ulduar_stone_grip_cast_target'),
 ( 64702, 'spell_ulduar_squeezed_lifeless'),
 ( 63027, 'spell_ulduar_proximity_mines'),
+( 63276, 'spell_mark_of_the_faceless'),
+( 63489, 'spell_shield_of_runes'),
+( 62274, 'spell_shield_of_runes'),
+( 63018, 'spell_xt002_searing_light_spawn_life_spark'),
+( 65121, 'spell_xt002_searing_light_spawn_life_spark'),
+( 64234, 'spell_xt002_gravity_bomb_aura'),
+( 63024, 'spell_xt002_gravity_bomb_aura'),
+( 64233, 'spell_xt002_gravity_bomb_damage'),
+( 63025, 'spell_xt002_gravity_bomb_damage'),
+( 62791, 'spell_xt002_heart_overload_periodic'),
+( 62775, 'spell_xt002_tympanic_tantrum'),
+( 37751, 'spell_xt002_submerged'),
+( 37752, 'spell_xt002_stand'),
+( 64381, 'spell_auriaya_strenght_of_the_pack'),
 -- Eye Of Eternity
 ( 56105, 'spell_malygos_vortex_dummy'),
 ( 55873, 'spell_malygos_vortex_visual'),
