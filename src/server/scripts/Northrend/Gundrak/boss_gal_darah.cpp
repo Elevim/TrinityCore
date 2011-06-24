@@ -332,6 +332,8 @@ public:
 
 
     };
+};
+
 class achievement_share_the_love : public AchievementCriteriaScript
 {
     public:
