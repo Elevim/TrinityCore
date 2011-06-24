@@ -427,20 +427,10 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
                 return;
             }
 
-            ASSERT(_charCreateCallback.GetParam() == createInfo);            
+            ASSERT(_charCreateCallback.GetParam() == createInfo);
 
-<<<<<<< HEAD
-            if (GetSecurity() <= SEC_MODERATOR && class_ == CLASS_DEATH_KNIGHT)
-            {
-                uint8 acc_class = field[2].GetUInt32();
-                if (acc_class == CLASS_DEATH_KNIGHT)
-                {
-                    if (heroic_free_slots > 0)
-                        --heroic_free_slots;
-=======
             PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_GET_SUM_REALMCHARS);
             stmt->setUInt32(0, GetAccountId());
->>>>>>> fe8cb75... Core/DBLayer: Make database interaction after create character packet completely asynchronous. This is more performant and fixes a DoS loophole and possible data desynchronisation caused by spamming this packet.
 
             _charCreateCallback.FreeResult();
             _charCreateCallback.SetFutureResult(LoginDatabase.AsyncQuery(stmt));
@@ -504,21 +494,7 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
 
             bool allowTwoSideAccounts = !sWorld->IsPvPRealm() || sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_ACCOUNTS) || GetSecurity() > SEC_PLAYER;
             uint32 skipCinematics = sWorld->getIntConfig(CONFIG_SKIP_CINEMATICS);
-            uint32 heroicReqLevel = sWorld->getIntConfig(CONFIG_CHARACTER_CREATING_MIN_LEVEL_FOR_HEROIC_CHARACTER);
-
-            // if 0 then allowed creating without any characters
-            bool hasHeroicReqLevel = (heroicReqLevel == 0);
-            if (GetSecurity() == SEC_PLAYER && createInfo->Class == CLASS_DEATH_KNIGHT && !hasHeroicReqLevel)
-            {
-                WorldPacket data(SMSG_CHAR_CREATE, 1);
-                data << uint8(CHAR_CREATE_LEVEL_REQUIREMENT);
-                SendPacket(&data);
-                delete createInfo;
-                _charCreateCallback.SetParam(NULL);
-                _charCreateCallback.FreeResult();
-                return;
-            }
-
+          
             _charCreateCallback.FreeResult();
 
             if (!allowTwoSideAccounts || skipCinematics == 1 || createInfo->Class == CLASS_DEATH_KNIGHT)
@@ -551,12 +527,8 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
                 Field* field = result->Fetch();
                 uint8 accRace  = field[1].GetUInt32();
 
-<<<<<<< HEAD
-                if (GetSecurity() <= SEC_MODERATOR && class_ == CLASS_DEATH_KNIGHT)
-=======
-                if (GetSecurity() == SEC_PLAYER && createInfo->Class == CLASS_DEATH_KNIGHT)
->>>>>>> fe8cb75... Core/DBLayer: Make database interaction after create character packet completely asynchronous. This is more performant and fixes a DoS loophole and possible data desynchronisation caused by spamming this packet.
-                {
+               if (GetSecurity() == SEC_MODERATOR && createInfo->Class == CLASS_DEATH_KNIGHT)
+               {
                     uint8 accClass = field[2].GetUInt32();
                     if (accClass == CLASS_DEATH_KNIGHT)
                     {
@@ -646,21 +618,23 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
                 }
             }
 
-<<<<<<< HEAD
-    if (GetSecurity() <= SEC_MODERATOR && class_ == CLASS_DEATH_KNIGHT && !have_req_level_for_heroic)
-    {
-        data << (uint8)CHAR_CREATE_LEVEL_REQUIREMENT;
-        SendPacket(&data);
-        return;
-    }
-=======
+            if (GetSecurity() == SEC_MODERATOR && createInfo->Class == CLASS_DEATH_KNIGHT && !hasHeroicReqLevel)
+            {
+                WorldPacket data(SMSG_CHAR_CREATE, 1);
+                data << uint8(CHAR_CREATE_LEVEL_REQUIREMENT);
+                SendPacket(&data);
+                delete createInfo;
+                _charCreateCallback.SetParam(NULL);
+                _charCreateCallback.FreeResult();
+                return;
+            }
+
             if (createInfo->Data.rpos() < createInfo->Data.wpos())
             {
                 uint8 unk;
                 createInfo->Data >> unk;
                 sLog->outDebug(LOG_FILTER_NETWORKIO, "Character creation %s (account %u) has unhandled tail data: [%u]", createInfo->Name.c_str(), GetAccountId(), unk);
             }
->>>>>>> fe8cb75... Core/DBLayer: Make database interaction after create character packet completely asynchronous. This is more performant and fixes a DoS loophole and possible data desynchronisation caused by spamming this packet.
 
             Player* pNewChar = new Player(this);
             if (!pNewChar->Create(sObjectMgr->GenerateLowGuid(HIGHGUID_PLAYER), createInfo))
