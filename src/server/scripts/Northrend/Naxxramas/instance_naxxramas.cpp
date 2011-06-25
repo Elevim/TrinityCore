@@ -156,6 +156,7 @@ public:
         uint64 uiSir;
 
         uint64 uiThaddius;
+        uint64 uiHeigan;
         uint64 uiFeugen;
         uint64 uiStalagg;
 
@@ -206,6 +207,7 @@ public:
                 case 30549: uiBaron = creature->GetGUID(); return;
                 case 16063: uiSir = creature->GetGUID(); return;
                 case 15928: uiThaddius = creature->GetGUID(); return;
+                case 15936: uiHeigan = creature->GetGUID(); return;
                 case 15930: uiFeugen = creature->GetGUID(); return;
                 case 15929: uiStalagg = creature->GetGUID(); return;
                 case 15990: uiKelthuzad = creature->GetGUID(); return;
@@ -327,7 +329,11 @@ public:
                         minHorsemenDiedTime = 0;
                         maxHorsemenDiedTime = 0;
                     }
-                    else if (value == DATA_HORSEMEN_BESERK)
+                    else if (value == DATA_HORSEMEN_BESERK_0)
+                    {
+                        horsemenBeserk = 0;
+                    }
+                    else if (value == DATA_HORSEMEN_BESERK_1)
                     {
                         horsemenBeserk = 1;
                     }
@@ -360,6 +366,8 @@ public:
                 return uiSir;
             case DATA_THADDIUS:
                 return uiThaddius;
+            case DATA_HEIGAN:
+                return uiHeigan;
             case DATA_FEUGEN:
                 return uiFeugen;
             case DATA_STALAGG:

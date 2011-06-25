@@ -289,6 +289,11 @@ inline bool IsLootCraftingSpell(SpellEntry const *spellInfo)
         (spellInfo->TotemCategory[0] != 0 || spellInfo->EffectItemType[0]==0)));
 }
 
+inline bool IsQuestTameSpell(SpellEntry const* spellInfo)
+{
+    return spellInfo->Effect[0] == SPELL_EFFECT_THREAT && spellInfo->Effect[1] == SPELL_EFFECT_APPLY_AURA && spellInfo->EffectApplyAuraName[1] == SPELL_AURA_DUMMY;
+}
+
 bool IsHigherHankOfSpell(uint32 spellId_1, uint32 spellId_2);
 bool IsSingleFromSpellSpecificPerCaster(SpellSpecific spellSpec1, SpellSpecific spellSpec2);
 bool IsSingleFromSpellSpecificPerTarget(SpellSpecific spellSpec1, SpellSpecific spellSpec2);
@@ -337,8 +342,8 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB);
 bool CanSpellDispelAura(SpellEntry const* dispelSpell, SpellEntry const* aura);
 bool CanSpellPierceImmuneAura(SpellEntry const* pierceSpell, SpellEntry const* aura);
 
-bool IsSingleTargetSpell(SpellEntry const *spellInfo);
-bool IsSingleTargetSpells(SpellEntry const *spellInfo1, SpellEntry const *spellInfo2);
+bool IsSingleTargetSpell(SpellEntry const* spellInfo);
+bool IsSingleTargetSpells(SpellEntry const* spellInfo1, SpellEntry const* spellInfo2);
 
 extern bool IsAreaEffectTarget[TOTAL_SPELL_TARGETS];
 extern SpellEffectTargetTypes EffectTargetType[TOTAL_SPELL_EFFECTS];
@@ -482,7 +487,7 @@ inline bool IsRangedWeaponSpell(SpellEntry const* spellInfo)
         || (spellInfo->EquippedItemSubClassMask & ITEM_SUBCLASS_MASK_WEAPON_RANGED);
 }
 
-SpellCastResult GetErrorAtShapeshiftedCast (SpellEntry const *spellInfo, uint32 form);
+SpellCastResult GetErrorAtShapeshiftedCast(SpellEntry const* spellInfo, uint32 form);
 
 inline bool IsChanneledSpell(SpellEntry const* spellInfo)
 {

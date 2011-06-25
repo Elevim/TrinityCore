@@ -36,6 +36,14 @@ enum Events
     EVENT_DOOM,
 };
 
+enum Achievments
+{
+    ACHIEV_SPORE_LOSER_10                                     = 2182,
+    ACHIEV_SPORE_LOSER_25                                     = 2183,
+};
+
+bool isSporeKilled;
+
 class boss_loatheb : public CreatureScript
 {
 public:
@@ -56,6 +64,7 @@ public:
             events.ScheduleEvent(EVENT_AURA, 10000);
             events.ScheduleEvent(EVENT_BLOOM, 5000);
             events.ScheduleEvent(EVENT_DOOM, 120000);
+            isSporeKilled = false;
         }
 
         void UpdateAI(const uint32 diff)
@@ -88,6 +97,48 @@ public:
 
             DoMeleeAttackIfReady();
         }
+
+        void JustDied(Unit* killer)
+        {
+            if(!isSporeKilled)
+            {
+                if (RAID_MODE(10, 25) == 25)
+                    me->GetInstanceScript()->DoCompleteAchievement(ACHIEV_SPORE_LOSER_25);
+                else
+                    me->GetInstanceScript()->DoCompleteAchievement(ACHIEV_SPORE_LOSER_10);
+
+            }
+
+            me->GetInstanceScript()->SetBossState(BOSS_LOATHEB, DONE);
+        }
+    };
+
+};
+
+enum SporeSpells
+{
+    SPELL_FUNGAL_CREEP                                     = 29232
+};
+
+class mob_loatheb_spore : public CreatureScript
+{
+public:
+    mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_loatheb_sporeAI (pCreature);
+    }
+
+    struct mob_loatheb_sporeAI : public ScriptedAI
+    {
+        mob_loatheb_sporeAI(Creature *c) : ScriptedAI(c) {}
+
+        void JustDied(Unit* killer)
+        {
+            DoCast(killer, SPELL_FUNGAL_CREEP);
+            isSporeKilled = true;
+        }
     };
 
 };
@@ -95,4 +146,5 @@ public:
 void AddSC_boss_loatheb()
 {
     new boss_loatheb();
+    new mob_loatheb_spore();
 }
