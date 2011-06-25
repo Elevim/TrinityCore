@@ -1831,6 +1831,9 @@ class achievement_twilight_assist : public AchievementCriteriaScript
 
         bool OnCheck(Player* player, Unit* target)
         {
+            if (!target)
+                return false;
+
             if (Creature* Sartharion = target->ToCreature())
                 if (Sartharion->AI()->GetData(TWILIGHT_ACHIEVEMENTS) >= 1)
                     return true;
@@ -1848,6 +1851,9 @@ class achievement_twilight_duo : public AchievementCriteriaScript
 
         bool OnCheck(Player* player, Unit* target)
         {
+            if (!target)
+                return false;
+
             if (Creature* Sartharion = target->ToCreature())
                 if (Sartharion->AI()->GetData(TWILIGHT_ACHIEVEMENTS) >= 2)
                     return true;
@@ -1865,6 +1871,9 @@ class achievement_twilight_zone : public AchievementCriteriaScript
 
         bool OnCheck(Player* player, Unit* target)
         {
+            if (!target)
+                return false;
+
             if (Creature* Sartharion = target->ToCreature())
                 if (Sartharion->AI()->GetData(TWILIGHT_ACHIEVEMENTS) == 3)
                     return true;
