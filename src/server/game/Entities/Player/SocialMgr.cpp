@@ -194,10 +194,10 @@ void SocialMgr::GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo &fri
     if (itr != player->GetSocial()->m_playerSocialMap.end())
         friendInfo.Note = itr->second.Note;
 
-    // PLAYER see his team only and PLAYER can't see MODERATOR, GAME MASTER, ADMINISTRATOR characters
-    // MODERATOR, GAME MASTER, ADMINISTRATOR can see all
+    // PLAYER, VIP see his team only and PLAYER, VIP can't see GAME MASTER, ADMINISTRATOR characters
+    // GAME MASTER, ADMINISTRATOR can see all
     if (pFriend && pFriend->GetName() &&
-        (security > SEC_PLAYER ||
+        (security > SEC_MODERATOR ||
         ((pFriend->GetTeam() == team || allowTwoSideWhoList) && (pFriend->GetSession()->GetSecurity() <= gmLevelInWhoList))) &&
         pFriend->IsVisibleGloballyFor(player))
     {
@@ -273,10 +273,10 @@ void SocialMgr::BroadcastToFriendListers(Player* player, WorldPacket* packet)
         {
             Player *pFriend = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER));
 
-            // PLAYER see his team only and PLAYER can't see MODERATOR, GAME MASTER, ADMINISTRATOR characters
-            // MODERATOR, GAME MASTER, ADMINISTRATOR can see all
+            // PLAYER, VIP see his team only and PLAYER, VIP can't see GAME MASTER, ADMINISTRATOR characters
+            // GAME MASTER, ADMINISTRATOR can see all
             if (pFriend && pFriend->IsInWorld() &&
-                (pFriend->GetSession()->GetSecurity() > SEC_PLAYER ||
+                (pFriend->GetSession()->GetSecurity() > SEC_MODERATOR ||
                 ((pFriend->GetTeam() == team || allowTwoSideWhoList) && security <= gmLevelInWhoList)) &&
                 player->IsVisibleGloballyFor(pFriend))
             {
