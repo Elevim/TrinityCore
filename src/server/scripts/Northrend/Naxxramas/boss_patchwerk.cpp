@@ -22,7 +22,6 @@
  * Living Poisen *
  * ************* */
 
-#define SPELL_DEATH         5
 #define NAXXMAP             533
 #define uiPatchwerkGUID     128135
 #define uiLane1GUID         3000004
@@ -64,7 +63,7 @@ public:
 
             if (pWho->GetTypeId() == TYPEID_PLAYER)
             {
-                pWho->CastSpell(pWho,SPELL_DEATH, true);
+                me->Kill(pWho, true);
                 me->ForcedDespawn();
             }
         }
