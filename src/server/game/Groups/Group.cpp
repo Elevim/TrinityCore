@@ -115,7 +115,7 @@ bool Group::Create(Player *leader)
     m_raidDifficulty = RAID_DIFFICULTY_10MAN_NORMAL;
 
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
     {
         m_dungeonDifficulty = leader->GetDungeonDifficulty();
         m_raidDifficulty = leader->GetRaidDifficulty();
@@ -345,7 +345,7 @@ bool Group::AddMember(Player* player)
 
     // insert into the table if we're not a battleground group
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
         CharacterDatabase.PExecute("INSERT INTO group_member (guid, memberGuid, memberFlags, subgroup, roles) VALUES(%u, %u, %u, %u, %u)",
                                     m_dbStoreId, GUID_LOPART(member.guid), member.flags, member.group, member.roles);
 
@@ -516,7 +516,7 @@ void Group::ChangeLeader(const uint64 &guid)
     sScriptMgr->OnGroupChangeLeader(this, m_leaderGuid, guid);
 
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
     {
         // Remove the groups permanent instance bindings
         for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
@@ -612,7 +612,7 @@ void Group::Disband(bool hideDestroy /* = false */)
     RemoveAllInvites();
 
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
     {
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
         trans->PAppend("DELETE FROM groups WHERE guid = %u", m_dbStoreId);
@@ -1310,7 +1310,7 @@ bool Group::_setMembersGroup(const uint64 &guid, const uint8 &group)
     SubGroupCounterIncrease(group);
 
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
         CharacterDatabase.PExecute("UPDATE group_member SET subgroup='%u' WHERE memberGuid='%u'", group, GUID_LOPART(guid));
 
     return true;
@@ -1353,7 +1353,7 @@ void Group::ChangeMembersGroup(const uint64 &guid, const uint8 &group)
     SubGroupCounterDecrease(prevSubGroup);
 
     // Preserve new sub group in database for non-raid groups
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup())
         CharacterDatabase.PExecute("UPDATE group_member SET subgroup='%u' WHERE memberGuid='%u'", group, GUID_LOPART(guid));
 
     Player* player = sObjectMgr->GetPlayer(guid);
@@ -1544,7 +1544,7 @@ void Group::SetDungeonDifficulty(Difficulty difficulty)
 {
     m_dungeonDifficulty = difficulty;
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
        CharacterDatabase.PExecute("UPDATE groups SET difficulty = %u WHERE guid ='%u'", m_dungeonDifficulty, m_dbStoreId);
 
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
@@ -1562,7 +1562,7 @@ void Group::SetRaidDifficulty(Difficulty difficulty)
 {
     m_raidDifficulty = difficulty;
 
-    if (!isBGGroup() && !isBFGroup())
+    if (!isBGGroup() || !isBFGroup())
         CharacterDatabase.PExecute("UPDATE groups SET raiddifficulty = %u WHERE guid ='%u'", m_raidDifficulty, m_dbStoreId);
 
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
