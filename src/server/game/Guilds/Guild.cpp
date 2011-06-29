@@ -1969,7 +1969,6 @@ bool Guild::LoadBankItemFromDB(Field* fields)
 // Validates guild data loaded from database. Returns false if guild should be deleted.
 bool Guild::Validate()
 {
-    return true;
     // Validate ranks data
     // GUILD RANKS represent a sequence starting from 0 = GUILD_MASTER (ALL PRIVILEGES) to max 9 (lowest privileges).
     // The lower rank id is considered higher rank - so promotion does rank-- and demotion does rank++
