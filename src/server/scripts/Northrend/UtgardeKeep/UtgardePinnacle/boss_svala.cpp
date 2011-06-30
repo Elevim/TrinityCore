@@ -103,7 +103,7 @@ public:
 
     struct boss_svalaAI : public ScriptedAI
     {
-        boss_svalaAI(Creature *c) : ScriptedAI(c)
+        boss_svalaAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
         }
@@ -135,7 +135,7 @@ public:
             {
                 pInstance->SetData(DATA_SVALA_SORROWGRAVE_EVENT, NOT_STARTED);
             }
-            else 
+            else
                 Phase = FINISHED;
 
         uiDoodadMirror = pInstance? pInstance->GetData64(DATA_DOODAD_UTGARDE_MIRROR_FX01) : NULL;
@@ -159,7 +159,7 @@ public:
                 if (GameObject* go = GameObject::GetGameObject(*me, uiDoodadMirror))
                     go->Use(me);
             }
-            
+
         }
     }
 
@@ -174,6 +174,7 @@ public:
         {
             switch (uiIntroPhase)
             {
+<<<<<<< HEAD
                 case 0:
                     DoScriptText(SAY_DIALOG_WITH_ARTHAS_1, me);
                     ++uiIntroPhase;
@@ -181,6 +182,20 @@ public:
                     break;
                 case 1:
                     if (Creature* pArthas = Creature::GetCreature(*me, uiArthas))
+=======
+                Creature* pArthas = Unit::GetCreature(*me, uiArthasGUID);
+                if (!pArthas)
+                    return;
+
+                switch (uiIntroPhase)
+                {
+                    case 0:
+                        DoScriptText(SAY_DIALOG_WITH_ARTHAS_1, me);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 3500;
+                        break;
+                    case 1:
+>>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
                         DoScriptText(SAY_DIALOG_OF_ARTHAS_1, pArthas);
                     ++uiIntroPhase;
                     uiIntroTimer = 10*IN_MILLISECONDS;
@@ -211,7 +226,7 @@ public:
                         ++uiIntroPhase;
                         uiIntroTimer = 12*IN_MILLISECONDS;
                     }
-                    else 
+                    else
                        Reset();
                     break;
                 case 5:
@@ -257,7 +272,7 @@ public:
 
     struct mob_ritual_channelerAI : public Scripted_NoMovementAI
     {
-        mob_ritual_channelerAI(Creature *c) :Scripted_NoMovementAI(c)
+        mob_ritual_channelerAI(Creature* c) :Scripted_NoMovementAI(c)
         {
             pInstance = c->GetInstanceScript();
         }
@@ -268,10 +283,22 @@ public:
     {
         if (IsHeroic())
             DoCast(me, SPELL_SHADOWS_IN_THE_DARK);
+<<<<<<< HEAD
     }
+=======
+        }
+
+        // called by svala sorrowgrave to set guid of victim
+        void DoAction(const int32 /*action*/)
+        {
+            if (pInstance)
+                if (Unit* pVictim = me->GetUnit(*me, pInstance->GetData64(DATA_SACRIFICED_PLAYER)))
+                    DoCast(pVictim, SPELL_PARALYZE);
+        }
+>>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
 
     // called by svala sorrowgrave to set guid of victim
-    void SetGUID(const uint64 &guid, int32 id) 
+    void SetGUID(const uint64 &guid, int32 id)
     {
         if (Unit *pVictim = me->GetUnit(*me, guid))
         {
@@ -293,14 +320,14 @@ public:
 
     struct boss_svala_sorrowgraveAI : public ScriptedAI
     {
-        boss_svala_sorrowgraveAI(Creature *c) : ScriptedAI(c), summons(c)
+        boss_svala_sorrowgraveAI(Creature* c) : ScriptedAI(c), summons(c)
         {
             pInstance = c->GetInstanceScript();
         }
-    
+
     bool bFlames;
     bool bMove;
-    
+
     uint64 uiFlameBrazier_1;
     uint64 uiFlameBrazier_2;
     uint32 uiSinsterStrikeTimer;
@@ -308,7 +335,7 @@ public:
     uint8 uiFlamesCount;
     uint32 uiSacrificeTimer;
     uint32 uiMoveTimer;
-    
+
     uint64 uiDoodadMirror;
 
     CombatPhase Phase;
@@ -336,7 +363,7 @@ public:
         uiMoveTimer = 23*IN_MILLISECONDS;
 
         nextPercentageForSacrifice = 50;
-        
+
         bFlames = false;
         bMove = true;
 
@@ -358,7 +385,7 @@ public:
 
         if (pInstance)
             pInstance->SetData(DATA_SVALA_SORROWGRAVE_EVENT, IN_PROGRESS);
-            
+
         if (GameObject* go = GameObject::GetGameObject(*me, uiDoodadMirror))
             go->ResetDoorOrButton();
     }
@@ -372,14 +399,14 @@ public:
     {
         summons.Despawn(summon);
     }
-    
-    void SpellHitTarget(Unit *pTarget, const SpellEntry *spell) 
+
+    void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
     {
         if (pTarget->GetEntry() != CREATURE_SCOURGE_HULK && spell->Id == SPELL_RITUAL_STRIKE_HERO)
             pTarget->RemoveAurasDueToSpell(SPELL_RITUAL_STRIKE_HERO);
-            
+
     }
-    
+
     void KilledUnit(Unit* who)
     {
         DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
@@ -396,7 +423,33 @@ public:
                 uiMoveTimer -= diff;
                 return;
             }
+<<<<<<< HEAD
             else if (!bMove)
+=======
+        }
+
+        void EnterCombat(Unit* /*who*/)
+        {
+            DoScriptText(SAY_AGGRO, me);
+
+            if (pInstance)
+                pInstance->SetData(DATA_SVALA_SORROWGRAVE_EVENT, IN_PROGRESS);
+        }
+
+        void JustSummoned(Creature* summon)
+        {
+            summons.Summon(summon);
+        }
+
+        void SummonedCreatureDespawn(Creature* summon)
+        {
+            summons.Despawn(summon);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (Phase == NORMAL)
+>>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
             {
                 DoStartMovement(me->getVictim());
                 bMove = true;
@@ -419,16 +472,16 @@ public:
                     {
                         DoCast(pTarget, SPELL_CALL_FLAMES);
                         bFlames = true;
-                    }    
+                    }
                     if (uiFlamesCount < 3)
                     {
-                        if (Creature* creature = Creature::GetCreature(*me, RAND(uiFlameBrazier_1, uiFlameBrazier_2))) 
+                        if (Creature* creature = Creature::GetCreature(*me, RAND(uiFlameBrazier_1, uiFlameBrazier_2)))
                             creature->CastSpell(pTarget, SPELL_BALL_OF_FLAME, false);
                         uiCallFlamesTimer = 1*IN_MILLISECONDS;
                         ++uiFlamesCount;
                     }
                     else
-                    { 
+                    {
                         bFlames = false;
                         uiCallFlamesTimer = urand(8*IN_MILLISECONDS,12*IN_MILLISECONDS);
                         uiFlamesCount = 0;
