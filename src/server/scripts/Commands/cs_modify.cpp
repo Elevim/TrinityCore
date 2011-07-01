@@ -698,11 +698,12 @@ public:
             return false;
         }
 
-        if (Player* plr = target->ToPlayer())
+        if (Player* player = target->ToPlayer())
         {
             // check online security
-            if (handler->HasLowerSecurity(plr, 0))
+            if (handler->HasLowerSecurity(player, 0))
                 return false;
+
 
             handler->PSendSysMessage(LANG_YOU_CHANGE_SIZE, Scale, handler->GetNameLink((Player*)target).c_str());
             if (handler->needReportToTarget((Player*)target))
