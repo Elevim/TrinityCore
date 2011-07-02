@@ -381,7 +381,8 @@ public:
             Reset();
         }
 
-        void EnterCombat(Unit* pWho)
+
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_SARTHARION_AGGRO,me);
             DoZoneInCombat();
@@ -1095,7 +1096,7 @@ public:
         m_bHasPortalOpen = false;
     }
 
-    void EnterCombat(Unit* pWho)
+    void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(SAY_TENEBRON_AGGRO, me);
         DoZoneInCombat();
@@ -1208,7 +1209,8 @@ public:
         m_bHasPortalOpen = false;
     }
 
-    void EnterCombat(Unit* pWho)
+
+    void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(SAY_SHADRON_AGGRO,me);
         DoZoneInCombat();
@@ -1325,7 +1327,8 @@ public:
         m_bHasPortalOpen = false;
     }
 
-    void EnterCombat(Unit* pWho)
+
+    void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(SAY_VESPERON_AGGRO,me);
         DoZoneInCombat();
@@ -1626,7 +1629,6 @@ public:
 
     void SpawnWhelps()
     {
-
         Creature* pTenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
         if (pInstance && pTenebron)
         {
@@ -1643,7 +1645,6 @@ public:
 
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
             pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
-
         }
         me->DisappearAndDie();
       }
@@ -1662,9 +1663,8 @@ public:
             m_uiHatchEggTimer -= uiDiff;
     }
 
-
-    void AttackStart(Unit* pWho) {}
-    void MoveInLineOfSight(Unit* pWho) {}
+    void AttackStart(Unit* /*who*/) {}
+    void MoveInLineOfSight(Unit* /*who*/) {}
 };
 };
 

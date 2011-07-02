@@ -185,11 +185,11 @@ public:
             sLog->outError("End Intro");
         }
 
-        void AttackStart(Unit* pWho)
+        void AttackStart(Unit* who)
         {
-            if (!pWho || Intro || IsIntro)
+            if (!who || Intro || IsIntro)
                 return;
-            ScriptedAI::AttackStart(pWho);
+            ScriptedAI::AttackStart(who);
         }
 
         void DoIntro()

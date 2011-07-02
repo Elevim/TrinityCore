@@ -141,6 +141,7 @@ public:
         uiDoodadMirror = pInstance? pInstance->GetData64(DATA_DOODAD_UTGARDE_MIRROR_FX01) : NULL;
     }
 
+<<<<<<< HEAD
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!pWho)
@@ -153,6 +154,14 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
             if (Creature* pArthas = me->SummonCreature(CREATURE_ARTHAS, 295.81f, -366.16f, 92.57f, 1.58f, TEMPSUMMON_MANUAL_DESPAWN))
+=======
+        void MoveInLineOfSight(Unit* who)
+        {
+            if (!who)
+                return;
+
+            if (Phase == IDLE && who->isTargetableForAttack() && me->IsHostileTo(who) && me->IsWithinDistInMap(who, 40))
+>>>>>>> f676585... Core: Cleaning up hungarian notation - Phase5: pWho -> who
             {
                 pArthas->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE|UNIT_FLAG_DISABLE_MOVE);
                 uiArthas = pArthas->GetGUID();

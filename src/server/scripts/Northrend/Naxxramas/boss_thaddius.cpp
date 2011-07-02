@@ -315,7 +315,7 @@ public:
             homePosition = me->GetHomePosition();
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoCast(SPELL_STALAGG_TESLA);
         }
@@ -458,7 +458,7 @@ public:
             homePosition = me->GetHomePosition();
         }
 
-        void EnterCombat(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*who*/)
         {
             DoCast(SPELL_FEUGEN_TESLA);
         }
