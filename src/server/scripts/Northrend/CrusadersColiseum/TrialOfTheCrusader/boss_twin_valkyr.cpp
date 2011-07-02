@@ -393,8 +393,8 @@ struct boss_twin_baseAI : public ScriptedAI
 
         if (IsHeroic() && m_uiTouchTimer <= uiDiff)
         {
-            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true, m_uiOtherEssenceSpellId))
-                me->CastCustomSpell(m_uiTouchSpellId, SPELLVALUE_MAX_TARGETS, 1, pTarget, false);
+            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true, m_uiOtherEssenceSpellId))
+                me->CastCustomSpell(m_uiTouchSpellId, SPELLVALUE_MAX_TARGETS, 1, target, false);
             m_uiTouchTimer = urand(10, 15)*IN_MILLISECONDS;
         }
         else
@@ -626,8 +626,8 @@ public:
         {
             if (m_uiRangeCheckTimer < uiDiff)
             {
-                if (Unit* pTarget = me->SelectNearestTarget(2.0f))
-                    if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
+                if (Unit* target = me->SelectNearestTarget(2.0f))
+                    if (target->GetTypeId() == TYPEID_PLAYER && target->isAlive())
                     {
                         DoCastAOE(SPELL_UNLEASHED_DARK);
                         me->GetMotionMaster()->MoveIdle();
@@ -659,8 +659,8 @@ public:
         {
             if (m_uiRangeCheckTimer < uiDiff)
             {
-                if (Unit* pTarget = me->SelectNearestTarget(2.0f))
-                    if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
+                if (Unit* target = me->SelectNearestTarget(2.0f))
+                    if (target->GetTypeId() == TYPEID_PLAYER && target->isAlive())
                     {
                         DoCastAOE(SPELL_UNLEASHED_LIGHT);
                         me->GetMotionMaster()->MoveIdle();

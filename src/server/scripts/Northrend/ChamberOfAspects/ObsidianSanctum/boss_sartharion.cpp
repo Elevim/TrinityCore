@@ -693,9 +693,9 @@ public:
             // Lavas Strike
             if (m_uiLavaStrikeTimer <= uiDiff)
             {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                 {
-                    CastLavaStrikeOnTarget(pTarget);
+                    CastLavaStrikeOnTarget(target);
 
                     if(urand(0,5) == 0)
                         DoScriptText(RAND(SAY_SARTHARION_SPECIAL_1,SAY_SARTHARION_SPECIAL_2,SAY_SARTHARION_SPECIAL_3), me);
@@ -1234,10 +1234,23 @@ public:
             if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, RAID_MODE(SPELL_SHADOW_FISSURE, SPELL_SHADOW_FISSURE_H));
 
+<<<<<<< HEAD
             m_uiShadowFissureTimer = urand(15000,20000);
         }
         else
             m_uiShadowFissureTimer -= uiDiff;
+=======
+            // shadow fissure
+            if (m_uiShadowFissureTimer <= uiDiff)
+            {
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    DoCast(target, RAID_MODE(SPELL_SHADOW_FISSURE, SPELL_SHADOW_FISSURE_H));
+
+                m_uiShadowFissureTimer = urand(15000, 20000);
+            }
+            else
+                m_uiShadowFissureTimer -= uiDiff;
+>>>>>>> 70115f5... Core: Cleaning up hungarian notation - Phase3: pTarget -> target
 
         // Portal Event
         if (!m_bHasPortalOpen)
@@ -1349,8 +1362,23 @@ public:
         // shadow fissure
         if (m_uiShadowFissureTimer <= uiDiff)
         {
+<<<<<<< HEAD
             if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, RAID_MODE(SPELL_SHADOW_FISSURE, SPELL_SHADOW_FISSURE_H));
+=======
+            //if no target, update dummy and return
+            if (!UpdateVictim())
+            {
+                dummy_dragonAI::UpdateAI(uiDiff);
+                return;
+            }
+
+            // shadow fissure
+            if (m_uiShadowFissureTimer <= uiDiff)
+            {
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    DoCast(target, RAID_MODE(SPELL_SHADOW_FISSURE, SPELL_SHADOW_FISSURE_H));
+>>>>>>> 70115f5... Core: Cleaning up hungarian notation - Phase3: pTarget -> target
 
             m_uiShadowFissureTimer = urand(15000,20000);
         }
@@ -1436,7 +1464,24 @@ public:
             Creature* pShadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
             if(pShadron)
             {
+<<<<<<< HEAD
                 (CAST_AI(mob_shadron::mob_shadronAI, pShadron->AI()))->m_bHasPortalOpen = false;
+=======
+                Creature* target = NULL;
+                //if not solo figth, buff main boss, else place debuff on mini-boss. both spells TARGET_SCRIPT
+                if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+                {
+                    target = Unit::GetCreature((*me), pInstance->GetData64(DATA_SARTHARION));
+                    if (target)
+                        target->AddAura(SPELL_GIFT_OF_TWILIGTH_SAR, target);
+                }
+                else
+                {
+                    target = Unit::GetCreature((*me), pInstance->GetData64(DATA_SHADRON));
+                    if (target)
+                        target->AddAura(SPELL_GIFT_OF_TWILIGTH_SHA, target);
+                }
+>>>>>>> 70115f5... Core: Cleaning up hungarian notation - Phase3: pTarget -> target
             }
 
             Creature* pDebuffTarget = NULL;

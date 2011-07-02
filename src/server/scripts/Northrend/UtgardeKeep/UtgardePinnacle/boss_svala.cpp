@@ -174,15 +174,7 @@ public:
         {
             switch (uiIntroPhase)
             {
-<<<<<<< HEAD
-                case 0:
-                    DoScriptText(SAY_DIALOG_WITH_ARTHAS_1, me);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 8*IN_MILLISECONDS;
-                    break;
-                case 1:
-                    if (Creature* pArthas = Creature::GetCreature(*me, uiArthas))
-=======
+
                 Creature* pArthas = Unit::GetCreature(*me, uiArthasGUID);
                 if (!pArthas)
                     return;
@@ -195,10 +187,9 @@ public:
                         uiIntroTimer = 3500;
                         break;
                     case 1:
->>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
                         DoScriptText(SAY_DIALOG_OF_ARTHAS_1, pArthas);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 10*IN_MILLISECONDS;
+                        ++uiIntroPhase;
+                        uiIntroTimer = 10*IN_MILLISECONDS;
                     break;
                 case 2:
                     DoCast(me, SPELL_SVALA_TRANSFORMING1);
@@ -283,10 +274,8 @@ public:
     {
         if (IsHeroic())
             DoCast(me, SPELL_SHADOWS_IN_THE_DARK);
-<<<<<<< HEAD
+
     }
-=======
-        }
 
         // called by svala sorrowgrave to set guid of victim
         void DoAction(const int32 /*action*/)
@@ -295,7 +284,7 @@ public:
                 if (Unit* pVictim = me->GetUnit(*me, pInstance->GetData64(DATA_SACRIFICED_PLAYER)))
                     DoCast(pVictim, SPELL_PARALYZE);
         }
->>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
+
 
     // called by svala sorrowgrave to set guid of victim
     void SetGUID(const uint64 &guid, int32 id)
@@ -423,9 +412,6 @@ public:
                 uiMoveTimer -= diff;
                 return;
             }
-<<<<<<< HEAD
-            else if (!bMove)
-=======
         }
 
         void EnterCombat(Unit* /*who*/)
@@ -449,7 +435,6 @@ public:
         void UpdateAI(const uint32 diff)
         {
             if (Phase == NORMAL)
->>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
             {
                 DoStartMovement(me->getVictim());
                 bMove = true;
@@ -468,10 +453,11 @@ public:
             {
                 if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                 {
-                    if (!bFlames)
+
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                     {
-                        DoCast(pTarget, SPELL_CALL_FLAMES);
-                        bFlames = true;
+                        DoCast(target, SPELL_CALL_FLAMES);
+                        uiCallFlamesTimer = urand(8 * IN_MILLISECONDS, 12 * IN_MILLISECONDS);
                     }
                     if (uiFlamesCount < 3)
                     {
@@ -494,6 +480,7 @@ public:
                 pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                 if (pSacrificeTarget)
                 {
+
                     DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
                     me->GetMotionMaster()->Clear();
                     DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
