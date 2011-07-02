@@ -473,6 +473,7 @@ public:
                         uiCallFlamesTimer = urand(8*IN_MILLISECONDS,12*IN_MILLISECONDS);
                         uiFlamesCount = 0;
                     }
+
                 }
             } else uiCallFlamesTimer -= diff;
 
