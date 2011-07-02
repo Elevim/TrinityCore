@@ -281,8 +281,8 @@ public:
         void DoAction(const int32 /*action*/)
         {
             if (pInstance)
-                if (Unit* pVictim = me->GetUnit(*me, pInstance->GetData64(DATA_SACRIFICED_PLAYER)))
-                    DoCast(pVictim, SPELL_PARALYZE);
+                if (Unit* victim = me->GetUnit(*me, pInstance->GetData64(DATA_SACRIFICED_PLAYER)))
+                    DoCast(victim, SPELL_PARALYZE);
         }
 
 
