@@ -393,7 +393,8 @@ public:
             }
         }
 
-        void JustDied(Unit* pKiller)
+
+        void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_SARTHARION_DEATH,me);
 
@@ -993,7 +994,7 @@ struct dummy_dragonAI : public ScriptedAI
         //Refresh respawnTime so time again are set to 30secs?
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* /*killer*/)
     {
         int32 iTextId = 0;
         uint32 uiSpellId = 0;
@@ -1537,7 +1538,8 @@ public:
         }
     }
 
-    void JustDied(Unit* pKiller)
+
+    void JustDied(Unit* /*killer*/)
     {
         // remove twilight torment on Vesperon
         if (pInstance)

@@ -141,27 +141,19 @@ public:
         uiDoodadMirror = pInstance? pInstance->GetData64(DATA_DOODAD_UTGARDE_MIRROR_FX01) : NULL;
     }
 
-<<<<<<< HEAD
-    void MoveInLineOfSight(Unit* pWho)
+
+    void MoveInLineOfSight(Unit* who)
     {
-        if (!pWho)
+        if (!who)
             return;
 
 
-        if (Phase == IDLE && pWho->isTargetableForAttack() && me->IsHostileTo(pWho) && me->IsWithinDistInMap(pWho, 40))
+        if (Phase == IDLE && who->isTargetableForAttack() && me->IsHostileTo(who) && me->IsWithinDistInMap(who, 40))
         {
             Phase = INTRO;
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
             if (Creature* pArthas = me->SummonCreature(CREATURE_ARTHAS, 295.81f, -366.16f, 92.57f, 1.58f, TEMPSUMMON_MANUAL_DESPAWN))
-=======
-        void MoveInLineOfSight(Unit* who)
-        {
-            if (!who)
-                return;
-
-            if (Phase == IDLE && who->isTargetableForAttack() && me->IsHostileTo(who) && me->IsWithinDistInMap(who, 40))
->>>>>>> f676585... Core: Cleaning up hungarian notation - Phase5: pWho -> who
             {
                 pArthas->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE|UNIT_FLAG_DISABLE_MOVE);
                 uiArthas = pArthas->GetGUID();
@@ -510,6 +502,7 @@ public:
             }
             DoMeleeAttackIfReady();
         }
+
         else  //SACRIFICING
         {
             if (uiSacrificeTimer <= diff)
@@ -527,7 +520,6 @@ public:
                 pSacrificeTarget = NULL;
                 uiSinsterStrikeTimer = urand(10*IN_MILLISECONDS,15*IN_MILLISECONDS);
                 uiCallFlamesTimer = urand(13*IN_MILLISECONDS,18*IN_MILLISECONDS);
-
                 uiSacrificeTimer = 25*IN_MILLISECONDS;
             }
             else uiSacrificeTimer -= diff;
@@ -535,13 +527,13 @@ public:
     }
 
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* killer)
     {
         if (pInstance)
         {
             Creature* pSvala = Unit::GetCreature((*me), pInstance->GetData64(DATA_SVALA));
             if (pSvala && pSvala->isAlive())
-                pKiller->Kill(pSvala);
+                killer->Kill(pSvala);
 
             pInstance->SetData(DATA_SVALA_SORROWGRAVE_EVENT, DONE);
         }
