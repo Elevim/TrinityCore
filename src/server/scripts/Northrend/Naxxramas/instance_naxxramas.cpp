@@ -454,7 +454,7 @@ public:
             {
                 case DATA_HORSEMEN_BESERK:
                     return horsemenBeserk;
-                case default:
+                default:
                     return NULL;
             }
 
