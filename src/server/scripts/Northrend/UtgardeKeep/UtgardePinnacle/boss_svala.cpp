@@ -176,7 +176,7 @@ public:
             switch (uiIntroPhase)
             {
 
-                Creature* pArthas = Unit::GetCreature(*me, uiArthasGUID);
+                Creature* pArthas = Unit::GetCreature(*me, uiArthas);
                 if (!pArthas)
                     return;
 
@@ -246,6 +246,7 @@ public:
                     if (Creature* pArthas = Creature::GetCreature(*me, uiArthas))
                         pArthas->DisappearAndDie();
                     Phase = FINISHED;
+                }
             }
         } else uiIntroTimer -= diff;
     }
@@ -404,7 +405,7 @@ public:
             pInstance->DoCompleteAchievement(ACHIEV_INCREDIBLE_HULK);
     }
 
-    void UpdateAI(const uint32 diff)
+   void UpdateAI(const uint32 diff)
     {
         if (Phase == NORMAL)
         {
@@ -413,29 +414,7 @@ public:
                 uiMoveTimer -= diff;
                 return;
             }
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            DoScriptText(SAY_AGGRO, me);
-
-            if (pInstance)
-                pInstance->SetData(DATA_SVALA_SORROWGRAVE_EVENT, IN_PROGRESS);
-        }
-
-        void JustSummoned(Creature* summon)
-        {
-            summons.Summon(summon);
-        }
-
-        void SummonedCreatureDespawn(Creature* summon)
-        {
-            summons.Despawn(summon);
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (Phase == NORMAL)
+            else if (!bMove)
             {
                 DoStartMovement(me->getVictim());
                 bMove = true;
@@ -454,11 +433,10 @@ public:
             {
                 if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                 {
-
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    if (!bFlames)
                     {
-                        DoCast(target, SPELL_CALL_FLAMES);
-                        uiCallFlamesTimer = urand(8 * IN_MILLISECONDS, 12 * IN_MILLISECONDS);
+                        DoCast(pTarget, SPELL_CALL_FLAMES);
+                        bFlames = true;
                     }
                     if (uiFlamesCount < 3)
                     {
@@ -473,55 +451,49 @@ public:
                         uiCallFlamesTimer = urand(8*IN_MILLISECONDS,12*IN_MILLISECONDS);
                         uiFlamesCount = 0;
                     }
-
                 }
             } else uiCallFlamesTimer -= diff;
 
-            if (this->HealthBelowPct(nextPercentageForSacrifice))
-            {
-                pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                if (pSacrificeTarget)
+                if (this->HealthBelowPct(nextPercentageForSacrifice))
                 {
+                    pSacrificeTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+                    if (pSacrificeTarget)
+                    {
+                        DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
+                        me->GetMotionMaster()->Clear();
+                        DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
+                        //Spell doesn't teleport
+                        DoTeleportPlayer(pSacrificeTarget, 296.632f, -346.075f, 90.63f, 4.6f);
+                        Phase = SACRIFICING;
 
-                    DoScriptText(RAND(SAY_SACRIFICE_PLAYER_1,SAY_SACRIFICE_PLAYER_2,SAY_SACRIFICE_PLAYER_3,SAY_SACRIFICE_PLAYER_4,SAY_SACRIFICE_PLAYER_5),me);
-                    me->GetMotionMaster()->Clear();
-                    DoCast(pSacrificeTarget, SPELL_RITUAL_OF_THE_SWORD);
-                    me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_TRIGGER, true);
-                    me->CastSpell(me, SPELL_RITUAL_OF_THE_SWORD_DISARM, true);
-                    //Spell doesn't teleport
-                    DoTeleportPlayer(pSacrificeTarget, 296.632f, -346.075f, 90.63f, 4.6f);
-                    Phase = SACRIFICING;
+                        for (uint8 i = 0; i < 3; ++i)
+                            if (Creature* pRitualChanneler = me->SummonCreature(CREATURE_RITUAL_CHANNELER, RitualChannelerPos[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 100*HOUR))
+                                if (pRitualChanneler->AI())
+                                    pRitualChanneler->AI()->SetGUID(pSacrificeTarget->GetGUID());
 
-                    for (uint8 i = 0; i < 3; ++i)
-                        if (Creature* pRitualChanneler = me->SummonCreature(CREATURE_RITUAL_CHANNELER, RitualChannelerPos[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, uiSacrificeTimer))
-                            if (pRitualChanneler->AI())
-                                pRitualChanneler->AI()->SetGUID(pSacrificeTarget->GetGUID());
-
+                    }
+                    if (nextPercentageForSacrifice > 0)
+						nextPercentageForSacrifice -= 25;
                 }
-                if (nextPercentageForSacrifice > 0)
-                    nextPercentageForSacrifice -= 50;
-            }
             DoMeleeAttackIfReady();
         }
-
         else  //SACRIFICING
         {
             if (uiSacrificeTimer <= diff)
             {
                 if (pSacrificeTarget && !summons.empty())
                 {
-                    if (IsHeroic())
-                        me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_HERO, false);
-                    else
-                        me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE, false);
-                    summons.DespawnAll();
+                    //me->CastSpell(pSacrificeTarget, SPELL_RITUAL_STRIKE_TRIGGER, true); //Spell does not really work, it doesn't fly to the player
+                    me->CastSpell(me, SPELL_RITUAL_OF_THE_SWORD_DISARM, true);
+                    me->Kill(pSacrificeTarget, true);
                 }
                 bMove = false;
                 Phase = NORMAL;
                 pSacrificeTarget = NULL;
                 uiSinsterStrikeTimer = urand(10*IN_MILLISECONDS,15*IN_MILLISECONDS);
                 uiCallFlamesTimer = urand(13*IN_MILLISECONDS,18*IN_MILLISECONDS);
-                uiSacrificeTimer = 25*IN_MILLISECONDS;
+
+                uiSacrificeTimer = 8*IN_MILLISECONDS;
             }
             else uiSacrificeTimer -= diff;
         }

@@ -355,25 +355,10 @@ public:
             uint32 spellId = 0;
             switch(spell->Id)
             {
-<<<<<<< HEAD
                 case SPELL_INFORM_LIVE_TRAINEE: spellId = SPELL_INFORM_DEAD_TRAINEE;    break;
                 case SPELL_INFORM_LIVE_KNIGHT:  spellId = SPELL_INFORM_DEAD_KNIGHT;     break;
                 case SPELL_INFORM_LIVE_RIDER:   spellId = SPELL_INFORM_DEAD_RIDER;      break;
-=======
-                uint32 spellId = 0;
-                switch(spell->Id)
-                {
-                    case SPELL_INFORM_LIVE_TRAINEE: spellId = SPELL_INFORM_DEAD_TRAINEE;    break;
-                    case SPELL_INFORM_LIVE_KNIGHT:  spellId = SPELL_INFORM_DEAD_KNIGHT;     break;
-                    case SPELL_INFORM_LIVE_RIDER:   spellId = SPELL_INFORM_DEAD_RIDER;      break;
-                }
-                if (spellId && me->isInCombat())
-                {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_SPELLCAST);
-                    if (Creature* pRandomDeadTrigger = Unit::GetCreature(*me, DeadTriggerGUID[rand() % POS_DEAD]))
-                        me->CastSpell(pRandomDeadTrigger, spellId, true);
-                }
->>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
+
             }
             if (spellId && me->isInCombat())
             {
@@ -493,33 +478,6 @@ public:
                             {
                                 DoTeleportTo(PosGroundLiveSide);
                             }
-<<<<<<< HEAD
-=======
-                            break;
-                        case EVENT_BOLT:
-                            DoCast(me->getVictim(), RAID_MODE(SPELL_SHADOW_BOLT, H_SPELL_SHADOW_BOLT));
-                            events.ScheduleEvent(EVENT_BOLT, 1000);
-                            break;
-                        case EVENT_HARVEST:
-                            DoCast(me->getVictim(), SPELL_HARVEST_SOUL, true);
-                            events.ScheduleEvent(EVENT_HARVEST, urand(20000, 25000));
-                            break;
-                        case EVENT_TELEPORT:
-                            if (!thirtyPercentReached)
-                            {
-                                me->AttackStop();
-                                if (IN_LIVE_SIDE(me))
-                                    DoTeleportTo(PosGroundDeadSide);
-                                else
-                                    DoTeleportTo(PosGroundLiveSide);
-
-                                me->getThreatManager().resetAggro(NotOnSameSide(me));
-                                if (Unit* target = SelectTarget(SELECT_TARGET_NEAREST, 0))
-                                {
-                                    me->getThreatManager().addThreat(target, 100.0f);
-                                    AttackStart(target);
-                                }
->>>>>>> 6fd41ae... Scripts: Reorder file names in Commands/CMakeList file and cosmetic changes in all scripts
 
                             me->getThreatManager().resetAggro(NotOnSameSide(me));
                             if (Unit *pTarget = SelectTarget(SELECT_TARGET_NEAREST, 0))

@@ -785,7 +785,7 @@ enum VespText
 struct dummy_dragonAI : public ScriptedAI
 {
 
-    dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
+    dummy_dragonAI(Creature* creature) : ScriptedAI(creature), summons(me)
     {
         pInstance = creature->GetInstanceScript();
     }
@@ -1363,14 +1363,6 @@ public:
                 dummy_dragonAI::UpdateAI(uiDiff);
                 return;
             }
-
-            // shadow fissure
-            if (m_uiShadowFissureTimer <= uiDiff)
-            {
-                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, RAID_MODE(SPELL_SHADOW_FISSURE, SPELL_SHADOW_FISSURE_H));
->>>>>>> 70115f5... Core: Cleaning up hungarian notation - Phase3: pTarget -> target
-
             m_uiShadowFissureTimer = urand(15000,20000);
         }
         else
