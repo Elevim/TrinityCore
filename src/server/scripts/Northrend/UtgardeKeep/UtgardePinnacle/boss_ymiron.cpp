@@ -101,14 +101,14 @@ class boss_ymiron : public CreatureScript
 public:
     boss_ymiron() : CreatureScript("boss_ymiron") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_ymironAI(pCreature);
+        return new boss_ymironAI(creature);
     }
 
     struct boss_ymironAI : public ScriptedAI
     {
-        boss_ymironAI(Creature *c) : ScriptedAI(c)
+        boss_ymironAI(Creature* c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
             for (int i = 0; i < 4; ++i)
@@ -194,13 +194,7 @@ public:
         void SpellHitTarget(Unit* who, SpellEntry const* spell)
         {
             if (who && who->GetTypeId() == TYPEID_PLAYER && spell->Id == 59302)
-                SetData(DATA_KINGS_BANE, 0);
-        }
-
-        void SetData(uint32 id, uint32 data)
-        {
-            if (id == DATA_KINGS_BANE)
-                kingsBane = data ? true : false;
+                kingsBane = false;
         }
 
         uint32 GetData(uint32 type)
@@ -324,10 +318,10 @@ public:
                         //DoCast(me, SPELL_SUMMON_AVENGING_SPIRIT); // works fine, but using summon has better control
                         if (Creature* pTemp = me->SummonCreature(CREATURE_AVENGING_SPIRIT, x + rand() % 10, y + rand() % 10, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
                         {
-                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
                             {
-                                pTemp->AddThreat(pTarget, 0.0f);
-                                pTemp->AI()->AttackStart(pTarget);
+                                pTemp->AddThreat(target, 0.0f);
+                                pTemp->AI()->AttackStart(target);
                             }
                         }
                     }
@@ -406,6 +400,9 @@ class achievement_kings_bane : public AchievementCriteriaScript
 
         bool OnCheck(Player* /*player*/, Unit* target)
         {
+            if (!target)
+                return false;
+
             if (Creature* Ymiron = target->ToCreature())
                 if (Ymiron->AI()->GetData(DATA_KINGS_BANE))
                     return true;

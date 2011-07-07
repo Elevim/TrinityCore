@@ -1248,7 +1248,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     m_caster->CastSpell(m_caster, 65156, true);
                 return;
             }
-            //Slam
+            // Slam
             if (m_spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_WARRIOR_SLAM && m_spellInfo->SpellIconID == 559)
             {
                 int32 bp0 = damage;
@@ -1321,7 +1321,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     if (AuraEffect const* aurEff = m_caster->GetDummyAuraEffect(SPELLFAMILY_WARLOCK, 208, 0))
                         AddPctN(mana, aurEff->GetAmount());
 
-                    m_caster->CastCustomSpell(unitTarget, 31818, &mana, NULL, NULL, true);
+                    m_caster->CastCustomSpell(unitTarget, 31818, &mana, NULL, NULL, false);
 
                     // Mana Feed
                     int32 manaFeedVal = 0;

@@ -439,7 +439,7 @@ bool Group::RemoveMember(const uint64 &guid, const RemoveMethod &method /*= GROU
         CharacterDatabase.PExecute("DELETE FROM group_member WHERE memberGuid=%u", GUID_LOPART(guid));
 
         // Reevaluate group enchanter if the leaving player had enchanting skill or the player is offline
-        if (player && player->GetSkillValue(SKILL_ENCHANTING) || !player)
+        if ((player && player->GetSkillValue(SKILL_ENCHANTING)) || !player)
             ResetMaxEnchantingLevel();
 
         // Remove player from loot rolls
@@ -1574,7 +1574,7 @@ bool Group::InCombatToInstance(uint32 instanceId)
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
     {
         Player *pPlayer = itr->getSource();
-        if (pPlayer && pPlayer->getAttackers().size() && pPlayer->GetInstanceId() == instanceId && (pPlayer->GetMap()->IsRaidOrHeroicDungeon()))
+        if (pPlayer && !pPlayer->getAttackers().empty() && pPlayer->GetInstanceId() == instanceId && (pPlayer->GetMap()->IsRaidOrHeroicDungeon()))
             for (std::set<Unit*>::const_iterator i = pPlayer->getAttackers().begin(); i != pPlayer->getAttackers().end(); ++i)
                 if ((*i) && (*i)->GetTypeId() == TYPEID_UNIT && (*i)->ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
                     return true;

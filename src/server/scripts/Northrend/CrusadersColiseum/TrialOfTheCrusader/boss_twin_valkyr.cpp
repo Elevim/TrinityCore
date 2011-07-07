@@ -108,9 +108,9 @@ enum Actions
 
 struct boss_twin_baseAI : public ScriptedAI
 {
-    boss_twin_baseAI(Creature* pCreature) : ScriptedAI(pCreature), Summons(me)
+    boss_twin_baseAI(Creature* creature) : ScriptedAI(creature), Summons(me)
     {
-        m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+        m_pInstance = (InstanceScript*)creature->GetInstanceScript();
     }
 
     InstanceScript* m_pInstance;
@@ -189,9 +189,9 @@ struct boss_twin_baseAI : public ScriptedAI
         }
     }
 
-    void KilledUnit(Unit* pWho)
+    void KilledUnit(Unit* who)
     {
-        if (pWho->GetTypeId() == TYPEID_PLAYER)
+        if (who->GetTypeId() == TYPEID_PLAYER)
         {
             DoScriptText(urand(0, 1) ? SAY_KILL1 : SAY_KILL2, me);
             if (m_pInstance)
@@ -199,21 +199,21 @@ struct boss_twin_baseAI : public ScriptedAI
         }
     }
 
-    void JustSummoned(Creature* pSummoned)
+    void JustSummoned(Creature* summoned)
     {
-        switch (pSummoned->GetEntry())
+        switch (summoned->GetEntry())
         {
             case NPC_UNLEASHED_DARK:
             case NPC_UNLEASHED_LIGHT:
-                pSummoned->SetCorpseDelay(0);
+                summoned->SetCorpseDelay(0);
                 break;
         }
-        Summons.Summon(pSummoned);
+        Summons.Summon(summoned);
     }
 
-    void SummonedCreatureDespawn(Creature* pSummoned)
+    void SummonedCreatureDespawn(Creature* summoned)
     {
-        switch (pSummoned->GetEntry())
+        switch (summoned->GetEntry())
         {
             case NPC_LIGHT_ESSENCE:
             case NPC_DARK_ESSENCE:
@@ -221,17 +221,17 @@ struct boss_twin_baseAI : public ScriptedAI
                 Map::PlayerList const &lPlayers = pMap->GetPlayers();
                 for (Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
                 {
-                    Unit* pPlayer = itr->getSource();
-                    if (!pPlayer) continue;
-                    if (pPlayer->isAlive())
-                        if (pSummoned->GetEntry() == NPC_LIGHT_ESSENCE)
-                            pPlayer->RemoveAurasDueToSpell(SPELL_LIGHT_ESSENCE);
-                        if (pSummoned->GetEntry() == NPC_DARK_ESSENCE)
-                            pPlayer->RemoveAurasDueToSpell(SPELL_DARK_ESSENCE);
+                    Unit* player = itr->getSource();
+                    if (!player) continue;
+                    if (player->isAlive())
+                        if (summoned->GetEntry() == NPC_LIGHT_ESSENCE)
+                            player->RemoveAurasDueToSpell(SPELL_LIGHT_ESSENCE);
+                        if (summoned->GetEntry() == NPC_DARK_ESSENCE)
+                            player->RemoveAurasDueToSpell(SPELL_DARK_ESSENCE);
                 }
                 break;
         }
-        Summons.Despawn(pSummoned);
+        Summons.Despawn(summoned);
     }
 
     void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
@@ -280,7 +280,7 @@ struct boss_twin_baseAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    void JustDied(Unit* /*killer*/)
     {
         DoScriptText(SAY_DEATH, me);
         if (m_pInstance)
@@ -305,7 +305,7 @@ struct boss_twin_baseAI : public ScriptedAI
         return Unit::GetCreature((*me), m_pInstance->GetData64(m_uiSisterNpcId));
     }
 
-    void EnterCombat(Unit* /*pWho*/)
+    void EnterCombat(Unit* /*who*/)
     {
         me->SetInCombatWithZone();
         if (m_pInstance)
@@ -393,8 +393,8 @@ struct boss_twin_baseAI : public ScriptedAI
 
         if (IsHeroic() && m_uiTouchTimer <= uiDiff)
         {
-            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true, m_uiOtherEssenceSpellId))
-                me->CastCustomSpell(m_uiTouchSpellId, SPELLVALUE_MAX_TARGETS, 1, pTarget, false);
+            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true, m_uiOtherEssenceSpellId))
+                me->CastCustomSpell(m_uiTouchSpellId, SPELLVALUE_MAX_TARGETS, 1, target, false);
             m_uiTouchTimer = urand(10, 15)*IN_MILLISECONDS;
         }
         else
@@ -439,14 +439,14 @@ class boss_fjola : public CreatureScript
 public:
     boss_fjola() : CreatureScript("boss_fjola") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_fjolaAI(pCreature);
+        return new boss_fjolaAI(creature);
     }
 
     struct boss_fjolaAI : public boss_twin_baseAI
     {
-        boss_fjolaAI(Creature* pCreature) : boss_twin_baseAI(pCreature) {}
+        boss_fjolaAI(Creature* creature) : boss_twin_baseAI(creature) {}
 
         void Reset() {
             boss_twin_baseAI::Reset();
@@ -477,9 +477,9 @@ public:
             }
         }
 
-        void EnterCombat(Unit* pWho)
+        void EnterCombat(Unit* who)
         {
-            boss_twin_baseAI::EnterCombat(pWho);
+            boss_twin_baseAI::EnterCombat(who);
             if (m_pInstance)
             {
                 m_pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT,  EVENT_START_TWINS_FIGHT);
@@ -498,14 +498,14 @@ class boss_eydis : public CreatureScript
 public:
     boss_eydis() : CreatureScript("boss_eydis") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new boss_eydisAI(pCreature);
+        return new boss_eydisAI(creature);
     }
 
     struct boss_eydisAI : public boss_twin_baseAI
     {
-        boss_eydisAI(Creature* pCreature) : boss_twin_baseAI(pCreature) {}
+        boss_eydisAI(Creature* creature) : boss_twin_baseAI(creature) {}
 
         void Reset() {
             boss_twin_baseAI::Reset();
@@ -561,9 +561,9 @@ public:
 
 struct mob_unleashed_ballAI : public ScriptedAI
 {
-    mob_unleashed_ballAI(Creature *pCreature) : ScriptedAI(pCreature)
+    mob_unleashed_ballAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+        m_pInstance = (InstanceScript*)creature->GetInstanceScript();
     }
 
     InstanceScript* m_pInstance;
@@ -613,21 +613,21 @@ class mob_unleashed_dark : public CreatureScript
 public:
     mob_unleashed_dark() : CreatureScript("mob_unleashed_dark") { }
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_unleashed_darkAI(pCreature);
+        return new mob_unleashed_darkAI(creature);
     }
 
     struct mob_unleashed_darkAI : public mob_unleashed_ballAI
     {
-        mob_unleashed_darkAI(Creature *pCreature) : mob_unleashed_ballAI(pCreature) {}
+        mob_unleashed_darkAI(Creature* creature) : mob_unleashed_ballAI(creature) {}
 
         void UpdateAI(const uint32 uiDiff)
         {
             if (m_uiRangeCheckTimer < uiDiff)
             {
-                if (Unit *pTarget = me->SelectNearestTarget(2.0f))
-                    if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
+                if (Unit* target = me->SelectNearestTarget(2.0f))
+                    if (target->GetTypeId() == TYPEID_PLAYER && target->isAlive())
                     {
                         DoCastAOE(SPELL_UNLEASHED_DARK);
                         me->GetMotionMaster()->MoveIdle();
@@ -646,21 +646,21 @@ class mob_unleashed_light : public CreatureScript
 public:
     mob_unleashed_light() : CreatureScript("mob_unleashed_light") { }
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_unleashed_lightAI(pCreature);
+        return new mob_unleashed_lightAI(creature);
     }
 
     struct mob_unleashed_lightAI : public mob_unleashed_ballAI
     {
-        mob_unleashed_lightAI(Creature *pCreature) : mob_unleashed_ballAI(pCreature) {}
+        mob_unleashed_lightAI(Creature* creature) : mob_unleashed_ballAI(creature) {}
 
         void UpdateAI(const uint32 uiDiff)
         {
             if (m_uiRangeCheckTimer < uiDiff)
             {
-                if (Unit *pTarget = me->SelectNearestTarget(2.0f))
-                    if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
+                if (Unit* target = me->SelectNearestTarget(2.0f))
+                    if (target->GetTypeId() == TYPEID_PLAYER && target->isAlive())
                     {
                         DoCastAOE(SPELL_UNLEASHED_LIGHT);
                         me->GetMotionMaster()->MoveIdle();

@@ -9,7 +9,7 @@ UPDATE `gameobject_template` SET `ScriptName`='';
 UPDATE `outdoorpvp_template` SET `ScriptName`='';
 
 /* AREA TRIGGERS */
-DELETE FROM `areatrigger_scripts` WHERE `entry` IN (822,5284,5285,5286,5287,4871,4872,4873,5108,5332,5338,5334,5340,5369,5423,5633,5604,5698,5649,5729);
+DELETE FROM `areatrigger_scripts` WHERE `entry` IN (822,5284,5285,5286,5287,4871,4872,4873,5108,5332,5338,5334,5340,5369,5423,5633,5604,5698,5649,5729,5616,5617,5618,5718);
 DELETE FROM `areatrigger_scripts` WHERE `entry` BETWEEN 1726 AND 1740;
 INSERT INTO `areatrigger_scripts` (`entry`,`ScriptName`) VALUES 
 (822, 'at_map_chamber'),
@@ -46,7 +46,11 @@ INSERT INTO `areatrigger_scripts` (`entry`,`ScriptName`) VALUES
 (5604, 'at_sindragosa_lair'),
 (5698, 'at_icc_saurfang_portal'),
 (5649, 'at_icc_shutdown_traps'),
-(5729, 'at_icc_start_blood_quickening');
+(5729, 'at_icc_start_blood_quickening'),
+(5616, 'at_icc_start_frostwing_gauntlet'),
+(5617, 'at_icc_start_frostwing_gauntlet'),
+(5618, 'at_icc_start_frostwing_gauntlet'),
+(5718, 'at_frozen_throne_teleport');
 
 /* WORLD BOSS */
 UPDATE `creature_template` SET `ScriptName`='boss_ysondre' WHERE `entry`=14887;
@@ -1542,7 +1546,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_turret
 UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_overload_device' WHERE `entry`=33143;
 UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_cannon' WHERE `entry`=33139;
 UPDATE `creature_template` SET `ScriptName`='npc_colossus' WHERE `entry`=33237;
-UPDATE `creature_template` SET `ScriptName`='spell_pool_of_tar' WHERE `entry`=33090;
+UPDATE `creature_template` SET `ScriptName`='npc_pool_of_tar' WHERE `entry`=33090;
 UPDATE `creature_template` SET `ScriptName`='boss_ignis' WHERE `entry`=33118;
 UPDATE `creature_template` SET `ScriptName`='npc_iron_construct' WHERE `entry`=33121;
 UPDATE `creature_template` SET `ScriptName`='npc_scorch_ground' WHERE `entry`=33221;
@@ -1825,7 +1829,7 @@ UPDATE `outdoorpvp_template` SET `ScriptName`='outdoorpvp_si' WHERE `TypeId`=5;
 UPDATE `outdoorpvp_template` SET `ScriptName`='outdoorpvp_ep' WHERE `TypeId`=6;
 
 /* ACHIEVEMENTS */
-DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (3693,3804,3805,3806,3807,3808,3809,3810,3811,3812,3813,1234,1239,5605,5606,12778,13036,13035,13037,12977,12967,12986,12982,12993,12780,13012,13011,13013,12062,12063,12064,12065,12183,12068,12060,12061,12822,12996,12972,12989,10062,10063,10054,10055,10046,10047,10048,10049,10050,10051,10044,10045,6446,7625,7628,5541,5542,5543,7573,7574,7265,7549,12971,12978,12979,12980,7598,7587,7264,7548,10068,10069,10173,10306,10451,10462,10447,10448,10449,10459,10460,10461,7316,7317,7318,7583,4240) AND `type` IN (0,11);
+DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (3693,3804,3805,3806,3807,3808,3809,3810,3811,3812,3813,1234,1239,5605,5606,12778,13036,13035,13037,12977,12967,12986,12982,12993,12780,13012,13011,13013,12062,12063,12064,12065,12183,12068,12060,12061,12822,12996,12972,12989,10062,10063,10054,10055,10046,10047,10048,10049,10050,10051,10044,10045,6446,7625,7628,5541,5542,5543,7573,7574,7265,7549,12971,12978,12979,12980,7598,7587,7264,7548,10068,10069,10173,10306,10451,10462,10447,10448,10449,10459,10460,10461,7316,7317,7318,7583,4240,6803,7319,7577,7320,7590,7361) AND `type` IN (0,11);
 INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,`ScriptName`) VALUES
 (3693,11,0,0, 'achievement_storm_glory'),
 (3804,11,0,0, 'achievement_resilient_victory'),
@@ -1842,6 +1846,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 (1239,11,0,0, 'achievement_bg_control_all_nodes'),
 (5605,11,0,0, 'achievement_save_the_day'),
 (5606,11,0,0, 'achievement_save_the_day'),
+(6800,11,0,0, 'achievement_sickly_gazelle'),
 (12993,11,0,0, 'achievement_doesnt_go_to_eleven'),
 (12778,11,0,0, 'achievement_ive_gone_and_made_a_mess'),
 (13036,11,0,0, 'achievement_ive_gone_and_made_a_mess'),
@@ -1914,11 +1919,18 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 (7318,11,0,0,'achievement_king_dred'),
 (7316,11,0,0,'achievement_chaos_theory'),
 (7583,11,0,0,'achievement_share_the_love'),
-(4240,11,0,0,'achievement_watch_him_die');
+(4240,11,0,0,'achievement_watch_him_die'),
+(6803,11,0,0,'achievement_defenseless'),
+(7319,11,0,0,'achievement_less_rabi'),
+(7577,11,0,0,'achievement_split_personality'),
+(7320,11,0,0,'achievement_dehydration'),
+(7590,11,0,0,'achievement_brann_sparklin_news'),
+(7361,11,0,0,'achievement_oh_novos');
 
 /* SPELLS */
 INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 -- generic
+( 66218, 'spell_gen_launch'),
 ( 39228, 'spell_gen_absorb0_hitlimit1'),
 ( 60218, 'spell_gen_absorb0_hitlimit1'),
 (  6962, 'spell_gen_pet_summoned'),
@@ -1979,6 +1991,12 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 12749, 'spell_gen_allow_cast_from_item_only'),
 ( 13258, 'spell_gen_allow_cast_from_item_only'),
 ( 13166, 'spell_gen_allow_cast_from_item_only'),
+ (65266, 'spell_gen_vehicle_scaling'),
+ (65635, 'spell_gen_vehicle_scaling'),
+ (65636, 'spell_gen_vehicle_scaling'),
+ (66666, 'spell_gen_vehicle_scaling'),
+ (66667, 'spell_gen_vehicle_scaling'),
+ (66668, 'spell_gen_vehicle_scaling'),
 -- instances
 -- Black Temple
 ( 41475, 'spell_boss_lady_malande_shield'),
@@ -2040,10 +2058,10 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 72440, 'spell_deathbringer_blood_nova'),
 ( 72378, 'spell_deathbringer_blood_nova_targeting'),
 ( 73058, 'spell_deathbringer_blood_nova_targeting'),
-( 72255, 'spell_deathbringer_mark_of_the_fallen_champion'),
-( 72444, 'spell_deathbringer_mark_of_the_fallen_champion'),
-( 72445, 'spell_deathbringer_mark_of_the_fallen_champion'),
-( 72446, 'spell_deathbringer_mark_of_the_fallen_champion'),
+( 72385, 'spell_deathbringer_boiling_blood'),
+( 72441, 'spell_deathbringer_boiling_blood'),
+( 72442, 'spell_deathbringer_boiling_blood'),
+( 72443, 'spell_deathbringer_boiling_blood'),
 ( 72155, 'spell_icc_harvest_blight_specimen'),
 ( 72162, 'spell_icc_harvest_blight_specimen'),
 ( 71123, 'spell_stinky_precious_decimate'),
