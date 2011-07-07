@@ -64,12 +64,16 @@ public:
         bool safetyDance;
         Phases phase;
 
-        void KilledUnit(Unit* who)
+        void KilledUnit(Unit* victim)
         {
             if (!(rand()%5))
                 DoScriptText(SAY_SLAY, me);
-            if (who->GetTypeId() == TYPEID_PLAYER)
+            if (victim && victim->GetTypeId() == TYPEID_PLAYER)
+            {
                 safetyDance = false;
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
+            }
+
         }
 
         void SetData(uint32 id, uint32 data)

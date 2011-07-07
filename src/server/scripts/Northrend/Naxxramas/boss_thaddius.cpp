@@ -149,10 +149,13 @@ public:
         bool checkFeugenAlive;
         uint32 uiAddsTimer;
 
-        void KilledUnit(Unit* /*victim*/)
+        void KilledUnit(Unit* victim)
         {
             if (!(rand()%5))
                 DoScriptText(SAY_SLAY, me);
+
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
         }
 
         void JustDied(Unit* /*Killer*/)
@@ -361,7 +364,7 @@ public:
                         // switch aggro, tank gets generated thread from the other tank
                         float uiTempThreat = pFeugen->getThreatManager().getThreat(pFeugenVictim);
                         pFeugen->getThreatManager().modifyThreatPercent(pFeugenVictim, -100);
-                        pFeugenVictim->JumpTo(me, 0.3f); 
+                        pFeugenVictim->JumpTo(me, 0.3f);
                         pFeugen->AddThreat(pStalaggVictim, uiTempThreat);
                         pFeugen->SetReactState(REACT_PASSIVE);
 
@@ -404,7 +407,7 @@ public:
                     ShockTimer = 1000;
                     bShock = true;
                 }else ShockTimer -= uiDiff;
-            } 
+            }
             else if (bShock)
             {
                 bShock = false;

@@ -111,10 +111,13 @@ public:
             }
         }
 
-        void KilledUnit(Unit* /*victim*/)
+        void KilledUnit(Unit* victim)
         {
             if (!(rand()%5))
                 DoScriptText(SAY_SLAY, me);
+
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
         }
 
         void JustSummoned(Creature* summon)

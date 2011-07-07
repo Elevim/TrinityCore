@@ -170,6 +170,8 @@ public:
         time_t maxHorsemenDiedTime;
         uint32 horsemenBeserk;
 
+        uint32 playerKilled;
+
         uint64 PortalMaexxnaGUID;
         uint64 PortalThaddiusGUID;
         uint64 PortalLoathebGUID;
@@ -194,6 +196,7 @@ public:
             Lane3Timer = 5000;
 
             horsemenBeserk = 0;
+            playerKilled = 0;
         }
 
         void OnCreatureCreate(Creature* creature)
@@ -347,6 +350,12 @@ public:
                         maxHorsemenDiedTime = now;
                     }
                     break;
+                case DATA_KILLED_PLAYER:
+                    playerKilled += value;
+                    break;
+                default:
+                    break;
+
             }
         }
 
@@ -454,6 +463,10 @@ public:
             {
                 case DATA_HORSEMEN_BESERK:
                     return horsemenBeserk;
+                    break;
+                case DATA_KILLED_PLAYER:
+                    return playerKilled;
+                    break;
                 default:
                     return NULL;
             }
@@ -500,10 +513,8 @@ public:
                         return true;
                     return false;
                 case 13233: // Criteria for achievement 2186: The Immortal (25-man)
-                    // TODO.
                     break;
                 case 13237: // Criteria for achievement 2187: The Undying (10-man)
-                    // TODO.
                     break;
             }
             return false;

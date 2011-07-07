@@ -55,7 +55,7 @@ void PossessedAI::JustDied(Unit* /*u*/)
 void PossessedAI::KilledUnit(Unit* victim)
 {
     // We killed a creature, disable victim's loot
-    if (victim->GetTypeId() == TYPEID_UNIT)
+    if (victim && victim->GetTypeId() == TYPEID_PLAYER)
         victim->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 }
 

@@ -66,10 +66,13 @@ public:
     {
         boss_razuviousAI(Creature* c) : BossAI(c, BOSS_RAZUVIOUS) {}
 
-        void KilledUnit(Unit* /*victim*/)
+        void KilledUnit(Unit* victim)
         {
             if (!(rand()%3))
                 DoPlaySoundToSet(me, SOUND_SLAY);
+
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
         }
 
         void DamageTaken(Unit* pDone_by, uint32& uiDamage)

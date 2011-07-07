@@ -98,6 +98,12 @@ public:
             DoMeleeAttackIfReady();
         }
 
+        void KilledUnit(Unit* victim)
+        {
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
+        }
+
         void JustDied(Unit* killer)
         {
             if(!isSporeKilled)

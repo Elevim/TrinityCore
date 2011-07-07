@@ -243,6 +243,10 @@ const Position PosWeavers[MAX_WEAVERS] =
     {3704.71f, -5175.96f, 143.597f, 3.36549f},
 };
 
+enum Achievments {
+    ACHIEVMENT_THE_IMMORTAL = 2187,
+    ACHIEVMENT_THE_UNDYING = 2187,
+};
 // predicate function to select not charmed target
 struct NotCharmedTargetSelector : public std::unary_function<Unit *, bool> {
     NotCharmedTargetSelector() {}
@@ -323,9 +327,11 @@ public:
             nWeaver = 0;
         }
 
-        void KilledUnit(Unit* /*victim*/)
+        void KilledUnit(Unit* victim)
         {
             DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
         }
 
         void JustDied(Unit* /*Killer*/)
@@ -340,6 +346,15 @@ public:
                     player->SetFloatValue(OBJECT_FIELD_SCALE_X, (*itr).second);
             }
             chained.clear();
+
+            if (me->GetInstanceScript()->GetData(DATA_KILLED_PLAYER) == 0)
+            {
+                if (RAID_MODE(0, 1))
+                        me->GetInstanceScript()->DoCompleteAchievement(ACHIEVMENT_THE_IMMORTAL);
+                else
+                    me->GetInstanceScript()->DoCompleteAchievement(ACHIEVMENT_THE_UNDYING);
+            }
+
         }
 
         void EnterCombat(Unit* /*who*/)

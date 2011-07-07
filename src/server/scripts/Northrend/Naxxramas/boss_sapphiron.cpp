@@ -132,6 +132,12 @@ public:
             CheckPlayersFrostResist();
         }
 
+        void KilledUnit(Unit* victim)
+        {
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
+        }
+
         void SpellHitTarget(Unit* target, const SpellEntry *spell)
         {
             if (spell->Id == SPELL_ICEBOLT)

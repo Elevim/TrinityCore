@@ -95,10 +95,12 @@ class boss_faerlina : public CreatureScript
                 BossAI::MoveInLineOfSight(who);
             }
 
-            void KilledUnit(Unit* /*victim*/)
+            void KilledUnit(Unit* victim)
             {
                 if (!urand(0, 2))
                     DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
+                if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                    me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
             }
 
             void JustDied(Unit* /*killer*/)

@@ -86,6 +86,12 @@ public:
             events.ScheduleEvent(EVENT_SUMMON, 15000);
         }
 
+        void KilledUnit(Unit* victim)
+        {
+            if(victim && victim->GetTypeId() == TYPEID_PLAYER)
+                me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
+        }
+
         void JustSummoned(Creature* summon)
         {
             if (summon->GetEntry() == MOB_ZOMBIE)
@@ -129,7 +135,7 @@ public:
                                 summon->SetHealth(summon->GetMaxHealth() * 0.05f);
                                 summon->GetMotionMaster()->MoveFollow(me, 0, 0);
                             }
-                        }       
+                        }
                         events.ScheduleEvent(EVENT_DECIMATE, 104000);
                         break;
                         }
@@ -154,7 +160,7 @@ public:
                     me->Kill(summon);
                     //summon->ForcedDespawn(); /think they don't have do despawn if gluth killed them
                     me->ModifyHealth(int32(me->CountPctFromMaxHealth(5)));
-                    std::list<uint64>::iterator next = itr; 
+                    std::list<uint64>::iterator next = itr;
                     ++next;
                     summons.erase(itr);
                     itr = next;
