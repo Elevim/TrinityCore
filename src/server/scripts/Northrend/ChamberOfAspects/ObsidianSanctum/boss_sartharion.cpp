@@ -1426,7 +1426,8 @@ public:
 
     void Reset()
     {
-        me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
+		me->SetPhaseMask(PHASEMASK_NORMAL, false);
+		me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
     }
 
     void JustDied(Unit* killer)
