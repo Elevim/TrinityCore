@@ -43,6 +43,7 @@ enum Achievments
 };
 
 bool isSporeKilled;
+#define LOATHEB RAID_MODE(16011,29718)
 
 class boss_loatheb : public CreatureScript
 {
@@ -133,23 +134,24 @@ class mob_loatheb_spore : public CreatureScript
 public:
     mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_loatheb_sporeAI (pCreature);
+        return new mob_loatheb_sporeAI creature);
     }
 
     struct mob_loatheb_sporeAI : public ScriptedAI
     {
-        mob_loatheb_sporeAI(Creature *c) : ScriptedAI(c){}
+        mob_loatheb_sporeAI(Creature* c) : ScriptedAI(c){}
 
         uint32 deathTimer;
 
 
         void Reset()
         {
+            me->SetSpeed(MOVE_RUN, 0.4f, true);
             deathTimer = 90000;
             me->SetReactState(REACT_PASSIVE);
-            Unit *pLoatheb = me->FindNearestCreature(16011,1000.0f,true);
+            Unit* pLoatheb = me->FindNearestCreature(16011,1000.0f,true);
             if(pLoatheb)
                 me->GetMotionMaster()->MovePoint(0, locCenter.GetPositionX(),locCenter.GetPositionY(),locCenter.GetPositionZ());
         }
@@ -159,12 +161,11 @@ public:
             if(!UpdateVictim())
                 return;
 
-            if (Unit* pLoatheb = me->FindNearestCreature(16011, 10.0f))
+            if (Unit* pLoatheb = me->FindNearestCreature(LOATHEB, 10.0f))
                 me->Kill(me, false);
 
             if (deathTimer <= uiDiff)
             {
-                sLog->outString("Deathtimer up!");
                 deathTimer = 0;
                 me->Kill(me,false);
             }else deathTimer -= uiDiff;
@@ -173,16 +174,15 @@ public:
 
         void JustDied(Unit* killer)
         {
-            sLog->outString("Spore killed!");
+
             if (killer->GetTypeId() == TYPEID_PLAYER)
             {
-
                 Map* pMap = me->GetMap();
                 if (pMap && pMap->IsDungeon())
                 {
-                Map::PlayerList const &players = pMap->GetPlayers();
+                    Map::PlayerList const &players = pMap->GetPlayers();
                     for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                        if (itr->getSource()->IsInRange(me, 0.0F, 10.0f, true))
+                        if (itr->getSource()->IsInRange(me, 0.0F, 15.0f, true))
                         {
                             me->AddAura(SPELL_FUNGAL_CREEP, itr->getSource());
                         }
