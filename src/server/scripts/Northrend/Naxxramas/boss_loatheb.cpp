@@ -126,6 +126,8 @@ enum SporeSpells
     SPELL_FUNGAL_CREEP                                     = 29232
 };
 
+static Position locCenter = { 2910.24f, -3995.78f, 274.15f, 0.0f };
+
 class mob_loatheb_spore : public CreatureScript
 {
 public:
@@ -138,12 +140,58 @@ public:
 
     struct mob_loatheb_sporeAI : public ScriptedAI
     {
-        mob_loatheb_sporeAI(Creature *c) : ScriptedAI(c) {}
+        mob_loatheb_sporeAI(Creature *c) : ScriptedAI(c){}
+
+        uint32 deathTimer;
+
+
+        void Reset()
+        {
+            deathTimer = 90000;
+            me->SetReactState(REACT_PASSIVE);
+            Unit *pLoatheb = me->FindNearestCreature(16011,1000.0f,true);
+            if(pLoatheb)
+                me->GetMotionMaster()->MovePoint(0, locCenter.GetPositionX(),locCenter.GetPositionY(),locCenter.GetPositionZ());
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if(!UpdateVictim())
+                return;
+
+            if (Unit* pLoatheb = me->FindNearestCreature(16011, 10.0f))
+                me->Kill(me, false);
+
+            if (deathTimer <= uiDiff)
+            {
+                sLog->outString("Deathtimer up!");
+                deathTimer = 0;
+                me->Kill(me,false);
+            }else deathTimer -= uiDiff;
+
+        }
 
         void JustDied(Unit* killer)
         {
-            DoCast(killer, SPELL_FUNGAL_CREEP);
-            isSporeKilled = true;
+            sLog->outString("Spore killed!");
+            if (killer->GetTypeId() == TYPEID_PLAYER)
+            {
+
+                Map* pMap = me->GetMap();
+                if (pMap && pMap->IsDungeon())
+                {
+                Map::PlayerList const &players = pMap->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                        if (itr->getSource()->IsInRange(me, 0.0F, 10.0f, true))
+                        {
+                            me->AddAura(SPELL_FUNGAL_CREEP, itr->getSource());
+                        }
+                }
+
+                if (deathTimer != 0)
+                    isSporeKilled = true;
+                }
+
         }
     };
 
