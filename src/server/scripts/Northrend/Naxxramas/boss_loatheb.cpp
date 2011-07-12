@@ -136,7 +136,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const
     {
-        return new mob_loatheb_sporeAI creature);
+        return new mob_loatheb_sporeAI(creature);
     }
 
     struct mob_loatheb_sporeAI : public ScriptedAI
