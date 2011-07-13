@@ -150,7 +150,8 @@ public:
         }
 
         InstanceScript* pInstance;
-
+        std::list<Unit*> unitList;
+        std::list<Unit*>::iterator players;
         uint32 deathTimer;
 
 
@@ -189,25 +190,26 @@ public:
 
         }
 
-        void JustDied(Unit* killer)
+        void JustDied(Unit* pKiller)
         {
-
-            if (killer->GetTypeId() == TYPEID_PLAYER)
+            if (pKiller->GetTypeId() == TYPEID_PLAYER)
             {
+                if (deathTimer != 0)
+                    isSporeKilled = true;
+
                 Map* pMap = me->GetMap();
                 if (pMap && pMap->IsDungeon())
                 {
-                    Map::PlayerList const &players = pMap->GetPlayers();
-                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                        if (itr->getSource()->IsInRange(me, 0.0F, 15.0f, true))
+                    pKiller->GetPartyMemberInDist(unitList, 15.0f);
+
+                    for(players  = unitList.begin(); players != unitList.end(); ++players)
+                        if ((*players)->ToPlayer()->IsInRange(me, 0.0F, 15.0f, true))
                         {
-                            me->AddAura(SPELL_FUNGAL_CREEP, itr->getSource());
+                            me->AddAura(SPELL_FUNGAL_CREEP, *players);
                         }
                 }
 
-                if (deathTimer != 0)
-                    isSporeKilled = true;
-                }
+            }
 
         }
     };
