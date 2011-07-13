@@ -129,10 +129,11 @@ enum SporeSpells
 
 static Position locCenter = { 2910.24f, -3995.78f, 274.15f, 0.0f };
 
-class mob_loatheb_spore : public CreatureScript
+
+class mob_loatheb_spore: public CreatureScript
 {
 public:
-    mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") { }
+    mob_loatheb_spore() : CreatureScript("mob_loatheb_spore") {}
 
     CreatureAI* GetAI(Creature* creature) const
     {
@@ -141,7 +142,14 @@ public:
 
     struct mob_loatheb_sporeAI : public ScriptedAI
     {
-        mob_loatheb_sporeAI(Creature* c) : ScriptedAI(c){}
+        mob_loatheb_sporeAI(Creature* creature) : ScriptedAI(creature)
+        {
+            pInstance = me->GetInstanceScript();
+
+            MoveToLoatheb();    
+        }
+
+        InstanceScript* pInstance;
 
         uint32 deathTimer;
 
@@ -151,10 +159,19 @@ public:
             me->SetSpeed(MOVE_RUN, 0.4f, true);
             deathTimer = 90000;
             me->SetReactState(REACT_PASSIVE);
-            Unit* pLoatheb = me->FindNearestCreature(16011,1000.0f,true);
-            if(pLoatheb)
-                me->GetMotionMaster()->MovePoint(0, locCenter.GetPositionX(),locCenter.GetPositionY(),locCenter.GetPositionZ());
         }
+
+        void MoveToLoatheb()
+        {
+            me->GetMotionMaster()->MoveIdle();
+
+            if (pInstance)
+            {
+                if (Unit* pLoatheb = me->FindNearestCreature(LOATHEB, 1000.0f, true))
+                    me->GetMotionMaster()->MoveFollow(pLoatheb, 0.0f, 0.0f);
+            }
+        }
+
 
         void UpdateAI(const uint32 uiDiff)
         {
