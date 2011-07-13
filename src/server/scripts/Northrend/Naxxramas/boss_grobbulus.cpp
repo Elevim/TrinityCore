@@ -26,6 +26,9 @@
 #define SPELL_BERSERK               26662
 #define SPELL_POISON_CLOUD_ADD      59116
 
+#define SPELL_POISON_CLOUD_HACK     30914
+#define SPELL_AOE_NATURE_DMG        30915
+
 #define EVENT_BERSERK   1
 #define EVENT_CLOUD     2
 #define EVENT_INJECT    3
@@ -130,21 +133,62 @@ public:
             Reset();
         }
 
-        uint32 Cloud_Timer;
+        uint32 Damage_Timer;
+        uint32 Disappear_Timer;
+
 
         void Reset()
         {
-            Cloud_Timer = 1000;
+            Damage_Timer = 1000;
+            Disappear_Timer = 65000;
+            SetCombatMovement(false);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.85f);
+            if (SpellEntry* TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_POISON_CLOUD_HACK))
+            {
+                TempSpell->EffectTriggerSpell[0] = 204;
+                me->CastCustomSpell(me, SPELL_POISON_CLOUD_HACK, NULL, NULL, NULL, true);
+                me->CastCustomSpell(me, SPELL_POISON_CLOUD_HACK, NULL, NULL, NULL, true);
+            }
         }
 
         void UpdateAI(const uint32 diff)
         {
-            if (Cloud_Timer <= diff)
+            if (Damage_Timer < diff)
             {
-                DoCast(me, SPELL_POISON_CLOUD_ADD);
-                Cloud_Timer = 10000;
-            } else Cloud_Timer -= diff;
+                uint8 RadiusIndex;
+                switch (uint32(Disappear_Timer / 4300))
+                {
+                    case 0:
+                    case 1:  RadiusIndex = 43; break;
+                    case 2:  RadiusIndex = 18; break;
+                    case 3:  RadiusIndex = 61; break;
+                    case 4:  RadiusIndex = 17; break;
+                    case 5:  RadiusIndex = 32; break;
+                    case 6:  RadiusIndex = 42; break;
+                    case 7:  RadiusIndex = 13; break;
+                    case 8:  RadiusIndex = 40; break;
+                    case 9:  RadiusIndex = 14; break;
+                    case 10: RadiusIndex = 37; break;
+                    case 11: RadiusIndex = 29;  break;
+                    case 12: RadiusIndex = 8; break;
+                    case 13: RadiusIndex = 26; break;
+                    case 14:
+                    case 15: RadiusIndex = 15;  break;
+                }
+                if (SpellEntry* TempSpell = (SpellEntry*)GetSpellStore()->LookupEntry(SPELL_AOE_NATURE_DMG))
+                {
+                    TempSpell->EffectRadiusIndex[0] = RadiusIndex;
+                    TempSpell->EffectBasePoints[0] = (RAID_MODE (2000, 4250));
+                    me->CastCustomSpell(me, SPELL_AOE_NATURE_DMG, NULL, NULL, NULL, true);
+                }
+                Damage_Timer = 1000;
+            }else Damage_Timer -= diff;
+
+            if (Disappear_Timer < diff)
+            {
+                me->ForcedDespawn();
+            }else Disappear_Timer -= diff;
         }
     };
 
