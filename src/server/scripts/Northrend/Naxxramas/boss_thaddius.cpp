@@ -149,6 +149,17 @@ public:
         bool checkFeugenAlive;
         uint32 uiAddsTimer;
 
+        void Reset()
+        {
+            if (instance)
+            {
+                if (Creature* pStalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
+                    pStalagg->Respawn();
+                if (Creature* pFeugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
+                    pFeugen->Respawn();
+            }
+        }
+
         void KilledUnit(Unit* victim)
         {
             if (!(rand()%5))
