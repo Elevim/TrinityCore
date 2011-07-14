@@ -125,6 +125,8 @@ public:
 
 };
 
+#define RANGE_ECK           1000.0f
+
 class npc_ruins_dweller : public CreatureScript
 {
 public:
@@ -148,9 +150,12 @@ public:
         {
             if (pInstance)
             {
-                pInstance->SetData64(DATA_RUIN_DWELLER_DIED, me->GetGUID());
-                if (pInstance->GetData(DATA_ALIVE_RUIN_DWELLERS) == 0)
-                    me->SummonCreature(CREATURE_ECK, EckSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
+                if (me->FindNearestCreature(CREATURE_ECK, RANGE_ECK, true))
+                {
+                    pInstance->SetData64(DATA_RUIN_DWELLER_DIED, me->GetGUID());
+                    if (pInstance->GetData(DATA_ALIVE_RUIN_DWELLERS) == 0)
+                        me->SummonCreature(CREATURE_ECK, EckSpawnPoint, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
+                }
             }
         }
     };
