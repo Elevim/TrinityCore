@@ -150,7 +150,7 @@ public:
         {
             if (pInstance)
             {
-                if (me->FindNearestCreature(CREATURE_ECK, RANGE_ECK, true))
+                if (!me->FindNearestCreature(CREATURE_ECK, RANGE_ECK, true))
                 {
                     pInstance->SetData64(DATA_RUIN_DWELLER_DIED, me->GetGUID());
                     if (pInstance->GetData(DATA_ALIVE_RUIN_DWELLERS) == 0)
