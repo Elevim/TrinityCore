@@ -350,9 +350,9 @@ public:
             if (me->GetInstanceScript()->GetData(DATA_KILLED_PLAYER) == 0 && me->GetInstanceScript()->GetData(DATA_ALL_ENCOUNTERS_DEAD) == 1)
             {
                 if (RAID_MODE(0, 1))
-                        me->GetInstanceScript()->DoCompleteAchievement(ACHIEVMENT_THE_IMMORTAL);
+                        me->GetInstanceScript()->DoCompleteAchievement(ACHIEVEMENT_THE_IMMORTAL);
                 else
-                    me->GetInstanceScript()->DoCompleteAchievement(ACHIEVMENT_THE_UNDYING);
+                    me->GetInstanceScript()->DoCompleteAchievement(ACHIEVEMENT_THE_UNDYING);
             }
 
         }
