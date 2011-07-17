@@ -53,6 +53,7 @@ enum Data
     DATA_HORSEMEN_BESERK_1,
 
     DATA_KILLED_PLAYER,
+    DATA_ALL_ENCOUNTERS_DEAD,
 };
 
 enum Data64

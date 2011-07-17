@@ -107,6 +107,8 @@ class boss_faerlina : public CreatureScript
             {
                 _JustDied();
                 DoScriptText(SAY_DEATH, me);
+                if (instance)
+                    instance->SetBossState(BOSS_ANUBREKHAN, DONE);
             }
 
             void SpellHit(Unit* caster, SpellEntry const* spell)

@@ -185,6 +185,25 @@ public:
         uint32 Lane2Timer;
         uint32 Lane3Timer;
 
+
+        // Achievment The Undying/The Immortal
+
+        bool anubrekhanDone;
+        bool faerlinaDone;
+        bool maexxnaDone;
+        bool nothDone;
+        bool heiganDone;
+        bool patchwerkDone;
+        bool loathebDone;
+        bool grobbulusDone;
+        bool gluthDone;
+        bool thaddiusDone;
+        bool razuviousDone;
+        bool gothikDone;
+        bool horsemenDone;
+        bool sapphironDone;
+        bool kelthuzadDone;
+
         void Initialize()
         {
             uiLane1GUID = 0;
@@ -416,24 +435,83 @@ public:
 
                 if (GameObject* pHorsePortal = instance->GetGameObject(Portal4HorseGUID))
                     pHorsePortal->SetPhaseMask(1, true);
+                horsemenDone = true;
             }
 
             if (id == BOSS_THADDIUS && state == DONE)
             {
                 if (GameObject* pThaddiusPortal = instance->GetGameObject(PortalThaddiusGUID))
                     pThaddiusPortal->SetPhaseMask(1, true);
+
+                thaddiusDone = true;
             }
 
             if (id == BOSS_MAEXXNA && state == DONE)
             {
                 if (GameObject* pMaexxnaPortal = instance->GetGameObject(PortalMaexxnaGUID))
                     pMaexxnaPortal->SetPhaseMask(1, true);
+                maexxnaDone = true;
             }
 
             if (id == BOSS_LOATHEB && state == DONE)
             {
                 if (GameObject* pLoathebPortal = instance->GetGameObject(PortalLoathebGUID))
                     pLoathebPortal->SetPhaseMask(1, true);
+
+                loathebDone = true;
+            }
+            if (id == BOSS_ANUBREKHAN && state == DONE)
+            {
+                anubrekhanDone = true;
+            }
+
+            if (id == BOSS_HEIGAN && state == DONE)
+            {
+                heiganDone = true;
+            }
+
+            if (id == BOSS_GOTHIK && state == DONE)
+            {
+                gothikDone = true;
+            }
+
+            if (id == BOSS_GLUTH && state == DONE)
+            {
+                gluthDone = true;
+            }
+            if (id == BOSS_PATCHWERK && state == DONE)
+            {
+                patchwerkDone = true;
+            }
+
+            if (id == BOSS_FAERLINA && state == DONE)
+            {
+                faerlinaDone = true;
+            }
+
+            if (id == BOSS_KELTHUZAD && state == DONE)
+            {
+                kelthuzadDone = true;
+            }
+
+            if (id == BOSS_SAPPHIRON && state == DONE)
+            {
+                sapphironDone = true;
+            }
+
+            if (id == BOSS_RAZUVIOUS && state == DONE)
+            {
+                razuviousDone = true;
+            }
+
+            if (id == BOSS_NOTH && state == DONE)
+            {
+                nothDone = true;
+            }
+
+            if (id == BOSS_GROBBULUS && state == DONE)
+            {
+                grobbulusDone = true;
             }
 
             return true;
@@ -466,6 +544,25 @@ public:
                     break;
                 case DATA_KILLED_PLAYER:
                     return playerKilled;
+                    break;
+                case DATA_ALL_ENCOUNTERS_DEAD:
+                    if (anubrekhanDone &&
+                        faerlinaDone &&
+                        maexxnaDone &&
+                        nothDone &&
+                        heiganDone &&
+                        patchwerkDone &&
+                        loathebDone &&
+                        grobbulusDone &&
+                        gluthDone &&
+                        thaddiusDone &&
+                        razuviousDone &&
+                        gothikDone &&
+                        horsemenDone &&
+                        sapphironDone )
+                        return 1;
+                    else
+                        return 0;
                     break;
                 default:
                     return NULL;

@@ -131,6 +131,8 @@ public:
         {
             _JustDied();
             DoScriptText(SAY_DEATH, me);
+            if(instance)
+                instance->SetBossState(BOSS_NOTH, DONE);
         }
 
         void SummonUndead(uint32 entry, uint32 num)

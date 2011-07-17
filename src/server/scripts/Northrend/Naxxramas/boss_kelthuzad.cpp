@@ -243,9 +243,9 @@ const Position PosWeavers[MAX_WEAVERS] =
     {3704.71f, -5175.96f, 143.597f, 3.36549f},
 };
 
-enum Achievments {
-    ACHIEVMENT_THE_IMMORTAL = 2187,
-    ACHIEVMENT_THE_UNDYING = 2187,
+enum Achievements {
+    ACHIEVEMENT_THE_IMMORTAL = 2186,
+    ACHIEVEMENT_THE_UNDYING = 2187,
 };
 // predicate function to select not charmed target
 struct NotCharmedTargetSelector : public std::unary_function<Unit *, bool> {
@@ -347,7 +347,7 @@ public:
             }
             chained.clear();
 
-            if (me->GetInstanceScript()->GetData(DATA_KILLED_PLAYER) == 0)
+            if (me->GetInstanceScript()->GetData(DATA_KILLED_PLAYER) == 0 && me->GetInstanceScript()->GetData(DATA_ALL_ENCOUNTERS_DEAD) == 1)
             {
                 if (RAID_MODE(0, 1))
                         me->GetInstanceScript()->DoCompleteAchievement(ACHIEVMENT_THE_IMMORTAL);

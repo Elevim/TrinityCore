@@ -148,6 +148,8 @@ public:
         {
             _JustDied();
             DoScriptText(SAY_DEATH, me);
+            if (me->GetInstanceScript())
+                me->GetInstanceScript()->SetBossState(BOSS_PATCHWERK, DONE);
         }
 
         void EnterCombat(Unit* /*who*/)

@@ -89,6 +89,8 @@ public:
             _JustDied();
             DoPlaySoundToSet(me, SOUND_DEATH);
             me->CastSpell(me, SPELL_HOPELESS, true); // TODO: this may affect other creatures
+            if(me->GetInstanceScript())
+                me->GetInstanceScript()->SetBossState(BOSS_RAZUVIOUS, DONE);
         }
 
         void EnterCombat(Unit* /*who*/)

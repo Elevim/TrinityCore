@@ -88,7 +88,11 @@ public:
             if(victim && victim->GetTypeId() == TYPEID_PLAYER)
                 me->GetInstanceScript()->SetData(DATA_KILLED_PLAYER,1);
         }
-
+        void JustDied(Unit* killer)
+        {
+            if(me->GetInstanceScript())
+                me->GetInstanceScript()->SetBossState(BOSS_MAEXXNA, DONE);
+        }
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim() || !CheckInRoom())

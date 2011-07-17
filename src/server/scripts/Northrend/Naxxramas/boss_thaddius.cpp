@@ -173,6 +173,8 @@ public:
         {
             _JustDied();
             DoScriptText(SAY_DEATH, me);
+            if(me->GetInstanceScript())
+                me->GetInstanceScript()->SetBossState(BOSS_THADDIUS, DONE);
         }
 
         void DoAction(const int32 action)

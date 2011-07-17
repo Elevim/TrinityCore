@@ -94,6 +94,9 @@ public:
         {
             _JustDied();
             DoScriptText(SAY_DEATH, me);
+
+            if(instance)
+                instance->SetBossState(BOSS_HEIGAN, DONE);
         }
 
         void EnterCombat(Unit* /*who*/)

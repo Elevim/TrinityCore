@@ -170,6 +170,8 @@ public:
                     }
                 }
             }
+            if(me->GetInstanceScript())
+                me->GetInstanceScript()->SetBossState(BOSS_SAPPHIRON, DONE);
         }
 
         void MovementInform(uint32, uint32 id)
