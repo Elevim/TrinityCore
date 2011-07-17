@@ -117,6 +117,109 @@ public:
 
 };
 
+enum Says
+{
+    SAY_START               = -1510356,
+    SAY_WINNER              = -1510357,
+    SAY_END                 = -1510358,
+    QUEST_MASTER_ANGLER     = 8193,
+};
+/*######
+## npc_riggle_bassbait
+######*/
+class npc_riggle_bassbait : public CreatureScript
+{
+public:
+    npc_riggle_bassbait() : CreatureScript("npc_riggle_bassbait") { }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver()) // If the quest is still running.
+        {
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(7614, pCreature->GetGUID());
+            return true;
+        }
+        // The Quest is not there anymore
+        // There is a winner!
+        pPlayer->SEND_GOSSIP_MENU(7714, pCreature->GetGUID());
+        return true;
+    }
+
+    bool OnQuestReward(Player* pPlayer, Creature* pCreature, const Quest* pQuest, uint32 opt)
+    {
+        // TODO: check if this can only be called if NPC has QUESTGIVER flag.
+        if (pQuest->GetQuestId() == QUEST_MASTER_ANGLER && ((npc_riggle_bassbaitAI*)(pCreature->AI()))->bEventWinnerFound == false)
+        {
+            DoScriptText(SAY_WINNER, pCreature,pPlayer);
+            pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+            ((npc_riggle_bassbaitAI*)(pCreature->AI()))->bEventWinnerFound = true;
+            Creature* creature2 = GetClosestCreatureWithEntry(pCreature,15087,60.0f);
+            if (creature2)
+            {
+                creature2->SetFlag(UNIT_NPC_FLAGS,UNIT_NPC_FLAG_QUESTGIVER);
+            }
+
+            return true;
+        }
+    return true;
+}
+
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_riggle_bassbaitAI (creature);
+    }
+
+    struct npc_riggle_bassbaitAI: public ScriptedAI
+    {
+        npc_riggle_bassbaitAI(Creature* c) : ScriptedAI(c)
+        {
+            // This will keep the NPC active even if there are no players around!
+            c->setActive(true);
+            bEventAnnounced = bEventIsOver = bEventWinnerFound = false;
+            Reset();
+        }
+        /**
+        *  Flag to check if event was announced. True if event was announced.
+        */
+        bool bEventAnnounced;
+        /**
+         *  Flag to check if event is over. True if event is over.
+         */
+        bool bEventIsOver;
+        /**
+         *  Flag to check if someone won the event. True if someone has won.
+         */
+        bool bEventWinnerFound;
+
+        void Reset() { }
+        void EnterCombat(Unit* who) {}
+
+        void UpdateAI(uint32 uiDiff)
+        {
+            // Announce the event max 1 minute after being spawned. But only if Fishing extravaganza is running.
+            if (!bEventAnnounced && time(NULL) % 60 == 0 && IsHolidayActive(HOLIDAY_FISHING_EXTRAVAGANZA))
+            {
+                DoScriptText(SAY_START, me);
+                me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER); //Quest&Gossip are now active
+                bEventAnnounced = true;
+            }
+            // The Event was started (announced) & It was not yet ended & One minute passed & the Fish are gone
+            if ( bEventAnnounced && !bEventIsOver && time(NULL) % 60 == 0 && !IsHolidayActive(HOLIDAY_FISHING_EXTRAVAGANZA))
+            {
+                DoScriptText(SAY_END, me);
+                bEventIsOver = true;
+
+            }
+            if (!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+    }
+    };
+};
+
 /*######
 ##
 ######*/
@@ -124,4 +227,5 @@ public:
 void AddSC_stranglethorn_vale()
 {
     new mob_yenniku();
+    new npc_riggle_bassbait();
 }
