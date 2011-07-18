@@ -11728,6 +11728,7 @@ void Unit::MeleeDamageBonus(Unit* victim, uint32 *pdamage, WeaponAttackType attT
     // ..done
     AuraEffectList const& mModDamagePercentDone = GetAuraEffectsByType(SPELL_AURA_MOD_DAMAGE_PERCENT_DONE);
     for (AuraEffectList::const_iterator i = mModDamagePercentDone.begin(); i != mModDamagePercentDone.end(); ++i)
+    {
         if (spellProto)
         {
             if ((*i)->GetMiscValue() & GetSpellSchoolMask(spellProto))
@@ -11767,6 +11768,15 @@ void Unit::MeleeDamageBonus(Unit* victim, uint32 *pdamage, WeaponAttackType attT
             else if (player->HasItemFitToSpellRequirements((*i)->GetSpellProto()))
                 AddPctN(DoneTotalMod, (*i)->GetAmount());
         }
+        else
+        {
+            if ((*i)->GetMiscValue() & GetMeleeDamageSchoolMask() &&
+                (*i)->GetSpellProto()->EquippedItemClass == -1)
+            {
+                AddPctN(DoneTotalMod, (*i)->GetAmount());
+            }
+        }
+    }
 
     AuraEffectList const& mDamageDoneVersus = GetAuraEffectsByType(SPELL_AURA_MOD_DAMAGE_DONE_VERSUS);
     for (AuraEffectList::const_iterator i = mDamageDoneVersus.begin(); i != mDamageDoneVersus.end(); ++i)
