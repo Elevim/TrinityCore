@@ -251,7 +251,11 @@ public:
             _JustDied();
             DoScriptText(SAY_DEATH, me);
             if (instance)
+            {
                 instance->SetData(DATA_GOTHIK_GATE, GO_STATE_ACTIVE);
+                instance->SetBossState(BOSS_GOTHIK, DONE);
+            }
+
         }
 
         void DoGothikSummon(uint32 entry)
