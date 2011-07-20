@@ -611,12 +611,13 @@ public:
                 else
                     DoScriptText(SAY_DOOMFIRE2, me);
 
-                Unit* temp = SelectTarget(SELECT_TARGET_RANDOM, 1);
-                if (!temp)
-                    temp = me->getVictim();
-
-                //replace with spell cast 31903 once implicitTarget 73 implemented
-                SummonDoomfire(temp);
+                if (Unit* temp = SelectTarget(SELECT_TARGET_RANDOM, 1))
+                {
+                    //replace with spell cast 31903 once implicitTarget 73 implemented
+                    SummonDoomfire(temp);
+                } else 
+                    if (Unit* temp = me->getVictim())
+                        SummonDoomfire(temp);
 
                 //supposedly three doomfire can be up at the same time
                 DoomfireTimer = 20000;
