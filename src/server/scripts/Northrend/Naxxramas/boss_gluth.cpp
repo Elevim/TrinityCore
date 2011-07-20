@@ -137,6 +137,7 @@ public:
                             if (summon && summon->GetEntry() == MOB_ZOMBIE)
                             {
                                 summon->SetHealth(summon->GetMaxHealth() * 0.05f);
+                                summon->SetReactState(REACT_PASSIVE);
                                 summon->GetMotionMaster()->MoveFollow(me, 0, 0);
                             }
                         }
@@ -163,7 +164,7 @@ public:
                 {
                     me->Kill(summon);
                     //summon->ForcedDespawn(); /think they don't have do despawn if gluth killed them
-                    me->ModifyHealth(int32(me->CountPctFromMaxHealth(5)));
+                    me->ModifyHealth(uint32(me->CountPctFromMaxHealth(5)));
                     std::list<uint64>::iterator next = itr;
                     ++next;
                     summons.erase(itr);

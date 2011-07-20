@@ -158,8 +158,92 @@ public:
     }
 };
 
+/*******************************************************
+ * RG-Custom Quest 1k-Winter-Marken
+ *******************************************************/
+
+
+#define WINTERGASP_MARK 43589
+
+
+#define GOSSIP_ITEM_EXCHANGE_1       "Tausche 1x Tausendwinter Marke für 5000 Ehre"
+#define GOSSIP_ITEM_EXCHANGE_5       "Tausche 5x Tausendwinter Marke für 25000 Ehre"
+#define GOSSIP_ITEM_EXCHANGE_10      "Tausche 10x Tausendwinter Marke für 50000 Ehre"
+
+#define SAY_WRONG "Ihr habt nicht genug Ehrepunkte!"
+
+
+
+class gossip_1k_winter : public CreatureScript
+{
+    public:
+
+        gossip_1k_winter() : CreatureScript("gossip_1k_winter")  {}
+
+        bool OnGossipHello(Player* player, Creature* creature)
+        {
+
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_ITEM_EXCHANGE_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_ITEM_EXCHANGE_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_ITEM_EXCHANGE_10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+
+            return true;
+        }
+
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+        {
+            player->PlayerTalkClass->ClearMenus();
+            switch(uiAction)
+            {
+                case GOSSIP_ACTION_INFO_DEF+1:
+                    GiveWintergaspMark(player, creature, 1);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF+2:
+                    GiveWintergaspMark(player, creature, 5);
+                    break;
+                case GOSSIP_ACTION_INFO_DEF+3:
+                    GiveWintergaspMark(player, creature, 10);
+                    break;
+                default:
+                    player->CLOSE_GOSSIP_MENU();
+                    break;
+            }
+            player->CLOSE_GOSSIP_MENU();
+            return true;
+        }
+
+        void GiveWintergaspMark(Player* player, Creature* creature, int amount)
+        {
+            bool hasEnoughHonor = false;
+            switch(amount)
+            {
+                case 1: hasEnoughHonor = (player->GetHonorPoints() >= 5000);
+                    break;
+                case 5: hasEnoughHonor = (player->GetHonorPoints() >= 25000);
+                    break;
+                case 10: hasEnoughHonor = (player->GetHonorPoints() >= 50000);
+                    break;
+                default:
+                    return;
+            }
+
+            if(hasEnoughHonor)
+            {
+                player->SetHonorPoints(player->GetHonorPoints() - (amount * 5000));
+                player->AddItem(WINTERGASP_MARK, amount);
+            }
+            else
+            {
+                creature->MonsterWhisper(SAY_WRONG, player->GetGUID(), true);
+
+            }
+        }
+};
+
 void AddSC_dalaran()
 {
     new npc_mageguard_dalaran;
     new npc_hira_snowdawn;
+    new gossip_1k_winter;
 }
