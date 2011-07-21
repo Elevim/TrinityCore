@@ -1097,11 +1097,11 @@ void WorldSession::HandleNextCinematicCamera(WorldPacket & /*recv_data*/)
 void WorldSession::HandleMoveTimeSkippedOpcode(WorldPacket & recv_data)
 {
     
-	uint32 time_skipped;
+	uint32 time_skipped = 0;
     uint64 guid;
 
     recv_data.readPackGUID(guid);
-	recv_data.read_skip<uint32>();
+	recv_data >> time_skipped;
 
 	sLog->outStaticDebug("WORLD: Time Lag/Synchronization Resent/Update, data = %d", time_skipped);
 
