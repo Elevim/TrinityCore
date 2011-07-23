@@ -56,6 +56,7 @@ EndScriptData */
 #define SPELL_DOOMFIRE_STRIKE       31903                   //summons two creatures
 #define SPELL_DOOMFIRE_SPAWN        32074
 #define SPELL_DOOMFIRE              31945
+#define SPELL_DOOMFIRE_DEV          31944
 #define SPELL_SOUL_CHARGE_YELLOW    32045
 #define SPELL_SOUL_CHARGE_GREEN     32051
 #define SPELL_SOUL_CHARGE_RED       32052
@@ -142,15 +143,52 @@ public:
 
     struct mob_doomfireAI : public ScriptedAI
     {
-        mob_doomfireAI(Creature* c) : ScriptedAI(c) {}
+        mob_doomfireAI(Creature* c) : ScriptedAI(c) 
+        {
+            instance = c->GetInstanceScript();
+        }
 
-        void Reset() { }
+        InstanceScript* instance;
+        uint32 FireTimer;
+        uint64 ArchimondeGUID;
+
+        void Reset() 
+        { 
+            FireTimer = 1000;
+
+            if(instance)
+                ArchimondeGUID = instance->GetData64(DATA_ARCHIMONDE);
+        }
 
         void MoveInLineOfSight(Unit* /*who*/) {}
         void EnterCombat(Unit* /*who*/) {}
         void DamageTaken(Unit* /*done_by*/, uint32 &damage) { damage = 0; }
-    };
 
+        void UpdateAI(const uint32 diff)
+        {
+            if (FireTimer < diff)
+            {
+                if (Unit* Archimonde = Unit::GetUnit(*me, ArchimondeGUID))
+                {
+                    std::list<HostileReference *> t_list = Archimonde->getThreatManager().getThreatList();
+                    for (std::list<HostileReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+                    {
+                        if (Unit* target = Unit::GetUnit(*me, (*itr)->getUnitGuid()))
+                        {
+                            if (target && target->GetTypeId() == TYPEID_PLAYER)
+                            {
+                                if (me->IsWithinDistInMap(target, 3))
+                                    target->CastSpell(target, SPELL_DOOMFIRE_DEV, true);
+                                else if (target->HasAura(SPELL_DOOMFIRE_DEV))
+                                    target->RemoveAurasDueToSpell(SPELL_DOOMFIRE_DEV);
+                            }
+                        }
+                    }
+                }
+                FireTimer = 3000;
+            }FireTimer -= diff;
+        }
+    };
 };
 
 /* This is the script for the Doomfire Spirit Mob. This mob simply follow players or
